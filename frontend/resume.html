@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Professional Resume Builder - AI Employee Preparation Platform">
+  <title>Resume Builder & Customization | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Protected Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="brand-icon">🤖</span>
+        <span>AI Employee <span class="brand-highlight">Prep</span></span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="roadmap.html" class="nav-link">Smart Roadmap</a></li>
+        <li><a href="resume.html" class="nav-link active">Resume Builder</a></li>
+        <li><a href="ai-fluency.html" class="nav-link">AI Fluency</a></li>
+        <li><a href="answer-builder.html" class="nav-link">60s Pitch</a></li>
+        <li><a href="interview.html" class="nav-link">AI Interview</a></li>
+        <li><a href="preparation.html" class="nav-link">Coding</a></li>
+        <li><a href="aptitude.html" class="nav-link">Aptitude</a></li>
+        <li><a href="analyzer.html" class="nav-link">Resume Analyzer</a></li>
+        <li><a href="companies.html" class="nav-link">Companies</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="badge badge-primary">Career Readiness</span>
+          <h1 style="font-size: 2rem; margin-top: 4px;">Customizable Professional Resume Builder</h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Select resume sections, choose a tailored layout template, edit live content, and export an ATS-optimized PDF.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;" class="no-print">
+          <button id="btn-save-resume" class="btn btn-secondary btn-sm">💾 Quick Save</button>
+          <button id="btn-save-version-modal" class="btn btn-outline-primary btn-sm">📁 Save as Named Version</button>
+          <button id="btn-print-resume" class="btn btn-primary btn-sm">🖨️ Print / Download PDF</button>
+        </div>
+      </div>
+
+      <!-- Version Manager Bar (no-print) -->
+      <div class="card no-print" style="padding: 14px 20px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; background: var(--bg-subtle);">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">📁 Saved Versions:</span>
+          <select id="select-resume-version" class="form-select" style="max-width: 280px; padding: 6px 12px; font-size: 0.85rem;">
+            <option value="">-- Select Saved Version to Load --</option>
+          </select>
+          <button id="btn-load-version" class="btn btn-secondary btn-sm">Load Version</button>
+          <button id="btn-delete-version" class="btn btn-outline-danger btn-sm" style="color: #dc2626; border-color: #fca5a5;">Delete Version</button>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);" id="version-status-indicator">
+          Loaded active draft
+        </div>
+      </div>
+
+      <!-- Controls & Template Selector Bar (2026 Trending Templates) -->
+      <div class="card no-print" style="padding: 18px 20px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+          <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);">
+            🎨 Choose 2026 Trending Template:
+          </div>
+          <span class="badge badge-purple" style="font-size: 0.72rem;">🔥 2026 Industry Standards</span>
+        </div>
+
+        <div class="template-selector-bar" id="template-buttons" style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="template-btn active" data-template="modern-single">
+            🔥 Modern Single-Column <span class="badge" style="background: #e0e7ff; color: #3730a3; margin-left: 4px; font-size: 0.7rem;">ATS Favorite</span>
+          </button>
+          <button class="template-btn" data-template="minimalist-accent">
+            ✨ Minimalist Accent <span class="badge" style="background: #cffafe; color: #0e7490; margin-left: 4px; font-size: 0.7rem;">Top Pick</span>
+          </button>
+          <button class="template-btn" data-template="classic-chrono">
+            💼 Classic Reverse-Chronological <span class="badge" style="background: #f1f5f9; color: #334155; margin-left: 4px; font-size: 0.7rem;">Corporate</span>
+          </button>
+          <button class="template-btn" data-template="modern">Modern Gradient</button>
+          <button class="template-btn" data-template="developer">Developer Tech</button>
+        </div>
+
+        <div style="font-weight: 700; font-size: 0.95rem; margin-top: 16px; margin-bottom: 8px; color: var(--text-main);">
+          ⚙️ Toggle Resume Sections:
+        </div>
+        <div class="resume-section-toggles-grid" id="section-toggles-container">
+          <label class="section-toggle-label"><input type="checkbox" id="chk-objective" checked> Career Objective</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-contact" checked> Contact Info</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-education" checked> Education</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-skills" checked> Technical Skills</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-soft-skills" checked> Soft Skills</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-projects" checked> Key Projects</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-internships" checked> Internships</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-experience" checked> Work Experience</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-certifications" checked> Certifications</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-achievements" checked> Achievements</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-languages" checked> Languages</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-hobbies" checked> Hobbies & Interests</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-strengths" checked> Core Strengths</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-extracurricular" checked> Extra-Curricular</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-github" checked> GitHub Profile</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-linkedin" checked> LinkedIn Profile</label>
+          <label class="section-toggle-label"><input type="checkbox" id="chk-portfolio" checked> Portfolio URL</label>
+        </div>
+      </div>
+
+      <!-- 2026 AI Tools Bar: AI Bullet Rewriter & AI Resume Score -->
+      <div class="no-print" style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px;">
+        <!-- AI Bullet Point Rewriter -->
+        <div class="card" style="padding: 18px; border: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);">
+              ✨ AI Bullet-Point Rewriter (Metric-Driven)
+            </div>
+            <span class="badge badge-success" style="font-size: 0.72rem;">STAR Impact</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">
+            Type/paste a draft bullet point. AI rewrites it with action verbs, metrics, and technical keywords.
+          </p>
+          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+            <input type="text" id="input-raw-bullet" class="form-control" placeholder="e.g. Worked on login and authentication system..." style="font-size: 0.85rem;">
+            <button type="button" id="btn-ai-rewrite-bullet" class="btn btn-primary btn-sm" style="white-space: nowrap;">
+              Rewrite ✨
+            </button>
+          </div>
+          <div id="ai-bullet-result" style="display: none; padding: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-sm); font-size: 0.85rem;">
+            <div style="font-weight: 700; color: #166534; margin-bottom: 4px;" id="ai-rewritten-text"></div>
+            <div style="font-size: 0.78rem; color: #15803d;" id="ai-rewritten-expl"></div>
+            <button type="button" id="btn-apply-bullet" class="btn btn-success btn-sm" style="margin-top: 8px; font-size: 0.78rem; padding: 4px 10px;">
+              Apply to Experience ➕
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Resume ATS Score & JD Match -->
+        <div class="card" style="padding: 18px; border: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);">
+              🎯 AI Resume Score (ATS & JD Match)
+            </div>
+            <span class="badge badge-primary" style="font-size: 0.72rem;">Live Scanner</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">
+            Evaluate ATS friendliness, keyword density, and match percentage for your target enterprise.
+          </p>
+          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+            <input type="text" id="input-jd-keywords" class="form-control" placeholder="Paste target Job Description snippet or keywords..." style="font-size: 0.85rem;">
+            <button type="button" id="btn-calculate-ats" class="btn btn-primary btn-sm" style="white-space: nowrap;">
+              Analyze 🤖
+            </button>
+          </div>
+          <div id="ats-score-result" style="display: none; padding: 12px; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: var(--radius-sm); font-size: 0.85rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>ATS Friendliness: <strong id="ats-score-val" style="color: #4f46e5; font-size: 1.1rem;">88%</strong></span>
+              <span id="ats-match-ratio" style="font-weight: 600; color: #16a34a;">80% Match</span>
+            </div>
+            <div style="font-size: 0.78rem; color: #4338ca; margin-top: 4px;" id="ats-keywords-summary"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Split Layout: Form Editor (Left) & Real-Time Resume Sheet (Right) -->
+      <div class="resume-layout">
+        
+        <!-- Left Column: Form Editor (no-print) -->
+        <div class="card no-print" style="padding: 24px; max-height: 960px; overflow-y: auto;">
+          <h2 style="font-size: 1.15rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <span>✏️</span> Edit Section Details
+          </h2>
+
+          <form id="resume-form">
+            <!-- Full Name & Email -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="res-input-name" class="form-label">Full Name</label>
+                <input type="text" id="res-input-name" class="form-control" placeholder="e.g. John Doe" required>
+              </div>
+
+              <div class="form-group">
+                <label for="res-input-role" class="form-label">Target Role / Title</label>
+                <input type="text" id="res-input-role" class="form-control" placeholder="e.g. Software Engineer (Java)">
+              </div>
+            </div>
+
+            <!-- Contact Row -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="res-input-email" class="form-label">Email</label>
+                <input type="email" id="res-input-email" class="form-control" placeholder="e.g. john@example.com">
+              </div>
+              <div class="form-group">
+                <label for="res-input-phone" class="form-label">Phone</label>
+                <input type="tel" id="res-input-phone" class="form-control" placeholder="+91 98765 43210" value="+91 98765 43210">
+              </div>
+            </div>
+
+            <!-- Social Links (GitHub, LinkedIn, Portfolio) -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="res-input-github" class="form-label">GitHub URL</label>
+                <input type="text" id="res-input-github" class="form-control" placeholder="github.com/johndoe" value="github.com/johndoe">
+              </div>
+              <div class="form-group">
+                <label for="res-input-linkedin" class="form-label">LinkedIn URL</label>
+                <input type="text" id="res-input-linkedin" class="form-control" placeholder="linkedin.com/in/johndoe" value="linkedin.com/in/johndoe">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="res-input-portfolio" class="form-label">Portfolio / Website</label>
+              <input type="text" id="res-input-portfolio" class="form-control" placeholder="johndoe.dev" value="johndoe.dev">
+            </div>
+
+            <!-- Career Objective -->
+            <div class="form-group" id="group-input-objective">
+              <label for="res-input-objective" class="form-label">Career Objective / Summary</label>
+              <textarea id="res-input-objective" class="form-textarea" rows="2" placeholder="Proactive software graduate passionate about building robust applications."></textarea>
+            </div>
+
+            <!-- Education -->
+            <div class="form-group" id="group-input-education">
+              <label for="res-input-qualification" class="form-label">Educational Qualification</label>
+              <textarea id="res-input-qualification" class="form-textarea" rows="2" placeholder="B.Tech Computer Science - ABC Institute of Technology (2022 - 2026) | CGPA: 8.8/10"></textarea>
+            </div>
+
+            <!-- Technical Skills -->
+            <div class="form-group" id="group-input-skills">
+              <label for="res-input-skills" class="form-label">Technical Skills</label>
+              <textarea id="res-input-skills" class="form-textarea" rows="2" placeholder="Java, Python, JavaScript, Spring Boot, Flask, React, MySQL, Git, Docker, REST APIs"></textarea>
+            </div>
+
+            <!-- Soft Skills -->
+            <div class="form-group" id="group-input-soft-skills">
+              <label for="res-input-soft-skills" class="form-label">Soft Skills</label>
+              <input type="text" id="res-input-soft-skills" class="form-control" placeholder="Problem Solving, Critical Thinking, Team Collaboration, Agile Delivery" value="Problem Solving, Critical Thinking, Team Collaboration, Agile Delivery">
+            </div>
+
+            <!-- Key Projects -->
+            <div class="form-group" id="group-input-projects">
+              <label for="res-input-projects" class="form-label">Key Projects (Bullet Points)</label>
+              <textarea id="res-input-projects" class="form-textarea" rows="3" placeholder="• AI Employee Preparation Platform: Built full-stack Flask web application with automated aptitude and coding simulator.&#10;• E-Commerce Microservice: Designed high-throughput payment REST API with Spring Boot and PostgreSQL."></textarea>
+            </div>
+
+            <!-- Internships -->
+            <div class="form-group" id="group-input-internships">
+              <label for="res-input-internships" class="form-label">Internships</label>
+              <textarea id="res-input-internships" class="form-textarea" rows="2" placeholder="• Software Development Intern at ABC Tech (3 Months): Engineered backend APIs and accelerated query throughput by 25%."></textarea>
+            </div>
+
+            <!-- Work Experience -->
+            <div class="form-group" id="group-input-experience">
+              <label for="res-input-experience" class="form-label">Work Experience</label>
+              <textarea id="res-input-experience" class="form-textarea" rows="2" placeholder="• Junior Software Engineer at FinTech Labs (2025 - Present): Collaborated in agile team to deploy cloud services."></textarea>
+            </div>
+
+            <!-- Certifications -->
+            <div class="form-group" id="group-input-certifications">
+              <label for="res-input-certifications" class="form-label">Certifications</label>
+              <textarea id="res-input-certifications" class="form-textarea" rows="2" placeholder="• AWS Certified Cloud Practitioner&#10;• Oracle Certified Associate, Java SE 8 Programmer"></textarea>
+            </div>
+
+            <!-- Achievements -->
+            <div class="form-group" id="group-input-achievements">
+              <label for="res-input-achievements" class="form-label">Achievements</label>
+              <textarea id="res-input-achievements" class="form-textarea" rows="2" placeholder="• Winner, National Level 24-Hour Hackathon (1st place out of 120 teams)&#10;• Solved 250+ Algorithmic Challenges across LeetCode & HackerRank"></textarea>
+            </div>
+
+            <!-- Languages -->
+            <div class="form-group" id="group-input-languages">
+              <label for="res-input-languages" class="form-label">Languages Known</label>
+              <input type="text" id="res-input-languages" class="form-control" placeholder="English (Fluent), Hindi (Native), Spanish (Basic)" value="English (Fluent), Hindi (Native), Spanish (Basic)">
+            </div>
+
+            <!-- Hobbies & Interests -->
+            <div class="form-group" id="group-input-hobbies">
+              <label for="res-input-hobbies" class="form-label">Hobbies & Interests</label>
+              <input type="text" id="res-input-hobbies" class="form-control" placeholder="Competitive Coding, Open Source Contribution, Tech Blogging, Chess" value="Competitive Coding, Open Source Contribution, Tech Blogging, Chess">
+            </div>
+
+            <!-- Core Strengths -->
+            <div class="form-group" id="group-input-strengths">
+              <label for="res-input-strengths" class="form-label">Core Strengths</label>
+              <input type="text" id="res-input-strengths" class="form-control" placeholder="Rapid Learner, Analytical Debugger, Clear Technical Communicator" value="Rapid Learner, Analytical Debugger, Clear Technical Communicator">
+            </div>
+
+            <!-- Extra-Curricular Activities -->
+            <div class="form-group" id="group-input-extracurricular">
+              <label for="res-input-extracurricular" class="form-label">Extra-Curricular Activities</label>
+              <textarea id="res-input-extracurricular" class="form-textarea" rows="2" placeholder="• President, University Computer Science Society (organized workshops for 300+ students)"></textarea>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right Column: Live Rendered Resume Sheet -->
+        <div>
+          <div id="resume-sheet" class="resume-paper template-modern">
+            
+            <!-- Header Bar -->
+            <div class="res-header" style="margin-bottom: 16px;">
+              <div class="res-header-name" id="preview-name">John Doe</div>
+              <div class="res-header-role" id="preview-role">Software Engineer</div>
+              
+              <!-- Contact Bar -->
+              <div class="res-contact-bar" id="preview-contact-bar" style="font-size: 0.85rem; color: #475569; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px;">
+                <span id="preview-email">📧 john@example.com</span>
+                <span id="preview-phone">📱 +91 98765 43210</span>
+                <span id="preview-github">🔗 github.com/johndoe</span>
+                <span id="preview-linkedin">💼 linkedin.com/in/johndoe</span>
+                <span id="preview-portfolio">🌐 johndoe.dev</span>
+              </div>
+            </div>
+
+            <!-- 1. Career Objective -->
+            <div id="sec-objective">
+              <div class="res-sec-title">Career Objective</div>
+              <div id="preview-objective" style="font-size: 0.92rem; color: #334155; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 2. Technical Skills -->
+            <div id="sec-skills">
+              <div class="res-sec-title">Technical Skills</div>
+              <div id="preview-skills" style="font-size: 0.92rem; color: #334155; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 3. Soft Skills -->
+            <div id="sec-soft-skills">
+              <div class="res-sec-title">Soft Skills</div>
+              <div id="preview-soft-skills" style="font-size: 0.92rem; color: #334155; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 4. Key Projects -->
+            <div id="sec-projects">
+              <div class="res-sec-title">Key Projects</div>
+              <div id="preview-projects" style="font-size: 0.92rem; color: #334155; white-space: pre-line; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 5. Work Experience -->
+            <div id="sec-experience">
+              <div class="res-sec-title">Work Experience</div>
+              <div id="preview-experience" style="font-size: 0.92rem; color: #334155; white-space: pre-line; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 6. Internships -->
+            <div id="sec-internships">
+              <div class="res-sec-title">Internships</div>
+              <div id="preview-internships" style="font-size: 0.92rem; color: #334155; white-space: pre-line; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 7. Education -->
+            <div id="sec-education">
+              <div class="res-sec-title">Education</div>
+              <div id="preview-education" style="font-size: 0.92rem; color: #334155; white-space: pre-line; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 8. Certifications -->
+            <div id="sec-certifications">
+              <div class="res-sec-title">Certifications & Training</div>
+              <div id="preview-certifications" style="font-size: 0.92rem; color: #334155; white-space: pre-line; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 9. Achievements -->
+            <div id="sec-achievements">
+              <div class="res-sec-title">Achievements & Honors</div>
+              <div id="preview-achievements" style="font-size: 0.92rem; color: #334155; white-space: pre-line; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 10. Core Strengths -->
+            <div id="sec-strengths">
+              <div class="res-sec-title">Core Strengths</div>
+              <div id="preview-strengths" style="font-size: 0.92rem; color: #334155; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 11. Languages -->
+            <div id="sec-languages">
+              <div class="res-sec-title">Languages Known</div>
+              <div id="preview-languages" style="font-size: 0.92rem; color: #334155; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 12. Hobbies & Interests -->
+            <div id="sec-hobbies">
+              <div class="res-sec-title">Hobbies & Interests</div>
+              <div id="preview-hobbies" style="font-size: 0.92rem; color: #334155; line-height: 1.5;"></div>
+            </div>
+
+            <!-- 13. Extra-Curricular Activities -->
+            <div id="sec-extracurricular">
+              <div class="res-sec-title">Extra-Curricular Activities</div>
+              <div id="preview-extracurricular" style="font-size: 0.92rem; color: #334155; white-space: pre-line; line-height: 1.5;"></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/script.js"></script>
+  <script src="js/resume.js"></script>
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Personalized AI Based Employee Preparation Dashboard">
+  <title>Personalized Dashboard | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Protected Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="brand-icon">⚡</span>
+        <span>Employee<span class="brand-highlight">Prep</span> AI</span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="dashboard.html" class="nav-link active">Dashboard</a></li>
+        <li><a href="roadmap.html" class="nav-link">Smart Roadmap</a></li>
+        <li><a href="resume.html" class="nav-link">Resume</a></li>
+        <li><a href="ai-fluency.html" class="nav-link">AI Fluency</a></li>
+        <li><a href="answer-builder.html" class="nav-link">60s Pitch</a></li>
+        <li><a href="companies.html" class="nav-link">Companies</a></li>
+        <li><a href="aptitude.html" class="nav-link">Aptitude</a></li>
+        <li><a href="preparation.html" class="nav-link">Coding</a></li>
+        <li><a href="interview.html" class="nav-link">AI Interview</a></li>
+        <li><a href="skills.html" class="nav-link">Skill Matrix</a></li>
+        <li><a href="history.html" class="nav-link">History</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="report.html" class="nav-link" target="_blank" style="color: #38bdf8; font-weight: 600;">Report 📄</a></li>
+        <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Header & Career Goal Bar -->
+      <div style="margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h1 id="welcome-heading" style="font-size: 2.1rem; margin-bottom: 4px;">
+            Welcome, Candidate! 👋
+          </h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Adaptive preparation system tracking your performance and personalizing your path.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+            <span>🏢 <strong id="header-target-company">TCS</strong></span>
+            <span style="color: var(--border-color);">|</span>
+            <span>🎯 <strong id="header-target-role">Java Developer</strong></span>
+          </div>
+          <button id="btn-change-goal" class="btn btn-outline-primary btn-sm">Switch Company 🔄</button>
+          <a href="report.html" target="_blank" class="btn btn-outline-primary btn-sm" style="border-color: #38bdf8; color: #38bdf8;">📄 Final Report</a>
+          <button id="btn-quick-ai" class="btn btn-primary btn-sm">Ask AI Assistant 🤖</button>
+        </div>
+      </div>
+
+      <!-- Current Company Preparation Banner -->
+      <div class="card" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: #fff; padding: 22px 28px; margin-bottom: 24px; border: none; border-radius: var(--radius-lg); box-shadow: 0 8px 20px -4px rgba(49, 46, 129, 0.3);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="font-size: 2.8rem; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 12px;" id="current-prep-emoji">🏢</div>
+            <div>
+              <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Current Target Preparation</span>
+              <h2 style="font-size: 1.6rem; color: #fff; margin: 4px 0 2px 0;" id="current-prep-title">TCS — Java Developer</h2>
+              <p style="color: #cbd5e1; font-size: 0.88rem; margin: 0;">
+                Isolated progress and customized interview questions tracked for this company.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <div style="text-align: center; background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 8px;">
+              <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Company Score</div>
+              <div style="font-size: 1.4rem; font-weight: 800; color: #38bdf8;" id="current-prep-progress">0%</div>
+            </div>
+            <button id="btn-open-comp-hub" class="btn btn-primary" style="background: #38bdf8; color: #0f172a; font-weight: 700; border: none; padding: 10px 18px;">
+              Open Company Hub 🚀
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Dashboard Grid -->
+      <div class="dashboard-grid">
+
+        <!-- Left Column: Profile Card & Gamification -->
+        <aside>
+          <div class="profile-card">
+            <div class="profile-avatar-wrap">
+              <div class="profile-avatar" id="profile-avatar-initials">E</div>
+              <h2 class="profile-name" id="profile-name">Candidate Name</h2>
+              <span class="profile-role-badge" id="profile-job-role">Target Role</span>
+            </div>
+
+            <!-- Profile Details List -->
+            <div class="profile-details-list">
+              <div class="profile-detail-item">
+                <span class="detail-label">Email Address</span>
+                <span class="detail-val" id="profile-email">email@example.com</span>
+              </div>
+
+              <div class="profile-detail-item">
+                <span class="detail-label">Target Company</span>
+                <span class="detail-val" id="profile-target-company" style="font-weight: 700; color: var(--primary-600);">TCS</span>
+              </div>
+
+              <div class="profile-detail-item">
+                <span class="detail-label">Target Job Role</span>
+                <span class="detail-val" id="profile-target-job">Java Developer</span>
+              </div>
+
+              <div class="profile-detail-item">
+                <span class="detail-label">Qualification</span>
+                <span class="detail-val" id="profile-qualification">BSc IT</span>
+              </div>
+
+              <div class="profile-detail-item">
+                <span class="detail-label">Experience</span>
+                <span class="detail-val" id="profile-experience">Fresher</span>
+              </div>
+
+              <div class="profile-detail-item">
+                <span class="detail-label">Technical Skills</span>
+                <span class="detail-val" id="profile-skills" style="font-size: 0.85rem; color: var(--primary-700);">Java, Python, SQL</span>
+              </div>
+            </div>
+
+            <!-- Gamification Streak & Points -->
+            <div style="margin-top: 16px; padding: 12px; background: var(--bg-subtle); border-radius: 8px; display: flex; justify-content: space-around; text-align: center;">
+              <div>
+                <span style="font-size: 1.3rem;">🔥</span>
+                <div style="font-weight: 700; font-size: 1.1rem; color: #ea580c;" id="gamification-streak">1</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">Day Streak</div>
+              </div>
+              <div style="border-left: 1px solid var(--border-color);"></div>
+              <div>
+                <span style="font-size: 1.3rem;">⚡</span>
+                <div style="font-weight: 700; font-size: 1.1rem; color: var(--primary-600);" id="gamification-points">120</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">XP Points</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 8px;">
+              <a href="skills.html" class="btn btn-secondary btn-block btn-sm">View Full Skill Matrix 🟢</a>
+              <a href="resume.html" class="btn btn-secondary btn-block btn-sm">Edit Resume 📄</a>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Column: Unified Readiness Gauge, Daily Plan, 3-Tier Skills, and Modules -->
+        <section>
+
+          <!-- 2026 Stat Cards (Live DB values per employee_id) -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px;">
+            <div class="card" style="padding: 18px; border-left: 4px solid var(--primary-600); box-shadow: var(--shadow-sm);">
+              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">🎙️ Interviews Taken</div>
+              <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-main); margin-top: 4px;" id="stat-interviews-taken">1</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Live from database</div>
+            </div>
+
+            <div class="card" style="padding: 18px; border-left: 4px solid var(--emerald-500); box-shadow: var(--shadow-sm);">
+              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">📊 Avg Interview Score</div>
+              <div style="font-size: 1.8rem; font-weight: 800; color: var(--emerald-600); margin-top: 4px;" id="stat-avg-score">84%</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">STAR evaluated</div>
+            </div>
+
+            <div class="card" style="padding: 18px; border-left: 4px solid var(--violet-500); box-shadow: var(--shadow-sm);">
+              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">📄 Resume ATS Score</div>
+              <div style="font-size: 1.8rem; font-weight: 800; color: var(--violet-600); margin-top: 4px;" id="stat-resume-score">84%</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">High scanability</div>
+            </div>
+
+            <div class="card" style="padding: 18px; border-left: 4px solid var(--cyan-500); box-shadow: var(--shadow-sm);">
+              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">🧠 2026 AI Fluency</div>
+              <div style="font-size: 1.8rem; font-weight: 800; color: var(--cyan-600); margin-top: 4px;" id="stat-fluency-score">88%</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Indirect tool mastery</div>
+            </div>
+          </div>
+
+          <!-- 2026 Trend Insight Widget (Curated 2026 Hiring Trends) -->
+          <div class="trend-widget-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="trend-badge-2026">🔥 2026 Hiring Insight</span>
+                <h2 style="font-size: 1.25rem; margin: 0; color: #fff;">Curated Market & Enterprise Trends</h2>
+              </div>
+              <span style="font-size: 0.8rem; color: #94a3b8;" id="trend-target-label">Relevant to your active target</span>
+            </div>
+            <p style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 14px;">
+              Actionable 2026 recruiter expectations tailored to your role and target enterprise. Live and CMS-maintainable.
+            </p>
+            <div id="trend-tips-container" style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="color: #94a3b8; font-size: 0.88rem;">Loading 2026 trend insights...</div>
+            </div>
+          </div>
+
+          <!-- Improvement Trend Progress Chart -->
+          <div class="card" style="padding: 22px; margin-bottom: 24px; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h2 style="font-size: 1.2rem; margin: 0;">📈 Improvement Trend Across Sessions</h2>
+                <p style="font-size: 0.84rem; color: var(--text-muted); margin: 2px 0 0 0;">Historical progression tracked per session in database</p>
+              </div>
+              <div style="display: flex; gap: 8px; font-size: 0.78rem;">
+                <span style="display: inline-flex; align-items: center; gap: 4px; color: var(--primary-600); font-weight: 600;">● Readiness</span>
+                <span style="display: inline-flex; align-items: center; gap: 4px; color: var(--emerald-600); font-weight: 600;">● Coding</span>
+                <span style="display: inline-flex; align-items: center; gap: 4px; color: var(--violet-600); font-weight: 600;">● Interview</span>
+              </div>
+            </div>
+            <div style="position: relative; width: 100%; height: 210px;">
+              <canvas id="progress-trend-canvas" width="700" height="210" style="width: 100%; height: 100%; display: block;"></canvas>
+            </div>
+          </div>
+
+          <!-- Quick-Access Shortcuts to Every Module -->
+          <div style="margin-bottom: 24px;">
+            <h2 style="font-size: 1.2rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+              <span>⚡</span> <span>Quick-Access Preparation Modules</span>
+            </h2>
+            <div class="quick-shortcuts-grid">
+              <a href="roadmap.html" class="shortcut-card">
+                <div class="shortcut-icon" style="background: #eef2ff; color: #4f46e5;">🗺️</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.95rem;">Smart Roadmap</div>
+                  <div style="font-size: 0.78rem; color: var(--text-muted);">Company-specific days</div>
+                </div>
+              </a>
+
+              <a href="resume.html" class="shortcut-card">
+                <div class="shortcut-icon" style="background: #f0fdf4; color: #16a34a;">📄</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.95rem;">Resume Builder</div>
+                  <div style="font-size: 0.78rem; color: var(--text-muted);">3 Trending Templates</div>
+                </div>
+              </a>
+
+              <a href="ai-fluency.html" class="shortcut-card">
+                <div class="shortcut-icon" style="background: #ecfeff; color: #0891b2;">🧠</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.95rem;">AI Fluency Round</div>
+                  <div style="font-size: 0.78rem; color: var(--text-muted);">2026 Indirect tests</div>
+                </div>
+              </a>
+
+              <a href="answer-builder.html" class="shortcut-card">
+                <div class="shortcut-icon" style="background: #fefce8; color: #ca8a04;">⏱️</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.95rem;">60s Pitch Builder</div>
+                  <div style="font-size: 0.78rem; color: var(--text-muted);">Present-Past-Future</div>
+                </div>
+              </a>
+
+              <a href="interview.html" class="shortcut-card">
+                <div class="shortcut-icon" style="background: #fdf2f8; color: #db2777;">🎯</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.95rem;">Mock Interview</div>
+                  <div style="font-size: 0.78rem; color: var(--text-muted);">STAR Simulator</div>
+                </div>
+              </a>
+
+              <a href="preparation.html" class="shortcut-card">
+                <div class="shortcut-icon" style="background: #faf5ff; color: #9333ea;">💻</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.95rem;">Coding Practice</div>
+                  <div style="font-size: 0.78rem; color: var(--text-muted);">In-browser compiler</div>
+                </div>
+              </a>
+
+              <a href="aptitude.html" class="shortcut-card">
+                <div class="shortcut-icon" style="background: #eff6ff; color: #2563eb;">📊</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.95rem;">Aptitude Tests</div>
+                  <div style="font-size: 0.78rem; color: var(--text-muted);">Low/Med/High tiers</div>
+                </div>
+              </a>
+
+              <a href="analyzer.html" class="shortcut-card">
+                <div class="shortcut-icon" style="background: #f0fdfa; color: #0d9488;">🔍</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.95rem;">Resume-to-JD</div>
+                  <div style="font-size: 0.78rem; color: var(--text-muted);">Keyword gap check</div>
+                </div>
+              </a>
+
+              <a href="achievements.html" class="shortcut-card">
+                <div class="shortcut-icon" style="background: #fffbeb; color: #d97706;">🏆</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.95rem;">Badges & Streaks</div>
+                  <div style="font-size: 0.78rem; color: var(--text-muted);">Gamified milestones</div>
+                </div>
+              </a>
+
+              <a href="admin.html" class="shortcut-card">
+                <div class="shortcut-icon" style="background: #fff1f2; color: #e11d48;">⚙️</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.95rem;">Trend Admin CMS</div>
+                  <div style="font-size: 0.78rem; color: var(--text-muted);">Manage trends & Qs</div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- 1. Unified Employee Readiness Score Gauge (0-100) -->
+          <div class="card" style="padding: 24px; margin-bottom: 24px; border: 1px solid var(--border-color); background: linear-gradient(135deg, rgba(79, 70, 229, 0.04) 0%, rgba(16, 185, 129, 0.04) 100%);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <h2 style="font-size: 1.3rem; margin: 0;">Employee Readiness Score</h2>
+                  <span class="badge badge-success" id="readiness-tier-badge">Job Ready 🚀</span>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;" id="readiness-tier-desc">
+                  Transparent weighted preparation index calculated from 5 performance dimensions.
+                </p>
+              </div>
+
+              <div style="text-align: right;">
+                <div style="font-size: 2.4rem; font-weight: 800; color: var(--primary-600); line-height: 1;" id="readiness-score-val">
+                  76<span style="font-size: 1.1rem; color: var(--text-muted); font-weight: 500;"> / 100</span>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+                  Trend: <strong style="color: #16a34a;" id="readiness-trend-text">52 → 61 → 68 → 76</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5-Pillar Score Components -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 12px;">
+              <div style="background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                <div style="font-size: 0.75rem; color: var(--text-muted);">🧮 Aptitude (25%)</div>
+                <div style="font-weight: 700; font-size: 1.1rem; color: var(--primary-700);" id="pillar-aptitude">0%</div>
+              </div>
+              <div style="background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                <div style="font-size: 0.75rem; color: var(--text-muted);">💻 Coding (25%)</div>
+                <div style="font-weight: 700; font-size: 1.1rem; color: var(--emerald-600);" id="pillar-coding">0%</div>
+              </div>
+              <div style="background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                <div style="font-size: 0.75rem; color: var(--text-muted);">⚙️ Technical (20%)</div>
+                <div style="font-weight: 700; font-size: 1.1rem; color: #0284c7;" id="pillar-technical">0%</div>
+              </div>
+              <div style="background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                <div style="font-size: 0.75rem; color: var(--text-muted);">🎙️ Interview (15%)</div>
+                <div style="font-weight: 700; font-size: 1.1rem; color: var(--violet-600);" id="pillar-interview">0%</div>
+              </div>
+              <div style="background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                <div style="font-size: 0.75rem; color: var(--text-muted);">📄 Resume ATS (15%)</div>
+                <div style="font-weight: 700; font-size: 1.1rem; color: #059669;" id="pillar-resume">80%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. AI Daily Preparation Plan -->
+          <div class="card" style="padding: 20px 24px; margin-bottom: 24px; border-left: 5px solid var(--emerald-600);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span class="badge badge-success" style="font-size: 0.75rem;">📅 Today's AI Plan</span>
+                <h3 style="font-size: 1.15rem; margin: 4px 0 0 0;">Personalized Daily Preparation Agenda</h3>
+              </div>
+              <span style="font-size: 0.8rem; color: var(--text-muted);" id="daily-plan-date">Today</span>
+            </div>
+
+            <div id="daily-plan-tasks" style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="color: var(--text-muted); font-size: 0.88rem;">Generating your daily preparation tasks...</div>
+            </div>
+          </div>
+
+          <!-- 3. Visual 3-Tier Skill Status Matrix -->
+          <div class="card" style="padding: 20px 24px; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+              <h3 style="font-size: 1.15rem; margin: 0;">Skill Status Overview</h3>
+              <a href="skills.html" style="font-size: 0.85rem; font-weight: 600;">Full Skill Breakdown →</a>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+              <!-- Strong Skills -->
+              <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px;">
+                <div style="font-weight: 700; font-size: 0.9rem; color: #166534; margin-bottom: 6px;">🟢 Strong Competencies</div>
+                <div id="matrix-strong-list" style="display: flex; flex-wrap: wrap; gap: 4px; font-size: 0.8rem;">
+                  <span class="badge" style="background: #dcfce7; color: #166534;">Core CS</span>
+                </div>
+              </div>
+
+              <!-- Developing Skills -->
+              <div style="background: #fefce8; border: 1px solid #fef08a; border-radius: 8px; padding: 14px;">
+                <div style="font-weight: 700; font-size: 0.9rem; color: #854d0e; margin-bottom: 6px;">🟡 Developing Skills</div>
+                <div id="matrix-developing-list" style="display: flex; flex-wrap: wrap; gap: 4px; font-size: 0.8rem;">
+                  <span class="badge" style="background: #fef9c3; color: #854d0e;">Data Structures</span>
+                </div>
+              </div>
+
+              <!-- Needs Improvement -->
+              <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px;">
+                <div style="font-weight: 700; font-size: 0.9rem; color: #991b1b; margin-bottom: 6px;">🔴 Priority Focus Areas</div>
+                <div id="matrix-weak-list" style="display: flex; flex-wrap: wrap; gap: 4px; font-size: 0.8rem;">
+                  <span class="badge" style="background: #fee2e2; color: #991b1b;">Algorithm Execution</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Preparation Hub Modules -->
+          <h3 style="font-size: 1.15rem; margin-bottom: 14px;">Preparation Modules</h3>
+          <div class="prep-cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+            
+            <div class="prep-card">
+              <div>
+                <div class="prep-card-icon">🧮</div>
+                <h3 class="prep-card-title">1. Aptitude Test</h3>
+                <p class="prep-card-desc">Adaptive 15-question test with timer, anti-cheat security, and detailed review.</p>
+              </div>
+              <a href="aptitude.html" class="btn btn-primary btn-block">Start Test</a>
+            </div>
+
+            <div class="prep-card">
+              <div>
+                <div class="prep-card-icon">💻</div>
+                <h3 class="prep-card-title">2. Coding Practice</h3>
+                <p class="prep-card-desc">35+ coding challenges in Python, Java, JS, SQL with live execution simulator.</p>
+              </div>
+              <a href="preparation.html" class="btn btn-primary btn-block">Practice Coding</a>
+            </div>
+
+            <div class="prep-card">
+              <div>
+                <div class="prep-card-icon">🎙️</div>
+                <h3 class="prep-card-title">3. AI Interview</h3>
+                <p class="prep-card-desc">Personalized mock interview tailored to your resume projects and target company.</p>
+              </div>
+              <a href="interview.html" class="btn btn-primary btn-block">Start Mock</a>
+            </div>
+
+            <div class="prep-card">
+              <div>
+                <div class="prep-card-icon">🏢</div>
+                <h3 class="prep-card-title">4. Top 20 Companies</h3>
+                <p class="prep-card-desc">Preparation hubs and roadmaps for TCS, Google, Amazon, Deloitte, Red Hat, etc.</p>
+              </div>
+              <a href="companies.html" class="btn btn-primary btn-block">Explore Companies</a>
+            </div>
+
+            <div class="prep-card">
+              <div>
+                <div class="prep-card-icon">🗺️</div>
+                <h3 class="prep-card-title">5. Learning Path</h3>
+                <p class="prep-card-desc">Adaptive curriculum that re-prioritizes milestones as your skills advance.</p>
+              </div>
+              <a href="roadmap.html" class="btn btn-primary btn-block">View Roadmap</a>
+            </div>
+
+            <div class="prep-card">
+              <div>
+                <div class="prep-card-icon">📄</div>
+                <h3 class="prep-card-title">6. Resume Builder</h3>
+                <p class="prep-card-desc">Build customizable resumes with 17 sections and 5 professional templates.</p>
+              </div>
+              <a href="resume.html" class="btn btn-primary btn-block">Build Resume</a>
+            </div>
+
+          </div>
+
+        </section>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Change Career Goal Modal -->
+  <div id="goal-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 480px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 1.25rem; margin: 0;">🎯 Update Career Goal</h2>
+        <button id="btn-close-goal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+      </div>
+
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+        Select your target company and job role. Your previous progress for other companies will remain completely safe.
+      </p>
+
+      <form id="form-career-goal">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label for="goal-company" style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 6px;">Target Company</label>
+          <select id="goal-company" class="form-control" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-main);">
+            <option value="Tata Consultancy Services (TCS)">Tata Consultancy Services (TCS)</option>
+            <option value="Infosys">Infosys</option>
+            <option value="Wipro">Wipro</option>
+            <option value="Capgemini">Capgemini</option>
+            <option value="Deloitte">Deloitte</option>
+            <option value="Red Hat">Red Hat</option>
+            <option value="Accenture">Accenture</option>
+            <option value="Cognizant">Cognizant</option>
+            <option value="HCLTech">HCLTech</option>
+            <option value="Tech Mahindra">Tech Mahindra</option>
+            <option value="IBM">IBM</option>
+            <option value="LTIMindtree">LTIMindtree</option>
+            <option value="Persistent Systems">Persistent Systems</option>
+            <option value="Oracle">Oracle</option>
+            <option value="Microsoft">Microsoft</option>
+            <option value="Google">Google</option>
+            <option value="Amazon">Amazon</option>
+            <option value="SAP">SAP</option>
+            <option value="EY">EY</option>
+            <option value="PwC">PwC</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="goal-role" style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 6px;">Target Job Role</label>
+          <select id="goal-role" class="form-control" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-main);">
+            <option value="Software Developer">Software Developer</option>
+            <option value="Java Developer">Java Developer</option>
+            <option value="Python Developer">Python Developer</option>
+            <option value="Web Developer">Web Developer</option>
+            <option value="Data Analyst">Data Analyst</option>
+            <option value="Software Engineer">Software Engineer</option>
+            <option value="QA Tester">QA Tester</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button type="button" id="btn-cancel-goal" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Career Goal 🚀</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

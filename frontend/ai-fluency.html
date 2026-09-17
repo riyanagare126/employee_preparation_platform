@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="2026 AI Fluency Round - Practice Indirect AI Tool Mastery & Engineering Verification">
+  <title>AI Fluency Round | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Protected Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="brand-icon">⚡</span>
+        <span>Employee<span class="brand-highlight">Prep</span> AI</span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="roadmap.html" class="nav-link">Smart Roadmap</a></li>
+        <li><a href="resume.html" class="nav-link">Resume Builder</a></li>
+        <li><a href="ai-fluency.html" class="nav-link active">AI Fluency</a></li>
+        <li><a href="answer-builder.html" class="nav-link">60s Pitch</a></li>
+        <li><a href="interview.html" class="nav-link">AI Interview</a></li>
+        <li><a href="preparation.html" class="nav-link">Coding</a></li>
+        <li><a href="aptitude.html" class="nav-link">Aptitude</a></li>
+        <li><a href="companies.html" class="nav-link">Companies</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="trend-badge-2026">🔥 2026 Recruiter Benchmark</span>
+          <h1 style="font-size: 2rem; margin-top: 4px;">AI Fluency Round: Indirect Tool Mastery</h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Enterprise interviewers test how naturally you leverage Copilot, Cursor, and LLMs in daily engineering while maintaining strict verification and architectural mastery.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button id="btn-random-question" class="btn btn-outline-primary btn-sm">🎲 Random Question</button>
+        </div>
+      </div>
+
+      <!-- Trend Explainer Banner -->
+      <div class="card" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); color: #fff; padding: 20px 24px; margin-bottom: 24px; border: none; border-radius: var(--radius-lg);">
+        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <div style="font-size: 2.2rem; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 12px;">🧠</div>
+          <div style="flex: 1;">
+            <h3 style="font-size: 1.15rem; color: #38bdf8; margin: 0 0 4px 0;">Why is this round critical in 2026?</h3>
+            <p style="color: #cbd5e1; font-size: 0.88rem; margin: 0; line-height: 1.5;">
+              Instead of asking <em>"Do you know AI?"</em>, top tech firms pose subtle scenario questions like <em>"How did you resolve a tricky bug recently?"</em> or <em>"How do you ensure test coverage under tight deadlines?"</em>. They listen for whether you use modern tooling as an active force multiplier while exercising zero-trust code verification.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Interactive Practice Workspace -->
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start;">
+        
+        <!-- Left Column: Question & Answer Form -->
+        <div class="card" style="padding: 24px;">
+          <!-- Question Selector -->
+          <div class="form-group">
+            <label for="select-fluency-question" class="form-label" style="display: flex; justify-content: space-between;">
+              <span>Select Practice Question</span>
+              <span id="question-category-badge" class="badge badge-purple">Workflow Velocity</span>
+            </label>
+            <select id="select-fluency-question" class="form-select" style="font-weight: 600; font-size: 0.95rem;">
+              <option value="">Loading questions...</option>
+            </select>
+          </div>
+
+          <!-- Question Context Card -->
+          <div style="background: var(--bg-subtle); border-left: 4px solid var(--primary-600); padding: 14px 18px; border-radius: var(--radius-sm); margin-bottom: 20px;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary-700); text-transform: uppercase;">What Interviewers Are Listening For:</div>
+            <p id="question-hint-text" style="font-size: 0.88rem; color: var(--text-main); margin: 4px 0 0 0; line-height: 1.5;">
+              Select a question to see recruiter evaluation criteria.
+            </p>
+          </div>
+
+          <!-- Candidate Answer Box -->
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label for="input-candidate-answer" class="form-label" style="margin-bottom: 0;">Your Response (Typed or Verbal Notes)</label>
+              <span id="answer-word-count" style="font-size: 0.8rem; color: var(--text-muted);">0 words</span>
+            </div>
+            <textarea id="input-candidate-answer" class="form-control" rows="8" placeholder="Walk through your approach: describe your problem-solving process, mention how you leveraged AI/developer tooling to scaffold or test, and emphasize how you critically verified the code before production..." style="font-size: 0.92rem; line-height: 1.6;"></textarea>
+          </div>
+
+          <!-- Helper Guidance Pills -->
+          <div style="margin-bottom: 20px;">
+            <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">Recommended Talking Points:</div>
+            <div id="ideal-points-list" style="display: flex; flex-direction: column; gap: 4px; font-size: 0.82rem; color: var(--text-muted);">
+              <span>• Mention specific AI tools (Copilot, Cursor, LLM mock generation)</span>
+              <span>• Emphasize your verification checklist (unit tests, manual inspection)</span>
+              <span>• Cite a concrete metric or time saved</span>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="button" id="btn-evaluate-fluency" class="btn btn-primary btn-block btn-lg" style="font-weight: 700;">
+            Evaluate AI Fluency Score 🤖
+          </button>
+        </div>
+
+        <!-- Right Column: Live AI Feedback & 4-Pillar Score Cards -->
+        <div>
+          <!-- Initial Placeholder -->
+          <div id="fluency-results-empty" class="card" style="padding: 40px 24px; text-align: center; color: var(--text-muted);">
+            <div style="font-size: 3rem; margin-bottom: 12px;">📊</div>
+            <h3 style="font-size: 1.15rem; color: var(--text-main); margin-bottom: 6px;">Evaluation Awaiting Input</h3>
+            <p style="font-size: 0.88rem; margin: 0;">
+              Type your answer on the left and click <strong>Evaluate AI Fluency Score</strong>. The AI will score your tool integration, verification discipline, velocity impact, and natural communication.
+            </p>
+          </div>
+
+          <!-- Live Results Card -->
+          <div id="fluency-results-card" class="card" style="display: none; padding: 24px;">
+            <!-- Overall Score Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 16px;">
+              <div>
+                <span class="badge badge-purple">AI Fluency Index</span>
+                <h3 style="font-size: 1.3rem; margin: 4px 0 0 0;">Evaluation Report</h3>
+              </div>
+              <div style="text-align: right;">
+                <div id="eval-overall-score" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-600); line-height: 1;">88%</div>
+                <span id="eval-overall-grade" class="badge badge-success" style="font-size: 0.72rem; margin-top: 4px;">Fluent 🚀</span>
+              </div>
+            </div>
+
+            <!-- 4 Pillar Metrics -->
+            <div class="fluency-score-grid">
+              <div class="fluency-score-pill">
+                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Tool Integration</div>
+                <div id="pillar-tool" style="font-size: 1.3rem; font-weight: 800; color: var(--primary-700); margin-top: 2px;">92%</div>
+              </div>
+              <div class="fluency-score-pill">
+                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Verification Mindset</div>
+                <div id="pillar-verif" style="font-size: 1.3rem; font-weight: 800; color: var(--emerald-600); margin-top: 2px;">90%</div>
+              </div>
+              <div class="fluency-score-pill">
+                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Velocity Impact</div>
+                <div id="pillar-velo" style="font-size: 1.3rem; font-weight: 800; color: #0284c7; margin-top: 2px;">86%</div>
+              </div>
+              <div class="fluency-score-pill">
+                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Authenticity</div>
+                <div id="pillar-comm" style="font-size: 1.3rem; font-weight: 800; color: var(--violet-600); margin-top: 2px;">84%</div>
+              </div>
+            </div>
+
+            <!-- Feedback Breakdown -->
+            <div style="margin-top: 18px;">
+              <h4 style="font-size: 0.95rem; margin-bottom: 6px;">Recruiter Impression Feedback:</h4>
+              <div id="eval-feedback-text" style="font-size: 0.88rem; color: var(--text-main); line-height: 1.5; background: var(--bg-subtle); padding: 12px 14px; border-radius: var(--radius-sm);"></div>
+            </div>
+
+            <!-- Natural AI Weaver Rewrite Sample -->
+            <div class="fluency-rewrite-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="font-size: 0.9rem; color: var(--primary-700);">💡 How to Naturally Weave AI Tools Into This Answer:</strong>
+                <button type="button" id="btn-copy-rewrite" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 3px 8px;">Copy 📋</button>
+              </div>
+              <p id="eval-rewrite-sample" style="font-size: 0.86rem; color: #334155; line-height: 1.55; margin: 0; font-style: italic;"></p>
+            </div>
+          </div>
+
+          <!-- History & Score Progression Card -->
+          <div class="card" style="padding: 20px; margin-top: 24px;">
+            <h3 style="font-size: 1.05rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <span>📈</span> <span>Your Past Fluency Attempts</span>
+            </h3>
+            <div id="fluency-history-list" style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="font-size: 0.82rem; color: var(--text-muted);">Loading past sessions...</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/script.js"></script>
+  <script src="js/ai-fluency.js"></script>
+</body>
+</html>

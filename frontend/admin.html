@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Secure Admin Dashboard - AI Employee Preparation Platform">
+  <title>Admin Dashboard | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Protected Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="brand-icon">🛡️</span>
+        <span>Platform <span class="brand-highlight" style="color: #f43f5e;">Admin</span></span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="dashboard.html" class="nav-link">Candidate View</a></li>
+        <li><a href="companies.html" class="nav-link">Companies Portal</a></li>
+        <li><a href="admin.html" class="nav-link active" style="color: #f43f5e; font-weight: 700;">Admin Console</a></li>
+        <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Header -->
+      <div style="margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div>
+          <span class="badge badge-purple" style="background: #ffe4e6; color: #e11d48;">System Administrator</span>
+          <h1 style="font-size: 2rem; margin-top: 4px;">Platform Management & Administration</h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Monitor platform metrics, oversee registered candidates, manage company placement blueprints, and assign questions to companies and job roles.
+          </p>
+        </div>
+
+        <div>
+          <button id="btn-refresh-admin" class="btn btn-secondary btn-sm">🔄 Refresh Data</button>
+        </div>
+      </div>
+
+      <!-- Admin Platform Stat Metrics -->
+      <div class="hero-stats" style="margin-bottom: 32px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(99, 102, 241, 0.1); color: var(--primary-600);">👥</div>
+          <div class="stat-info">
+            <div class="stat-number" id="stat-total-users">0</div>
+            <div class="stat-label">Registered Candidates</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--emerald-600);">🧮</div>
+          <div class="stat-info">
+            <div class="stat-number" id="stat-total-aptitude">0</div>
+            <div class="stat-label">Aptitude Tests Taken</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--amber-500);">💻</div>
+          <div class="stat-info">
+            <div class="stat-number" id="stat-total-coding">0</div>
+            <div class="stat-label">Coding Solutions Solved</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: var(--violet-500);">🏢</div>
+          <div class="stat-info">
+            <div class="stat-number" id="stat-total-companies">20</div>
+            <div class="stat-label">Company Blueprints</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Tabs -->
+      <div style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; flex-wrap: wrap;">
+        <button id="tab-users-btn" class="btn btn-primary btn-sm">👥 Manage Candidates</button>
+        <button id="tab-companies-btn" class="btn btn-secondary btn-sm">🏢 Company Blueprints</button>
+        <button id="tab-roles-btn" class="btn btn-secondary btn-sm">🎯 Job Roles</button>
+        <button id="tab-questions-btn" class="btn btn-secondary btn-sm">❓ Question Banks & Custom Questions</button>
+        <button id="tab-trends-btn" class="btn btn-secondary btn-sm">💡 Trend Insights CMS</button>
+        <button id="tab-templates-btn" class="btn btn-secondary btn-sm">🎨 Resume Templates CMS</button>
+        <button id="tab-fluency-btn" class="btn btn-secondary btn-sm">🧠 AI Fluency Questions CMS</button>
+      </div>
+
+      <!-- Tab 1: Candidates Management Table -->
+      <div id="admin-users-view" class="card" style="padding: 24px;">
+        <h2 style="font-size: 1.15rem; margin-bottom: 16px;">Registered Candidates Overview</h2>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+                <th style="padding: 10px;">ID</th>
+                <th style="padding: 10px;">Candidate Name</th>
+                <th style="padding: 10px;">Email</th>
+                <th style="padding: 10px;">Target Company & Role</th>
+                <th style="padding: 10px;">Admin Status</th>
+                <th style="padding: 10px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-tbody">
+              <!-- Injected dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: Company Blueprints Management -->
+      <div id="admin-companies-view" class="card" style="padding: 24px; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <h2 style="font-size: 1.15rem; margin: 0;">Enterprise Recruitment Blueprints</h2>
+          <button id="btn-add-company" class="btn btn-primary btn-sm">+ Add New Company 🏢</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+                <th style="padding: 10px;">Company</th>
+                <th style="padding: 10px;">Slug</th>
+                <th style="padding: 10px;">Category</th>
+                <th style="padding: 10px;">Difficulty</th>
+                <th style="padding: 10px;">Common Roles</th>
+                <th style="padding: 10px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-companies-tbody">
+              <!-- Injected dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Job Roles Management -->
+      <div id="admin-roles-view" class="card" style="padding: 24px; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <h2 style="font-size: 1.15rem; margin: 0;">Target Job Roles</h2>
+          <button id="btn-add-role" class="btn btn-primary btn-sm">+ Add Job Role 🎯</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+                <th style="padding: 10px;">Role ID</th>
+                <th style="padding: 10px;">Role Name</th>
+                <th style="padding: 10px;">Company Slug</th>
+                <th style="padding: 10px;">Description</th>
+                <th style="padding: 10px;">Skills Required</th>
+                <th style="padding: 10px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-roles-tbody">
+              <!-- Injected dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 4: Questions Management View -->
+      <div id="admin-questions-view" class="card" style="padding: 24px; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <h2 style="font-size: 1.15rem; margin: 0;">Custom Questions Assigned to Companies & Roles</h2>
+          <button id="btn-add-question" class="btn btn-primary btn-sm">+ Add & Assign Question ❓</button>
+        </div>
+        <div id="admin-questions-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 600px; overflow-y: auto;">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+      <!-- Tab 5: 2026 Trend Insights CMS -->
+      <div id="admin-trends-view" class="card" style="padding: 24px; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 1.15rem; margin: 0;">2026 Hiring Trend Insights CMS</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 2px 0 0 0;">Tips displayed dynamically on student dashboards matching target role and company.</p>
+          </div>
+          <button id="btn-add-trend" class="btn btn-primary btn-sm">+ Add Trend Insight 💡</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+                <th style="padding: 10px;">ID</th>
+                <th style="padding: 10px;">Title & Actionable Tip</th>
+                <th style="padding: 10px;">Category</th>
+                <th style="padding: 10px;">Target Tags</th>
+                <th style="padding: 10px;">Status</th>
+                <th style="padding: 10px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-trends-tbody">
+              <!-- Injected dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 6: 2026 Resume Templates CMS -->
+      <div id="admin-templates-view" class="card" style="padding: 24px; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 1.15rem; margin: 0;">Resume Templates Management CMS</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 2px 0 0 0;">Control active resume templates, CSS class bindings, and trending badges.</p>
+          </div>
+          <button id="btn-add-template" class="btn btn-primary btn-sm">+ Add Template 🎨</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+                <th style="padding: 10px;">ID</th>
+                <th style="padding: 10px;">Template Name</th>
+                <th style="padding: 10px;">Identifier & CSS Class</th>
+                <th style="padding: 10px;">Badge</th>
+                <th style="padding: 10px;">Status</th>
+                <th style="padding: 10px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-templates-tbody">
+              <!-- Injected dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 7: 2026 AI Fluency Questions CMS -->
+      <div id="admin-fluency-view" class="card" style="padding: 24px; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 1.15rem; margin: 0;">AI Fluency Round Questions CMS</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 2px 0 0 0;">Manage indirect AI tool fluency questions and evaluation rubrics.</p>
+          </div>
+          <button id="btn-add-fluency" class="btn btn-primary btn-sm">+ Add Fluency Question 🧠</button>
+        </div>
+        <div id="admin-fluency-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 600px; overflow-y: auto;">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL: ADD / EDIT COMPANY -->
+  <div id="company-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 650px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 1.25rem; margin: 0;" id="company-modal-title">Add Company Blueprint</h2>
+        <button id="btn-close-company-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+      </div>
+
+      <form id="form-company">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Company Name *</label>
+            <input type="text" id="comp-name" class="form-control" placeholder="e.g. Cisco Systems" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Slug (Identifier) *</label>
+            <input type="text" id="comp-slug" class="form-control" placeholder="e.g. cisco" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Company Logo (Emoji or Icon)</label>
+            <input type="text" id="comp-emoji" class="form-control" placeholder="e.g. 🌐" value="🏢">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <input type="text" id="comp-cat" class="form-control" placeholder="e.g. Networking & Cloud" value="IT Services">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Difficulty Rating</label>
+            <select id="comp-diff" class="form-select">
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+              <option value="Medium - Hard" selected>Medium - Hard</option>
+              <option value="Very Hard">Very Hard</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Short Description</label>
+          <textarea id="comp-desc" class="form-control" rows="2" placeholder="Overview of company recruitment expectations..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Hiring Rounds</label>
+          <input type="text" id="comp-rounds" class="form-control" placeholder="Round 1: Online Test | Round 2: Technical Interview | Round 3: HR">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Aptitude Pattern</label>
+            <input type="text" id="comp-apt" class="form-control" placeholder="Quantitative (15 min), Logical (15 min)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Coding Round Pattern</label>
+            <input type="text" id="comp-code" class="form-control" placeholder="2 Algorithmic DSA Problems (45 min)">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Technical Focus Areas</label>
+            <input type="text" id="comp-tech" class="form-control" placeholder="OOPs, DBMS, SQL, Computer Networks">
+          </div>
+          <div class="form-group">
+            <label class="form-label">HR / Behavioral Tips</label>
+            <input type="text" id="comp-hr" class="form-control" placeholder="Highlight project teamwork & adaptability">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Common Roles (comma separated)</label>
+          <input type="text" id="comp-roles" class="form-control" placeholder="Software Developer, Java Developer, Python Developer, QA Tester" value="Software Developer, Java Developer, Python Developer, Web Developer, Data Analyst, Software Engineer, QA Tester">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Recommended Skills (comma separated)</label>
+          <input type="text" id="comp-skills" class="form-control" placeholder="Java, Python, SQL, DSA, Cloud, REST APIs">
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" id="btn-cancel-comp" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Company Blueprint 💾</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD JOB ROLE -->
+  <div id="role-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 500px; width: 100%; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 1.25rem; margin: 0;">Add Target Job Role</h2>
+        <button id="btn-close-role-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+      </div>
+
+      <form id="form-role">
+        <div class="form-group">
+          <label class="form-label">Job Role Name *</label>
+          <input type="text" id="role-name-input" class="form-control" placeholder="e.g. Cloud Engineer" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Assign to Company Slug (or 'all')</label>
+          <input type="text" id="role-comp-slug" class="form-control" placeholder="all, tcs, google, amazon..." value="all" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Role Description</label>
+          <textarea id="role-desc-input" class="form-control" rows="2" placeholder="Responsibilities and scope..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Skills Required (comma separated)</label>
+          <input type="text" id="role-skills-input" class="form-control" placeholder="Docker, Kubernetes, AWS, Python">
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" id="btn-cancel-role" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Role 🎯</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD & ASSIGN QUESTION -->
+  <div id="question-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 600px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 1.25rem; margin: 0;">Add & Assign Question</h2>
+        <button id="btn-close-q-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+      </div>
+
+      <form id="form-question">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Question Type *</label>
+            <select id="q-type" class="form-select">
+              <option value="technical">Technical Q&A</option>
+              <option value="aptitude">Aptitude MCQ</option>
+              <option value="coding">Coding Challenge</option>
+              <option value="interview">HR / Mock Interview</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <input type="text" id="q-cat" class="form-control" placeholder="e.g. Java, DBMS, Quantitative" value="Technical">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Assign to Company Slug (or 'all')</label>
+            <input type="text" id="q-comp" class="form-control" placeholder="all, tcs, infosys, google..." value="all" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Assign to Job Role (or 'all')</label>
+            <input type="text" id="q-role" class="form-control" placeholder="all, Java Developer..." value="all" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Question Prompt *</label>
+          <textarea id="q-text" class="form-control" rows="3" placeholder="Enter the exact question..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Explanation / Model Answer</label>
+          <textarea id="q-exp" class="form-control" rows="2" placeholder="Key concepts or scoring criteria..."></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" id="btn-cancel-q" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Question 💾</button>
+        </div>
+      </form>
+    </div>
+  <!-- MODAL: ADD / EDIT TREND INSIGHT -->
+  <div id="modal-trend" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 600px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 1.25rem; margin: 0;">Add 2026 Trend Insight</h2>
+        <button id="btn-close-trend-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+      </div>
+
+      <form id="form-trend">
+        <div class="form-group">
+          <label class="form-label">Insight Title *</label>
+          <input type="text" id="trend-title" class="form-control" placeholder="e.g. Zero-Trust AI Code Verification" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="trend-category" class="form-select">
+              <option value="AI Fluency">AI Fluency</option>
+              <option value="System Design">System Design</option>
+              <option value="ATS Formatting">ATS Formatting</option>
+              <option value="Behavioral">Behavioral</option>
+              <option value="Hiring Trends">Hiring Trends</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Priority (1 = highest)</label>
+            <input type="number" id="trend-priority" class="form-control" value="1" min="1" max="10">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Target Role (or 'All')</label>
+            <input type="text" id="trend-role" class="form-control" value="All" placeholder="Software Engineer, SDE-1, All">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Company (or 'All')</label>
+            <input type="text" id="trend-company" class="form-control" value="All" placeholder="Google, TCS, Amazon, All">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Content / Context *</label>
+          <textarea id="trend-content" class="form-control" rows="2" placeholder="Why this matters in 2026 hiring rounds..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Actionable Candidate Tip *</label>
+          <textarea id="trend-tip" class="form-control" rows="2" placeholder="Concrete takeaway for candidates..." required></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" id="btn-cancel-trend" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Trend Tip 💡</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD / EDIT RESUME TEMPLATE -->
+  <div id="modal-template" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 550px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 1.25rem; margin: 0;">Add Resume Template</h2>
+        <button id="btn-close-template-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+      </div>
+
+      <form id="form-template">
+        <div class="form-group">
+          <label class="form-label">Template Identifier (Slug) *</label>
+          <input type="text" id="tmpl-id" class="form-control" placeholder="e.g. modern-single, minimalist-accent" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Template Display Name *</label>
+          <input type="text" id="tmpl-name" class="form-control" placeholder="e.g. Modern Single-Column (ATS Favorite)" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Badge Text</label>
+            <input type="text" id="tmpl-badge" class="form-control" value="🔥 Trending 2026" placeholder="e.g. 99% ATS Pass">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CSS Class</label>
+            <input type="text" id="tmpl-class" class="form-control" value="template-modern-single" placeholder="e.g. template-modern-single">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Template Description</label>
+          <textarea id="tmpl-desc" class="form-control" rows="2" placeholder="Design purpose and recruiter benefits..."></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" id="btn-cancel-template" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Template 🎨</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD AI FLUENCY QUESTION -->
+  <div id="modal-fluency" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 600px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 1.25rem; margin: 0;">Add AI Fluency Practice Question</h2>
+        <button id="btn-close-fluency-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+      </div>
+
+      <form id="form-fluency">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Evaluation Pillar *</label>
+            <select id="fluency-cat" class="form-select">
+              <option value="Workflow Velocity">Workflow Velocity</option>
+              <option value="Verification Mindset">Verification Mindset</option>
+              <option value="Tool Integration">Tool Integration</option>
+              <option value="Authenticity & Trade-offs">Authenticity & Trade-offs</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Difficulty</label>
+            <select id="fluency-diff" class="form-select">
+              <option value="Medium">Medium</option>
+              <option value="Hard" selected>Hard</option>
+              <option value="Enterprise Tier-1">Enterprise Tier-1</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Question Scenario Prompt *</label>
+          <textarea id="fluency-prompt" class="form-control" rows="3" placeholder="Scenario question posed by recruiter..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Context Hint (What Interviewers Are Listening For) *</label>
+          <textarea id="fluency-hint" class="form-control" rows="2" placeholder="Key signals and evaluation intent..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Ideal Talking Points (Comma or newline separated)</label>
+          <textarea id="fluency-points" class="form-control" rows="2" placeholder="Mentioned LLM scaffold, Verified boundary edge cases, Ran automated fuzzing tests"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" id="btn-cancel-fluency" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Question 🧠</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

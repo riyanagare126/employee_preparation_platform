@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI Resume Analyzer & ATS Score - AI Employee Preparation Platform">
+  <title>AI Resume Analyzer | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Protected Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="brand-icon">🤖</span>
+        <span>AI Employee <span class="brand-highlight">Prep</span></span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="aptitude.html" class="nav-link">Aptitude</a></li>
+        <li><a href="preparation.html" class="nav-link">Coding</a></li>
+        <li><a href="interview.html" class="nav-link">AI Interview</a></li>
+        <li><a href="skills.html" class="nav-link">Skill Assessment</a></li>
+        <li><a href="roadmap.html" class="nav-link">Learning Path</a></li>
+        <li><a href="resume.html" class="nav-link">Resume</a></li>
+        <li><a href="analyzer.html" class="nav-link active">Resume Analyzer</a></li>
+        <li><a href="companies.html" class="nav-link">Companies</a></li>
+        <li><a href="history.html" class="nav-link">History</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Header -->
+      <div style="margin-bottom: 24px;">
+        <span class="badge badge-purple">ATS Optimization & Insights</span>
+        <h1 style="font-size: 2rem; margin-top: 4px;">AI Resume Analyzer & Gap Scanner</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+          Evaluate ATS compatibility, uncover missing sections, scan keyword density, and receive actionable improvements.
+        </p>
+      </div>
+
+      <!-- Split Layout: Input Section (Left) vs Analysis Report (Right) -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 24px;">
+        
+        <!-- Left: Upload / Paste Resume Text -->
+        <div class="card" style="padding: 24px;">
+          <h2 style="font-size: 1.15rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <span>📄</span> Input Resume Text
+          </h2>
+
+          <div class="form-group">
+            <label for="analyzer-role-input" class="form-label">Target Job Role</label>
+            <input type="text" id="analyzer-role-input" class="form-control" placeholder="e.g. Java Developer, Python Developer, Frontend Engineer">
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label for="analyzer-resume-text" class="form-label" style="margin-bottom: 0;">Resume Content (Paste text)</label>
+              <button id="btn-autofill-builder" class="btn btn-secondary btn-sm" style="font-size: 0.78rem; padding: 3px 8px;">
+                ⚡ Load from Builder
+              </button>
+            </div>
+            <textarea id="analyzer-resume-text" class="form-textarea" rows="14" placeholder="Paste your resume content or project summary here to scan..."></textarea>
+          </div>
+
+          <button id="btn-run-analysis" class="btn btn-primary btn-block">
+            🔍 Analyze Resume & ATS Match
+          </button>
+        </div>
+
+        <!-- Right: Real-time Analysis Report Card -->
+        <div class="card" style="padding: 24px;" id="analysis-report-container">
+          <div id="analysis-empty-placeholder" style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+            <div style="font-size: 3rem; margin-bottom: 12px;">📊</div>
+            <h3 style="font-size: 1.2rem; margin-bottom: 6px;">No Analysis Run Yet</h3>
+            <p style="font-size: 0.9rem;">Paste your resume text on the left and click "Analyze Resume" to view your ATS score and keyword suggestions.</p>
+          </div>
+
+          <div id="analysis-results-box" style="display: none;">
+            
+            <!-- Overall ATS Score Metric -->
+            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-subtle); padding: 18px 24px; border-radius: var(--radius-md); margin-bottom: 20px;">
+              <div>
+                <span class="badge badge-success">ATS Compatibility</span>
+                <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary-600); margin-top: 4px;" id="res-score-val">--/100</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 0.85rem; color: var(--text-muted);">Readability Score: <strong id="res-readability-val" style="color: var(--emerald-600);">--%</strong></div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Role Relevance: <strong id="res-relevance-val" style="color: var(--primary-600);">--%</strong></div>
+              </div>
+            </div>
+
+            <!-- Strengths List -->
+            <div style="margin-bottom: 18px;">
+              <h3 style="font-size: 1rem; color: #166534; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <span>🟢</span> Resume Strengths
+              </h3>
+              <div id="res-strengths-list" style="display: flex; flex-direction: column; gap: 6px; font-size: 0.9rem;"></div>
+            </div>
+
+            <!-- Missing Sections / Gaps -->
+            <div style="margin-bottom: 18px;">
+              <h3 style="font-size: 1rem; color: #991b1b; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <span>⚠️</span> Missing Elements & Gaps
+              </h3>
+              <div id="res-missing-list" style="display: flex; flex-direction: column; gap: 6px; font-size: 0.9rem;"></div>
+            </div>
+
+            <!-- Recommended Keywords Tag Cloud -->
+            <div style="margin-bottom: 18px;">
+              <h3 style="font-size: 1rem; color: var(--text-main); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <span>🔑</span> Recommended Keywords to Add
+              </h3>
+              <div id="res-keywords-cloud" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+            </div>
+
+            <!-- Action Suggestions -->
+            <div>
+              <h3 style="font-size: 1rem; color: var(--text-main); margin-bottom: 8px;">💡 Actionable Improvement Tips</h3>
+              <div id="res-suggestions-list" style="display: flex; flex-direction: column; gap: 6px; font-size: 0.9rem;"></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/script.js"></script>
+  <script src="js/analyzer.js"></script>
+</body>
+</html>

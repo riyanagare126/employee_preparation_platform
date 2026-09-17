@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI Skill Assessment - AI Employee Preparation Platform">
+  <title>AI Skill Assessment | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Protected Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="brand-icon">🤖</span>
+        <span>AI Employee <span class="brand-highlight">Prep</span></span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="aptitude.html" class="nav-link">Aptitude</a></li>
+        <li><a href="preparation.html" class="nav-link">Coding</a></li>
+        <li><a href="interview.html" class="nav-link">AI Interview</a></li>
+        <li><a href="skills.html" class="nav-link active">Skill Assessment</a></li>
+        <li><a href="roadmap.html" class="nav-link">Learning Path</a></li>
+        <li><a href="resume.html" class="nav-link">Resume</a></li>
+        <li><a href="analyzer.html" class="nav-link">Resume Analyzer</a></li>
+        <li><a href="companies.html" class="nav-link">Companies</a></li>
+        <li><a href="history.html" class="nav-link">History</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="badge badge-purple">AI Competency Matrix</span>
+          <h1 style="font-size: 2rem; margin-top: 4px;">AI Skill Assessment & Gap Analysis</h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Automated multi-dimensional analysis of your Aptitude, Coding, Interview, and Resume performance.
+          </p>
+        </div>
+
+        <div>
+          <button id="btn-re-evaluate" class="btn btn-primary btn-sm">🔄 Re-Evaluate Skills</button>
+        </div>
+      </div>
+
+      <!-- Readiness Score Hero Card -->
+      <div class="card" style="padding: 28px; margin-bottom: 24px; background: linear-gradient(135deg, rgba(79, 70, 229, 0.06) 0%, rgba(124, 58, 237, 0.03) 100%);">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+          <div>
+            <div style="font-size: 0.9rem; font-weight: 700; color: var(--primary-700); text-transform: uppercase; letter-spacing: 0.5px;">
+              Overall Placement Readiness
+            </div>
+            <div style="font-size: 2.8rem; font-weight: 800; color: var(--text-main); line-height: 1.1; margin-top: 4px;" id="overall-readiness-val">
+              --%
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;" id="target-role-badge">
+              Target Role: Loading...
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <div class="stat-box" style="min-width: 140px; padding: 14px 20px;">
+              <div class="stat-number" style="color: var(--emerald-600); font-size: 1.5rem;" id="strong-count">0</div>
+              <div class="stat-label">Strong Skills</div>
+            </div>
+            <div class="stat-box" style="min-width: 140px; padding: 14px 20px;">
+              <div class="stat-number" style="color: var(--amber-500); font-size: 1.5rem;" id="avg-count">0</div>
+              <div class="stat-label">Average Skills</div>
+            </div>
+            <div class="stat-box" style="min-width: 140px; padding: 14px 20px;">
+              <div class="stat-number" style="color: var(--rose-500); font-size: 1.5rem;" id="weak-count">0</div>
+              <div class="stat-label">Needs Improvement</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Columns: Strong, Average, Weak Skills -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 28px;">
+        
+        <!-- Strong Skills Column -->
+        <div class="card">
+          <div class="card-header" style="border-bottom: 2px solid #bbf7d0;">
+            <h2 class="card-title" style="color: #166534; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+              <span>🟢</span> Strong Competencies
+            </h2>
+            <span class="badge badge-success">High Mastery</span>
+          </div>
+          <div id="strong-skills-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px;">
+            <div style="color: var(--text-muted); font-size: 0.9rem;">Analyzing performance...</div>
+          </div>
+        </div>
+
+        <!-- Average Skills Column -->
+        <div class="card">
+          <div class="card-header" style="border-bottom: 2px solid #fef08a;">
+            <h2 class="card-title" style="color: #854d0e; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+              <span>🟡</span> Average Skills
+            </h2>
+            <span class="badge badge-warning">Needs Practice</span>
+          </div>
+          <div id="average-skills-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px;">
+            <div style="color: var(--text-muted); font-size: 0.9rem;">Analyzing performance...</div>
+          </div>
+        </div>
+
+        <!-- Weak Skills Column -->
+        <div class="card">
+          <div class="card-header" style="border-bottom: 2px solid #fecaca;">
+            <h2 class="card-title" style="color: #991b1b; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+              <span>🔴</span> Priority Focus Areas
+            </h2>
+            <span class="badge badge-purple" style="background: #fee2e2; color: #991b1b;">Immediate Action</span>
+          </div>
+          <div id="weak-skills-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px;">
+            <div style="color: var(--text-muted); font-size: 0.9rem;">Analyzing performance...</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Actionable AI Recommendations Card -->
+      <div class="card" style="padding: 28px;">
+        <div class="card-header">
+          <h2 class="card-title" style="font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+            <span>🎯</span> Targeted Practice Recommendations
+          </h2>
+        </div>
+        <div id="recommendations-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/script.js"></script>
+  <script src="js/skills.js"></script>
+</body>
+</html>

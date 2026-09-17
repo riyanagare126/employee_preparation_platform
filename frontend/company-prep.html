@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Company Preparation Dashboard - AI Employee Preparation Platform">
+  <title>Company Preparation Hub | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .comp-header-banner {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px -5px rgba(67, 56, 202, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .comp-header-banner::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+      border-radius: 50%;
+    }
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .module-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    .module-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-400);
+    }
+    .module-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--primary-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 14px;
+    }
+    .progress-bar-container {
+      background: var(--bg-subtle);
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 12px;
+      margin-bottom: 16px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-600), var(--emerald-500));
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+    .stat-pill {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Protected Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="brand-icon">🤖</span>
+        <span>AI Employee <span class="brand-highlight">Prep</span></span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="companies.html" class="nav-link active">Companies</a></li>
+        <li><a href="aptitude.html" class="nav-link">Aptitude</a></li>
+        <li><a href="preparation.html" class="nav-link">Coding</a></li>
+        <li><a href="interview.html" class="nav-link">AI Interview</a></li>
+        <li><a href="skills.html" class="nav-link">Skill Matrix</a></li>
+        <li><a href="roadmap.html" class="nav-link">Learning Path</a></li>
+        <li><a href="resume.html" class="nav-link">Resume</a></li>
+        <li><a href="history.html" class="nav-link">History</a></li>
+        <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Breadcrumbs & Navigation -->
+      <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+        <a href="companies.html" style="color: var(--primary-600); font-weight: 600;">← Back to Companies</a>
+        <span>/</span>
+        <span id="breadcrumb-company-name">Company Preparation</span>
+      </div>
+
+      <!-- Main Company Hero Banner -->
+      <div class="comp-header-banner">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;">
+          <div style="display: flex; align-items: center; gap: 18px;">
+            <div style="font-size: 3.5rem; background: rgba(255,255,255,0.12); padding: 12px; border-radius: 16px;" id="company-hero-emoji">🏢</div>
+            <div>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+                <span class="stat-pill" id="company-hero-cat">IT Services</span>
+                <span class="stat-pill" id="company-hero-diff" style="background: rgba(239,68,68,0.25); color: #fecaca;">Difficulty: Medium</span>
+              </div>
+              <h1 style="font-size: 2.2rem; margin: 0; color: #ffffff;" id="company-hero-title">TCS Preparation</h1>
+              <p style="color: #cbd5e1; font-size: 0.95rem; margin-top: 6px; max-width: 680px;" id="company-hero-desc">
+                Target Company: <strong id="company-target-label" style="color: #67e8f9;">TCS</strong>
+              </p>
+            </div>
+          </div>
+
+          <!-- Overall Company Readiness Gauge -->
+          <div style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 16px 20px; text-align: center; min-width: 170px;">
+            <div style="font-size: 0.8rem; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Company Progress</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: #38bdf8; margin: 4px 0;" id="hero-progress-pct">0%</div>
+            <div style="font-size: 0.75rem; color: #a5f3fc;" id="hero-progress-status">In Progress</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Target Job Role Selector Card -->
+      <div class="card" style="margin-bottom: 24px; padding: 20px 24px; border-left: 5px solid var(--primary-600);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h2 style="font-size: 1.15rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <span>🎯 Choose Your Target Role:</span>
+            </h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+              All aptitude tests, coding challenges, and mock interview questions adapt specifically to your chosen job role.
+            </p>
+          </div>
+
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <select id="role-select" class="form-select" style="min-width: 240px; font-weight: 600; padding: 10px 14px; font-size: 0.95rem;">
+              <option value="Software Developer">Software Developer</option>
+              <option value="Java Developer" selected>Java Developer</option>
+              <option value="Python Developer">Python Developer</option>
+              <option value="Web Developer">Web Developer</option>
+              <option value="Data Analyst">Data Analyst</option>
+              <option value="Software Engineer">Software Engineer</option>
+              <option value="QA Tester">QA Tester</option>
+            </select>
+            <button id="btn-save-role" class="btn btn-primary" style="white-space: nowrap;">
+              Save Role ✔
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Company Progress Tracking Bar Breakdown -->
+      <div class="card" style="margin-bottom: 24px; padding: 20px 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="font-size: 1.05rem; margin: 0;">📊 Company Preparation Progress</h3>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Independent progress tracked per company in database</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px;">
+          <div style="background: var(--bg-subtle); padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">🧮 Aptitude</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--primary-600);" id="prog-aptitude">0%</div>
+          </div>
+          <div style="background: var(--bg-subtle); padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">💻 Coding</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--emerald-600);" id="prog-coding">0%</div>
+          </div>
+          <div style="background: var(--bg-subtle); padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">⚙️ Technical</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: #0284c7;" id="prog-technical">0%</div>
+          </div>
+          <div style="background: var(--bg-subtle); padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">🎙️ AI Interview</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--violet-600);" id="prog-interview">0%</div>
+          </div>
+          <div style="background: var(--bg-subtle); padding: 12px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">🤝 HR Interview</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: #ea580c;" id="prog-hr">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: 8 PREPARATION MODULES -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <div>
+          <h2 style="font-size: 1.35rem; margin: 0;">🚀 Preparation Modules</h2>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;">
+            Targeted preparation modules curated for <span id="label-module-target" style="font-weight: 600; color: var(--primary-700);">TCS</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="modules-grid">
+        
+        <!-- Module 1: Aptitude Test -->
+        <div class="module-card">
+          <div>
+            <div class="module-icon-wrap" style="background: #eff6ff; color: #2563eb;">🧮</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 6px;">1. Aptitude Test</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;" id="mod-apt-desc">
+              Timed online assessment tailored to company numerical, logical, and verbal patterns.
+            </p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              <strong>Pattern:</strong> <span id="mod-apt-pattern">Loading...</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="fill-apt" style="width: 0%;"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" id="btn-start-aptitude" onclick="window.location.href='aptitude.html'+window.location.search">
+            Start Aptitude 🧮
+          </button>
+        </div>
+
+        <!-- Module 2: Coding Practice -->
+        <div class="module-card">
+          <div>
+            <div class="module-icon-wrap" style="background: #ecfdf5; color: #059669;">💻</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 6px;">2. Coding Practice</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;" id="mod-code-desc">
+              Algorithmic challenges matching the company difficulty and candidate's target job role.
+            </p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              <strong>Coding Round:</strong> <span id="mod-code-pattern">Loading...</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="fill-coding" style="width: 0%;"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" id="btn-start-coding" onclick="window.location.href='preparation.html'+(window.location.search ? window.location.search+'&mode=coding' : '?mode=coding')">
+            Start Coding 💻
+          </button>
+        </div>
+
+        <!-- Module 3: Technical Questions -->
+        <div class="module-card">
+          <div>
+            <div class="module-icon-wrap" style="background: #f0fdfa; color: #0d9488;">⚙️</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 6px;">3. Technical Questions</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+              Core domain questions covering OOPs, DBMS, SQL, DSA, and architecture.
+            </p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              <strong>Core Focus:</strong> <span id="mod-tech-pattern">Loading...</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="fill-technical" style="width: 0%;"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" id="btn-start-technical" onclick="window.location.href='preparation.html'+(window.location.search ? window.location.search+'&mode=technical' : '?mode=technical')">
+            Start Technical ⚙️
+          </button>
+        </div>
+
+        <!-- Module 4: HR Interview -->
+        <div class="module-card">
+          <div>
+            <div class="module-icon-wrap" style="background: #fdf2f8; color: #db2777;">🤝</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 6px;">4. HR Interview</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+              Behavioral, situational, and culture-fit preparation tailored to company interview guidelines.
+            </p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              <strong>HR Strategy:</strong> <span id="mod-hr-pattern">Loading...</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="fill-hr" style="width: 0%;"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" id="btn-start-hr" onclick="window.location.href='interview.html'+(window.location.search ? window.location.search+'&type=hr' : '?type=hr')">
+            Start HR Interview 🤝
+          </button>
+        </div>
+
+        <!-- Module 5: AI Mock Interview -->
+        <div class="module-card">
+          <div>
+            <div class="module-icon-wrap" style="background: #faf5ff; color: #9333ea;">🎙️</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 6px;">5. AI Mock Interview</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+              Dynamic AI interview simulation personalized to your target company, role, and resume project anecdotes.
+            </p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              <strong>Format:</strong> STAR behavioral + Technical deep dive
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="fill-interview" style="width: 0%;"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" id="btn-start-interview" onclick="window.location.href='interview.html'+(window.location.search ? window.location.search+'&type=mock' : '?type=mock')">
+            Start AI Interview 🎙️
+          </button>
+        </div>
+
+        <!-- Module 6: Resume Preparation -->
+        <div class="module-card">
+          <div>
+            <div class="module-icon-wrap" style="background: #fff7ed; color: #ea580c;">📄</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 6px;">6. Resume Preparation</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+              ATS resume analysis, keyword density scanner, and role-specific project recommendations.
+            </p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              <strong>Targeting:</strong> ATS Keywords & Skills Match
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="fill-resume" style="width: 0%;"></div>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-block" id="btn-prepare-resume" onclick="window.location.href='resume.html'+window.location.search">
+            Prepare Resume 📄
+          </button>
+        </div>
+
+        <!-- Module 7: Skill Assessment -->
+        <div class="module-card">
+          <div>
+            <div class="module-icon-wrap" style="background: #f0fdf4; color: #16a34a;">🟢</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 6px;">7. Skill Assessment</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+              3-tier matrix comparing your current technical proficiencies against company benchmarks.
+            </p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              <strong>Analysis:</strong> Strong vs Focus Areas
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="fill-skills" style="width: 0%;"></div>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-block" id="btn-assess-skills" onclick="window.location.href='skills.html'+window.location.search">
+            Assess Skills 🟢
+          </button>
+        </div>
+
+        <!-- Module 8: Learning Roadmap -->
+        <div class="module-card">
+          <div>
+            <div class="module-icon-wrap" style="background: #f8fafc; color: #475569;">🗺️</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 6px;">8. Learning Roadmap</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+              Step-by-step milestone curriculum covering core syllabus from week 1 through placement.
+            </p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              <strong>Milestones:</strong> Adaptive timeline
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="fill-roadmap" style="width: 0%;"></div>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-block" id="btn-view-roadmap" onclick="window.location.href='roadmap.html'+window.location.search">
+            View Roadmap 🗺️
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Round-by-Round Syllabus Breakdown Accordion -->
+      <div class="card" style="margin-top: 28px; padding: 24px;">
+        <h3 style="font-size: 1.15rem; margin-bottom: 14px;">📋 Company Recruitment Process & Syllabus</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+          <div style="background: var(--bg-subtle); padding: 14px; border-radius: 8px; border-left: 4px solid var(--primary-500);">
+            <strong style="color: var(--primary-800); font-size: 0.9rem;">📌 Hiring Rounds</strong>
+            <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 4px;" id="detail-rounds">Loading...</p>
+          </div>
+
+          <div style="background: var(--bg-subtle); padding: 14px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+            <strong style="color: #1d4ed8; font-size: 0.9rem;">🧮 Aptitude Pattern</strong>
+            <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 4px;" id="detail-aptitude">Loading...</p>
+          </div>
+
+          <div style="background: var(--bg-subtle); padding: 14px; border-radius: 8px; border-left: 4px solid #10b981;">
+            <strong style="color: #047857; font-size: 0.9rem;">💻 Coding Expectations</strong>
+            <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 4px;" id="detail-coding">Loading...</p>
+          </div>
+
+          <div style="background: var(--bg-subtle); padding: 14px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+            <strong style="color: #b45309; font-size: 0.9rem;">⚙️ Technical Domains</strong>
+            <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 4px;" id="detail-technical">Loading...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Company Practice MCQs & Previous Year Questions (PYQs) Section -->
+      <div class="card" style="margin-top: 28px; padding: 28px;" id="company-mcqs-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 22px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.5rem;">📝</span>
+              <h3 style="font-size: 1.3rem; margin: 0; color: var(--text-main);">Company Practice MCQs & Previous Year Questions</h3>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 6px;">
+              Practice top recruitment questions for <strong id="company-mcq-target-name" style="color: var(--primary-700);">Company</strong>. Options are listed vertically one below another (A, B, C, D).
+            </p>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <button class="btn btn-secondary" id="btn-refresh-company-mcqs" style="display: flex; align-items: center; gap: 8px;" title="Fetch fresh randomized questions for this company">
+              <span>🔄 Change / New Questions</span>
+            </button>
+            <button class="btn btn-primary" id="btn-launch-full-test" onclick="window.location.href='aptitude.html'+window.location.search" style="display: flex; align-items: center; gap: 8px;">
+              <span>⏱️ Start Full Assessment (15 Qs)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Company Question Category Tabs -->
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px;" id="company-track-tabs">
+          <button type="button" class="btn btn-primary btn-sm comp-track-btn" id="btn-track-apt" data-module="aptitude">
+            🧮 Aptitude & PYQs
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm comp-track-btn" id="btn-track-tech" data-module="technical">
+            ⚙️ Technical MCQs
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm comp-track-btn" id="btn-track-code" data-module="coding">
+            💻 Coding Challenges
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm comp-track-btn" id="btn-track-hr" data-module="hr">
+            🤝 HR & Cultural Fit
+          </button>
+        </div>
+
+        <div id="company-mcqs-list" style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- Loaded dynamically with 1-by-1 vertical options -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/script.js"></script>
+  <script src="js/company-prep.js"></script>
+</body>
+</html>

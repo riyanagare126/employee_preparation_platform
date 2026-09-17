@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Project Report — AI Employee Preparation Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4338ca;
+            --primary-light: #6366f1;
+            --primary-bg: #eef2ff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+            --card-bg: #ffffff;
+            --bg-page: #f8fafc;
+            --code-bg: #1e293b;
+            --code-text: #f1f5f9;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --warning: #d97706;
+            --warning-bg: #fffbeb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.65;
+            font-size: 15px;
+            padding-bottom: 60px;
+        }
+
+        /* Top Bar */
+        .top-action-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .top-action-bar .brand {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-action-bar .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-nav {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: #f1f5f9;
+            color: var(--text-main);
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13.5px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-print:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+        }
+
+        .btn-download {
+            background: #059669;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13.5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-download:hover {
+            background: #047857;
+            transform: translateY(-1px);
+        }
+
+        .btn-download-docx {
+            background: #2563eb;
+        }
+
+        .btn-download-docx:hover {
+            background: #1d4ed8;
+        }
+
+        /* Document Container */
+        .report-wrapper {
+            max-width: 960px;
+            margin: 30px auto;
+            background: var(--card-bg);
+            padding: 60px 70px;
+            border-radius: 14px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        /* Title & Header Section */
+        .report-header {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 30px;
+            margin-bottom: 35px;
+        }
+
+        .badge-academic {
+            display: inline-block;
+            background: var(--primary-bg);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(67, 56, 202, 0.2);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.25;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 17px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-bottom: 25px;
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            background: #f8fafc;
+            padding: 18px 22px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 13.5px;
+        }
+
+        .meta-item strong {
+            display: block;
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .meta-item span {
+            color: #475569;
+        }
+
+        /* Table of Contents */
+        .toc-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary-light);
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin: 30px 0;
+        }
+
+        .toc-box h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .toc-box ol {
+            padding-left: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 30px;
+        }
+
+        .toc-box a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 500;
+        }
+
+        .toc-box a:hover {
+            text-decoration: underline;
+        }
+
+        /* Content Sections */
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 45px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 24px 0 10px 0;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: #334155;
+            line-height: 1.7;
+        }
+
+        ul, ol {
+            margin-bottom: 16px;
+            padding-left: 22px;
+            color: #334155;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-weight: 600;
+            text-align: left;
+            padding: 11px 15px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        td {
+            padding: 11px 15px;
+            border-bottom: 1px solid var(--border);
+            color: #334155;
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        /* Code & Pre */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 16px 20px;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.55;
+            overflow-x: auto;
+            margin: 18px 0;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            background: #f1f5f9;
+            color: #e11d48;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* Callouts / Alerts */
+        .callout {
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            font-size: 14px;
+        }
+
+        .callout-info {
+            background: var(--primary-bg);
+            border-color: var(--primary-light);
+            color: #1e1b4b;
+        }
+
+        .callout-success {
+            background: var(--success-bg);
+            border-color: var(--success);
+            color: #064e3b;
+        }
+
+        .callout-warning {
+            background: var(--warning-bg);
+            border-color: var(--warning);
+            color: #78350f;
+        }
+
+        .callout strong {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Formula Box */
+        .formula-card {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 18px 24px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin: 20px 0;
+            letter-spacing: 0.3px;
+        }
+
+        /* Q&A / Viva Blocks */
+        .viva-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .viva-q {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 15px;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .viva-a {
+            color: #334155;
+            line-height: 1.65;
+            font-size: 14.5px;
+            border-left: 3px solid #cbd5e1;
+            padding-left: 14px;
+            margin-top: 6px;
+        }
+
+        /* Architecture Diagram Flow */
+        .arch-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 22px 0;
+        }
+
+        .arch-layer {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px 18px;
+        }
+
+        .arch-layer-title {
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .arch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .arch-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1e293b;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        }
+
+        /* Print Stylesheet */
+        @media print {
+            body {
+                background: #ffffff;
+                color: #000000;
+                font-size: 12pt;
+                line-height: 1.5;
+                padding-bottom: 0;
+            }
+
+            .top-action-bar {
+                display: none !important;
+            }
+
+            .report-wrapper {
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+                border: none;
+            }
+
+            h1 {
+                font-size: 24pt;
+            }
+
+            h2 {
+                font-size: 16pt;
+                page-break-after: avoid;
+            }
+
+            pre, table, .viva-card, .callout {
+                page-break-inside: avoid;
+            }
+
+            a {
+                text-decoration: none;
+                color: #000000;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Navigation / Print Toolbar -->
+    <div class="top-action-bar">
+        <div class="brand">
+            <span>🎓</span> AI Employee Preparation Platform — Final Project Report
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html" class="btn-nav">← Dashboard</a>
+            <a href="FINAL_PROJECT_REPORT.pdf" download="AI_Employee_Preparation_Platform_Final_Report.pdf" class="btn-download" title="Direct PDF Download">
+                📥 Download PDF
+            </a>
+            <a href="FINAL_PROJECT_REPORT.docx" download="AI_Employee_Preparation_Platform_Final_Report.docx" class="btn-download btn-download-docx" title="Direct Word Document Download">
+                📥 Download Word (.docx)
+            </a>
+            <button class="btn-print" onclick="window.print()">
+                🖨️ Print
+            </button>
+        </div>
+    </div>
+
+    <div class="report-wrapper">
+
+        <!-- Header -->
+        <header class="report-header">
+            <div class="badge-academic">Academic & Industry Technical Documentation</div>
+            <h1>Next-Gen AI Employee Preparation & Placement Readiness Platform</h1>
+            <div class="subtitle">Comprehensive Final Project Report, System Architecture Blueprint & Viva Voce Guide</div>
+
+            <div class="metadata-grid">
+                <div class="meta-item">
+                    <strong>Academic Year</strong>
+                    <span>2025 – 2026</span>
+                </div>
+                <div class="meta-item">
+                    <strong>System Version</strong>
+                    <span>v2.0 (Enterprise Placement Edition)</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Backend Architecture</strong>
+                    <span>Flask WSGI (5000) & FastAPI ASGI (8000)</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Database Engine</strong>
+                    <span>SQLite3 Relational DB & SQLAlchemy ORM</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Client-Side Engine</strong>
+                    <span>Semantic HTML5, CSS3 Tokens, Modular JS</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Verification Suite</strong>
+                    <span>100% Endpoints Passed (7/7 Suites)</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Table of Contents -->
+        <nav class="toc-box">
+            <h3>📑 Table of Contents</h3>
+            <ol>
+                <li><a href="#section-1">1. Abstract & Executive Summary</a></li>
+                <li><a href="#section-2">2. Problem Statement & Motivation</a></li>
+                <li><a href="#section-3">3. System Architecture & Tech Design</a></li>
+                <li><a href="#section-4">4. Database Schema & Data Models</a></li>
+                <li><a href="#section-5">5. Core Modules Implementation</a></li>
+                <li><a href="#section-6">6. 5-Pillar Score Calculation</a></li>
+                <li><a href="#section-7">7. 2026 AI Fluency & Pitch Engines</a></li>
+                <li><a href="#section-8">8. REST API Reference</a></li>
+                <li><a href="#section-9">9. Testing & Quality Assurance</a></li>
+                <li><a href="#section-10">10. Viva Voce & Defense Q&A</a></li>
+            </ol>
+        </nav>
+
+        <!-- Section 1 -->
+        <section id="section-1">
+            <h2>1. Abstract & Executive Summary</h2>
+            <p>
+                In the contemporary campus recruitment and corporate hiring landscape of 2026, traditional candidate preparation methodologies have become severely disconnected from enterprise evaluation standards. Tier-1 enterprise recruiters—including Google, Microsoft, Amazon, Tata Consultancy Services (TCS), and Infosys—have fundamentally transformed their screening funnels:
+            </p>
+            <ul>
+                <li><strong>Algorithmic ATS Gatekeeping:</strong> Over 75% of candidate resumes are filtered out before human evaluation due to parsing failures caused by multi-column formats or missing semantic keywords aligned with corporate job descriptions.</li>
+                <li><strong>Enterprise Preparation Divergence:</strong> Preparation cannot be one-size-fits-all; an applicant targeting TCS requires extensive foundational quantitative aptitude and core OOPs/DBMS, whereas an Amazon or Google applicant is evaluated on distributed systems, algorithmic complexity, and behavioral leadership rubrics.</li>
+                <li><strong>The 2026 "AI Fluency" Round:</strong> Modern engineering organizations evaluate how candidates leverage AI coding assistants (e.g. GitHub Copilot, Cursor) while enforcing a rigorous zero-trust verification mindset, automated test generation, and invariant assertions.</li>
+                <li><strong>The 60-Second Verbal Filter:</strong> Over 80% of hiring impressions are formed during the introductory "Tell me about yourself" answer.</li>
+            </ul>
+            <p>
+                The <strong>AI Employee Preparation & Placement Readiness Platform</strong> is an end-to-end, production-ready system providing unified diagnostic testing, enterprise-calibrated smart roadmaps, single-column ATS resume engineering, conversational AI mock interviews, and real-time gamification.
+            </p>
+        </section>
+
+        <!-- Section 2 -->
+        <section id="section-2">
+            <h2>2. Problem Statement & Project Objectives</h2>
+            <div class="callout callout-warning">
+                <strong>Industry Problem:</strong>
+                Candidates face fragmented preparation across disparate single-purpose sites (LeetCode for coding, IndiaBIX for aptitude, Canva for non-ATS resumes), leaving candidates with zero holistic visibility into their true enterprise job-readiness.
+            </div>
+            <h3>Key Project Objectives:</h3>
+            <ol>
+                <li><strong>Holistic Job Readiness:</strong> Unify aptitude tests, live coding sandbox, resume ATS scoring, behavioral pitches, and AI fluency into an integrated 5-pillar composite index (0–100%).</li>
+                <li><strong>Company-Specific Roadmaps:</strong> Dynamically generate 7, 14, 30, or 60-day structured preparation schedules tailored to specific enterprise syllabi (e.g. TCS vs. Amazon).</li>
+                <li><strong>Recruiter-Approved ATS Resumes:</strong> Provide single-column ATS layouts with real-time AI STAR bullet enhancement and instant print-to-PDF formatting.</li>
+                <li><strong>Zero-Friction Evaluation:</strong> Guarantee 1-click execution, self-healing database initialization, and pre-seeded student and administrator accounts for seamless viva demonstration.</li>
+            </ol>
+        </section>
+
+        <!-- Section 3 -->
+        <section id="section-3">
+            <h2>3. System Architecture & Technical Design</h2>
+            <p>
+                The system adheres to a clean, modular <strong>Client-Server Architecture</strong> with strict separation of presentation, business logic, and persistence.
+            </p>
+
+            <div class="arch-diagram">
+                <div class="arch-layer">
+                    <div class="arch-layer-title">Layer 1: Presentation & Client UI (Zero Framework Overhead)</div>
+                    <div class="arch-grid">
+                        <div class="arch-box">Semantic HTML5 Templates</div>
+                        <div class="arch-box">Vanilla CSS3 Design Tokens (Dark Theme)</div>
+                        <div class="arch-box">ES6+ Modular JavaScript Controllers</div>
+                        <div class="arch-box">Responsive & Print Stylesheets</div>
+                    </div>
+                </div>
+
+                <div class="arch-layer">
+                    <div class="arch-layer-title">Layer 2: Dual Web & Application Server Engines</div>
+                    <div class="arch-grid">
+                        <div class="arch-box">Flask WSGI Engine (Port 5000)</div>
+                        <div class="arch-box">FastAPI ASGI Engine (Port 8000)</div>
+                        <div class="arch-box">17 Modular Blueprints / Sub-Routers</div>
+                        <div class="arch-box">CORS & JSON Exception Middleware</div>
+                    </div>
+                </div>
+
+                <div class="arch-layer">
+                    <div class="arch-layer-title">Layer 3: Core Service & Business Logic Engines</div>
+                    <div class="arch-grid">
+                        <div class="arch-box">5-Pillar Readiness Calculator</div>
+                        <div class="arch-box">Enterprise Smart Roadmap Engine</div>
+                        <div class="arch-box">ATS Resume & STAR Rewriter</div>
+                        <div class="arch-box">AI Fluency 4-Pillar Grader</div>
+                        <div class="arch-box">60s Speech Duration Meter</div>
+                        <div class="arch-box">Admin Trend & Template CMS</div>
+                    </div>
+                </div>
+
+                <div class="arch-layer">
+                    <div class="arch-layer-title">Layer 4: Relational Persistence Layer</div>
+                    <div class="arch-grid">
+                        <div class="arch-box">SQLite3 Embedded Database (employees.db)</div>
+                        <div class="arch-box">SQLAlchemy Declarative Models</div>
+                        <div class="arch-box">Foreign Key Enforcement (CASCADE)</div>
+                        <div class="arch-box">Parameterized Query Protection</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section id="section-4">
+            <h2>4. Relational Database Schema & Data Models</h2>
+            <p>
+                The database schema is structured into normalized tables enforcing data integrity, cascade deletions, and index optimization.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Table Name</th>
+                        <th>Primary Key</th>
+                        <th>Foreign Key</th>
+                        <th>Core Responsibilities</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>employees</code></td>
+                        <td><code>id</code> (Auto)</td>
+                        <td>None</td>
+                        <td>User credentials, hashed password, target role & company, extracted skills, admin flag.</td>
+                    </tr>
+                    <tr>
+                        <td><code>smart_roadmaps</code></td>
+                        <td><code>id</code> (Auto)</td>
+                        <td><code>employee_id</code></td>
+                        <td>Stores enterprise roadmaps, target duration, progress percentage, and streak counter.</td>
+                    </tr>
+                    <tr>
+                        <td><code>roadmap_tasks</code></td>
+                        <td><code>id</code> (Auto)</td>
+                        <td><code>roadmap_id</code></td>
+                        <td>Day-by-day tasks, phase classifications, time estimates, and completion status.</td>
+                    </tr>
+                    <tr>
+                        <td><code>resume_versions</code></td>
+                        <td><code>id</code> (Auto)</td>
+                        <td><code>employee_id</code></td>
+                        <td>Custom resume snapshots, template layout reference, and calculated ATS score.</td>
+                    </tr>
+                    <tr>
+                        <td><code>ai_fluency_attempts</code></td>
+                        <td><code>id</code> (Auto)</td>
+                        <td><code>employee_id</code></td>
+                        <td>Records AI interview responses, 4-pillar grades, feedback, and AI rewrites.</td>
+                    </tr>
+                    <tr>
+                        <td><code>structured_answers</code></td>
+                        <td><code>id</code> (Auto)</td>
+                        <td><code>employee_id</code></td>
+                        <td>Stores 3-box elevator pitches (Present, Past, Future), word counts, and spoken duration.</td>
+                    </tr>
+                    <tr>
+                        <td><code>trend_insights</code></td>
+                        <td><code>id</code> (Auto)</td>
+                        <td>None</td>
+                        <td>CMS knowledge base delivering active 2026 hiring trends to student dashboards.</td>
+                    </tr>
+                    <tr>
+                        <td><code>gamification</code></td>
+                        <td><code>employee_id</code></td>
+                        <td><code>employees(id)</code></td>
+                        <td>Maintains XP points, current player level, daily streak count, and badge JSON array.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 5 & 6 -->
+        <section id="section-6">
+            <h2>5. The 5-Pillar Employee Readiness Score Engine</h2>
+            <p>
+                Rather than relying on subjective self-evaluations, the platform implements a transparent mathematical formula to calculate aggregate employability:
+            </p>
+
+            <div class="formula-card">
+                Readiness Score = (0.25 × Aptitude) + (0.25 × Coding) + (0.20 × Technical Domain) + (0.15 × Mock Interview) + (0.15 × Resume ATS)
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pillar</th>
+                        <th>Weight</th>
+                        <th>Evaluation Mechanism</th>
+                        <th>Benchmark for Job-Readiness</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Aptitude & Logic</strong></td>
+                        <td>25%</td>
+                        <td>Timed quantitative, reasoning & verbal tests with tab-switch detection</td>
+                        <td>≥ 75% accuracy</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Coding Problem Solving</strong></td>
+                        <td>25%</td>
+                        <td>Algorithmic sandbox execution, edge-case test suite validation</td>
+                        <td>≥ 3 problems solved (Medium+)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technical Domain</strong></td>
+                        <td>20%</td>
+                        <td>Role-specific technical depth (SQL, OOPs, System Architecture, Web APIs)</td>
+                        <td>≥ 80% competency match</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Mock Interview</strong></td>
+                        <td>15%</td>
+                        <td>Dynamic conversational interviews evaluating communication and technical rigor</td>
+                        <td>≥ 75% overall rubric</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ATS Resume Score</strong></td>
+                        <td>15%</td>
+                        <td>Single-column ATS format compliance & enterprise JD keyword matching</td>
+                        <td>≥ 80% keyword match</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 7 -->
+        <section id="section-7">
+            <h2>6. 2026 AI Fluency & 60-Second Pitch Engines</h2>
+            
+            <h3>A. The 2026 AI Fluency Round</h3>
+            <p>
+                Leading tech organizations in 2026 test candidate maturity when using AI assistants. The platform grades candidate responses across 4 key dimensions:
+            </p>
+            <ul>
+                <li><strong>Tool Integration (25%):</strong> How intelligently AI is prompted for boilerplate scaffolding and initial diagnosis.</li>
+                <li><strong>Verification Mindset (35% - Critical):</strong> Enforcing automated unit tests, checking boundary conditions, and validating logic before deploying.</li>
+                <li><strong>Workflow Velocity (20%):</strong> Demonstrating measurable time-to-delivery improvements.</li>
+                <li><strong>Engineering Authenticity (20%):</strong> Communicating with architectural clarity rather than reciting generic AI outputs.</li>
+            </ul>
+
+            <h3>B. Present-Past-Future 60-Second Pitch Builder</h3>
+            <p>
+                Solves the common interview failure of rambling through unstructured self-introductions:
+            </p>
+            <ul>
+                <li><strong>Box 1: Present</strong> — Current technical identity, tech stack, and active project focus.</li>
+                <li><strong>Box 2: Past</strong> — Quantifiable past achievements, performance metrics, and leadership impact.</li>
+                <li><strong>Box 3: Future</strong> — Strategic alignment with the target company and 90-day contribution goals.</li>
+                <li><strong>Real-Time Speaking Gauge:</strong> Calibrated to 140 words per minute. Visual feedback guides candidates toward the 50–70 second target window (120–165 words).</li>
+            </ul>
+        </section>
+
+        <!-- Section 8 -->
+        <section id="section-8">
+            <h2>7. REST API Reference Summary</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>HTTP Method</th>
+                        <th>Endpoint Path</th>
+                        <th>Module</th>
+                        <th>Primary Responsibility</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>POST</code></td>
+                        <td><code>/api/auth/login</code></td>
+                        <td>Auth</td>
+                        <td>Validates credentials, checks admin status, issues session token</td>
+                    </tr>
+                    <tr>
+                        <td><code>GET</code></td>
+                        <td><code>/api/dashboard/summary</code></td>
+                        <td>Dashboard</td>
+                        <td>Returns 5-pillar scores, readiness percentage, trends, and history</td>
+                    </tr>
+                    <tr>
+                        <td><code>POST</code></td>
+                        <td><code>/api/roadmap/smart/generate</code></td>
+                        <td>Roadmap</td>
+                        <td>Generates customized day-wise schedule for target company & duration</td>
+                    </tr>
+                    <tr>
+                        <td><code>POST</code></td>
+                        <td><code>/api/roadmap/smart/task/toggle</code></td>
+                        <td>Roadmap</td>
+                        <td>Toggles task completion and updates roadmap progress percentage</td>
+                    </tr>
+                    <tr>
+                        <td><code>POST</code></td>
+                        <td><code>/api/resume/rewrite-bullet</code></td>
+                        <td>Resume</td>
+                        <td>Transforms raw bullet points into quantifiable STAR statements</td>
+                    </tr>
+                    <tr>
+                        <td><code>POST</code></td>
+                        <td><code>/api/resume/score-ats</code></td>
+                        <td>Resume</td>
+                        <td>Calculates keyword match score against target Job Description</td>
+                    </tr>
+                    <tr>
+                        <td><code>POST</code></td>
+                        <td><code>/api/ai-fluency/evaluate</code></td>
+                        <td>AI Fluency</td>
+                        <td>Grades AI interview answer across 4 pillars and returns rewritten sample</td>
+                    </tr>
+                    <tr>
+                        <td><code>POST</code></td>
+                        <td><code>/api/answer-builder/analyze</code></td>
+                        <td>Pitch Builder</td>
+                        <td>Analyzes 3-box pitch, calculates speech duration, and generates polished version</td>
+                    </tr>
+                    <tr>
+                        <td><code>GET/POST</code></td>
+                        <td><code>/api/admin/trends</code></td>
+                        <td>Admin CMS</td>
+                        <td>Real-time CRUD operations for hiring trends and placement tips</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 9 -->
+        <section id="section-9">
+            <h2>8. Testing & Quality Assurance Verification</h2>
+            <div class="callout callout-success">
+                <strong>100% Automated Test Suite Pass Rate:</strong>
+                All 7 test suites encompassing dashboard metrics, smart roadmaps, ATS resume generation, AI fluency evaluation, 60s pitch builder, Admin CMS, and legacy compatibility passed verification without errors.
+            </div>
+
+            <pre><code>==================================================
+RUNNING 2026 FEATURE SUITE VERIFICATION
+==================================================
+[1/7] Testing Main Dashboard Summary...       [OK] Stats, Trends & Session History
+[2/7] Testing Smart Prep Roadmap...           [OK] Generation & Task State Persistence
+[3/7] Testing Trending Resume Templates...    [OK] ATS Match (88%) & STAR Bullet Rewriter
+[4/7] Testing 2026 AI Fluency Round...        [OK] 4-Pillar Grading & Natural AI Rewrite
+[5/7] Testing 60s Pitch Builder...            [OK] Speech Pacing Meter & Structure Score
+[6/7] Testing Admin CMS Endpoints...          [OK] Real-time CRUD on Trends & Questions
+[7/7] Verifying Preserved Existing Features... [OK] Aptitude, Coding Sandbox & Resume Extractor
+==================================================
+ALL 7 CORE MODULES & CMS PASS 100% SUITE VERIFICATION!
+==================================================</code></pre>
+        </section>
+
+        <!-- Section 10 -->
+        <section id="section-10">
+            <h2>9. Viva Voce Defense Guide (Top Evaluator Questions & Answers)</h2>
+
+            <div class="viva-card">
+                <div class="viva-q"><span>Q1:</span> How does this platform differ from standard placement portals?</div>
+                <div class="viva-a">
+                    Traditional platforms operate in silos—LeetCode for coding, IndiaBIX for aptitude, and Canva for unparsable multi-column resumes. Our system consolidates all prep dimensions into an objective 5-Pillar Readiness Score and introduces 2026 hiring standards: enterprise-tailored smart roadmaps, single-column ATS resume scoring, the 2026 AI Fluency Round, and the 60-Second Pitch Builder.
+                </div>
+            </div>
+
+            <div class="viva-card">
+                <div class="viva-q"><span>Q2:</span> What is the significance of the 2026 AI Fluency Round?</div>
+                <div class="viva-a">
+                    Modern tech employers do not ask whether candidates know AI; they test whether candidates use AI tools (Copilot, Cursor) safely and effectively. Our grading engine evaluates candidates on Tool Integration, Verification Mindset (writing automated tests and checking invariants), Velocity, and Authenticity.
+                </div>
+            </div>
+
+            <div class="viva-card">
+                <div class="viva-q"><span>Q3:</span> How does the platform enforce anti-cheating during tests?</div>
+                <div class="viva-a">
+                    Test sessions generate a unique cryptographic session token. The frontend monitors browser tab-switching and window blurs, flagging violations. Server-side timestamps prevent client-side timer manipulation.
+                </div>
+            </div>
+
+            <div class="viva-card">
+                <div class="viva-q"><span>Q4:</span> How is the backend structured to support both Flask and FastAPI?</div>
+                <div class="viva-a">
+                    The backend uses a shared relational database (SQLite3) managed with SQLAlchemy declarative models. Standard requests execute via Flask WSGI on port 5000, while asynchronous workloads can run via FastAPI ASGI on port 8000 using Uvicorn.
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 11 -->
+        <section id="section-11">
+            <h2>10. Conclusion</h2>
+            <p>
+                The <strong>AI Employee Preparation & Placement Readiness Platform</strong> is a complete, production-ready solution bridging the gap between student preparation and modern enterprise hiring expectations. By combining 2026 recruitment standards, single-column ATS compliance, company-specific roadmaps, conversational AI fluency evaluations, and gamified motivation, the platform provides an effective, full-featured career preparation environment.
+            </p>
+        </section>
+
+    </div>
+
+</body>
+</html>

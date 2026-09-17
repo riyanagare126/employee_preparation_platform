@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Company-Specific AI Smart Prep Roadmap with Day-wise Checklist & Streak Tracker">
+  <title>Smart Prep Roadmap | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Protected Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="brand-icon">⚡</span>
+        <span>Employee<span class="brand-highlight">Prep</span> AI</span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="roadmap.html" class="nav-link active">Smart Roadmap</a></li>
+        <li><a href="resume.html" class="nav-link">Resume Builder</a></li>
+        <li><a href="ai-fluency.html" class="nav-link">AI Fluency</a></li>
+        <li><a href="answer-builder.html" class="nav-link">60s Pitch</a></li>
+        <li><a href="interview.html" class="nav-link">AI Interview</a></li>
+        <li><a href="preparation.html" class="nav-link">Coding</a></li>
+        <li><a href="aptitude.html" class="nav-link">Aptitude</a></li>
+        <li><a href="companies.html" class="nav-link">Companies</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="badge badge-primary">🗺️ 2026 Smart Prep Roadmap</span>
+          <h1 style="font-size: 2rem; margin-top: 4px;" id="roadmap-heading">Company-Specific Day-Wise Prep Roadmap</h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            AI tailors your day-by-day practice to that enterprise's typical interview rounds, testing patterns, and culture.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <button id="btn-auto-adjust" class="btn btn-outline-primary btn-sm" title="Adjust roadmap based on your recent quiz and interview scores">
+            ⚡ Auto-Calibrate with AI
+          </button>
+        </div>
+      </div>
+
+      <!-- Roadmap Setup Controls Card -->
+      <div class="card" style="padding: 24px; margin-bottom: 24px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+        <h2 style="font-size: 1.15rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+          <span>🎯</span> <span>Configure Target Enterprise Roadmap</span>
+        </h2>
+
+        <form id="form-generate-roadmap" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; align-items: end;">
+          <!-- Target Company Searchable / Dropdown -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="select-target-company" class="form-label">Target Enterprise</label>
+            <select id="select-target-company" class="form-select" required>
+              <option value="Tata Consultancy Services (TCS)" data-slug="tcs">Tata Consultancy Services (TCS)</option>
+              <option value="Infosys" data-slug="infosys">Infosys</option>
+              <option value="Wipro" data-slug="wipro">Wipro</option>
+              <option value="Google" data-slug="google">Google</option>
+              <option value="Microsoft" data-slug="microsoft">Microsoft</option>
+              <option value="Amazon" data-slug="amazon">Amazon</option>
+              <option value="Flipkart" data-slug="flipkart">Flipkart</option>
+              <option value="Zomato" data-slug="zomato">Zomato</option>
+              <option value="Deloitte" data-slug="deloitte">Deloitte</option>
+              <option value="Goldman Sachs" data-slug="goldman">Goldman Sachs</option>
+              <option value="Custom / Other Enterprise" data-slug="custom">Other / Custom Enterprise...</option>
+            </select>
+          </div>
+
+          <!-- Custom Company Input (conditional) -->
+          <div class="form-group" id="custom-company-group" style="display: none; margin-bottom: 0;">
+            <label for="input-custom-company" class="form-label">Enterprise Name</label>
+            <input type="text" id="input-custom-company" class="form-control" placeholder="e.g. Uber, Adobe, Oracle">
+          </div>
+
+          <!-- Target Role -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="select-target-role" class="form-label">Target Role</label>
+            <select id="select-target-role" class="form-select" required>
+              <option value="Software Engineer">Software Engineer</option>
+              <option value="Java Developer">Java Developer</option>
+              <option value="Python / AI Engineer">Python / AI Engineer</option>
+              <option value="Full Stack Developer">Full Stack Developer</option>
+              <option value="Frontend Engineer">Frontend Engineer</option>
+              <option value="Cloud / DevOps Engineer">Cloud / DevOps Engineer</option>
+              <option value="Data Analyst">Data Analyst</option>
+            </select>
+          </div>
+
+          <!-- Duration -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="select-duration" class="form-label">Prep Duration</label>
+            <select id="select-duration" class="form-select" required>
+              <option value="7">⚡ 7 Days (Sprint / Rapid Prep)</option>
+              <option value="14" selected>📅 14 Days (Intensive Dual-Pillar)</option>
+              <option value="30">🏆 30 Days (Comprehensive Mastery)</option>
+              <option value="60">🎓 60 Days (Full Placement Track)</option>
+            </select>
+          </div>
+
+          <!-- Submit Button -->
+          <div>
+            <button type="submit" class="btn btn-primary btn-block" id="btn-generate-submit" style="font-weight: 700;">
+              Generate AI Roadmap 🚀
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Roadmap Header Stats: Progress Bar + Streak Tracker -->
+      <div class="card" style="padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 14px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <h2 style="font-size: 1.3rem; margin: 0;" id="active-roadmap-title">Tata Consultancy Services (TCS) — 14 Days</h2>
+              <span class="badge badge-success" id="active-roadmap-role-badge">Java Developer</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 4px;" id="active-roadmap-notes">
+              Tailored to company interview pattern. Click task checkboxes as you complete daily goals.
+            </p>
+          </div>
+
+          <div style="display: flex; gap: 20px; align-items: center;">
+            <div style="text-align: center; background: #fff7ed; border: 1px solid #fed7aa; padding: 8px 16px; border-radius: var(--radius-md);">
+              <div style="font-size: 0.72rem; color: #ea580c; text-transform: uppercase; font-weight: 700;">Prep Streak</div>
+              <div style="font-size: 1.4rem; font-weight: 800; color: #c2410c;" id="roadmap-streak-val">🔥 5d</div>
+            </div>
+
+            <div style="text-align: right;">
+              <div style="font-size: 1.8rem; font-weight: 800; color: var(--primary-600); line-height: 1;" id="roadmap-pct-text">
+                35.7%
+              </div>
+              <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;" id="roadmap-tasks-ratio">
+                5 of 14 tasks completed
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-bg" style="height: 12px; border-radius: var(--radius-full);">
+          <div class="progress-bar-fill fill-primary" id="roadmap-bar-fill" style="width: 35.7%;"></div>
+        </div>
+      </div>
+
+      <!-- AI Calibration Notice Box (Shown when auto-adjusted) -->
+      <div id="calibration-alert" style="display: none; padding: 14px 18px; background: #ecfeff; border-left: 4px solid #06b6d4; border-radius: var(--radius-sm); margin-bottom: 24px; font-size: 0.9rem; color: #0e7490;"></div>
+
+      <!-- Day-by-Day Checklist UI -->
+      <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-size: 1.25rem; margin: 0;">📅 Day-Wise Schedule & Checklist</h2>
+        <div style="font-size: 0.84rem; color: var(--text-muted);">
+          Checked tasks save instantly to database
+        </div>
+      </div>
+
+      <div id="roadmap-tasks-container" class="roadmap-calendar-container">
+        <div style="color: var(--text-muted); padding: 20px; text-align: center;">Loading day-wise schedule...</div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/script.js"></script>
+  <script src="js/roadmap.js"></script>
+</body>
+</html>

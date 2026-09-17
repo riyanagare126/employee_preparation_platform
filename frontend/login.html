@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login to AI Employee Preparation Platform">
+  <title>Employee Login | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Minimal Header -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon">🤖</span>
+        <span>AI Employee <span class="brand-highlight">Prep</span></span>
+      </a>
+      <div>
+        <a href="register.html" class="btn btn-outline-primary btn-sm">Need an account? Register</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="auth-wrapper">
+        <div class="auth-box">
+          <div class="auth-header">
+            <div class="auth-icon">🔐</div>
+            <h1 class="auth-title">Welcome Back</h1>
+            <p class="auth-subtitle">Sign in to continue your placement preparation</p>
+          </div>
+
+          <!-- Alert Box -->
+          <div id="login-alert" style="display: none; padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 20px; font-size: 0.9rem; font-weight: 500;"></div>
+
+          <form id="login-form">
+            <!-- Email -->
+            <div class="form-group">
+              <label for="login-email" class="form-label">Email Address</label>
+              <input type="email" id="login-email" name="email" class="form-control" placeholder="e.g. user@example.com" required autocomplete="email">
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label for="login-password" class="form-label">Password</label>
+              <input type="password" id="login-password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-login-submit" style="margin-top: 12px;">
+              Login to Dashboard 🚀
+            </button>
+          </form>
+
+          <!-- 1-Click Quick Demo Access for College Presentation -->
+          <div style="margin-top: 20px; padding: 16px; background: var(--bg-subtle); border-radius: var(--radius-md); border: 1px dashed var(--border-color); text-align: center;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+              🎓 College Demo / 1-Click Login
+            </div>
+            <div style="display: flex; gap: 8px; flex-direction: column;">
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-demo-student" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; cursor: pointer;">
+                <span>⚡</span> <span>Demo Student Login (Rahul Sharma)</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-demo-admin" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; cursor: pointer;">
+                <span>🛡️</span> <span>Platform Admin Login</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-footer">
+            Don't have an account yet? <a href="register.html" style="font-weight: 600;">Register here</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Redirect if already authenticated
+      redirectIfLoggedIn();
+
+      const form = document.getElementById("login-form");
+      const alertBox = document.getElementById("login-alert");
+      const submitBtn = document.getElementById("btn-login-submit");
+
+      const btnDemoStudent = document.getElementById("btn-demo-student");
+      const btnDemoAdmin = document.getElementById("btn-demo-admin");
+
+      if (btnDemoStudent) {
+        btnDemoStudent.addEventListener("click", () => {
+          document.getElementById("login-email").value = "student@prep.com";
+          document.getElementById("login-password").value = "Student123!";
+          submitBtn.click();
+        });
+      }
+
+      if (btnDemoAdmin) {
+        btnDemoAdmin.addEventListener("click", () => {
+          document.getElementById("login-email").value = "admin@prep.com";
+          document.getElementById("login-password").value = "AdminPassword123!";
+          submitBtn.click();
+        });
+      }
+
+      function showAlert(msg, isSuccess = false) {
+        alertBox.style.display = "block";
+        alertBox.textContent = msg;
+        if (isSuccess) {
+          alertBox.style.background = "#d1fae5";
+          alertBox.style.color = "#065f46";
+          alertBox.style.border = "1px solid #a7f3d0";
+        } else {
+          alertBox.style.background = "#fee2e2";
+          alertBox.style.color = "#991b1b";
+          alertBox.style.border = "1px solid #fecaca";
+        }
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("login-email").value.trim();
+        const password = document.getElementById("login-password").value;
+
+        if (!email || !password) {
+          showAlert("Please enter both email and password.");
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Authenticating...";
+
+        try {
+          const response = await fetch(`${API_BASE}/api/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success && data.employee) {
+            showAlert("Login successful! Redirecting...", true);
+            showToast("Login successful!", "success");
+
+            // Save employee object and target company in localStorage
+            localStorage.setItem("loggedInEmployee", JSON.stringify(data.employee));
+            if (data.employee.target_company) {
+              localStorage.setItem("selectedCompany", JSON.stringify({
+                slug: data.employee.target_company_slug || "tcs",
+                name: data.employee.target_company,
+                role: data.employee.target_role || data.employee.job_role || "Software Engineer"
+              }));
+            }
+
+            setTimeout(() => {
+              window.location.href = "dashboard.html";
+            }, 500);
+          } else {
+            showAlert(data.message || "Incorrect email or password.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Login to Dashboard 🚀";
+          }
+        } catch (err) {
+          console.error("Login request error:", err);
+          showAlert("Could not connect to backend server. Please ensure the backend is running at " + API_BASE);
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Login to Dashboard 🚀";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
