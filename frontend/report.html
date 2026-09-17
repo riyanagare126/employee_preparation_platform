@@ -463,6 +463,63 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.03);
         }
 
+        /* Mobile Responsive Stylesheet */
+        @media (max-width: 768px) {
+            .top-action-bar {
+                padding: 10px 14px;
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            .top-action-bar .brand {
+                font-size: 14px;
+                justify-content: center;
+                text-align: center;
+            }
+            .top-action-bar .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            .btn-nav, .btn-download, .btn-print {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            .report-wrapper {
+                padding: 24px 16px;
+                border-radius: 0;
+            }
+            .report-header h1 {
+                font-size: 22px;
+            }
+            .report-header .subtitle {
+                font-size: 14px;
+            }
+            .metadata-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .toc-box ol {
+                grid-template-columns: 1fr;
+            }
+            .formula-card {
+                font-size: 13px;
+                padding: 14px 12px;
+                overflow-x: auto;
+            }
+            table {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            pre {
+                overflow-x: auto;
+                font-size: 12px;
+                padding: 12px;
+            }
+        }
+
         /* Print Stylesheet */
         @media print {
             body {

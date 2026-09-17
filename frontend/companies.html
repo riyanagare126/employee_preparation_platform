@@ -55,14 +55,14 @@
 
       <!-- Search & Filters Toolbar -->
       <div class="card" style="margin-bottom: 24px; padding: 16px 20px;">
-        <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 16px; align-items: center;">
-          <div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 14px; align-items: end;">
+          <div style="flex: 2; min-width: min(100%, 220px);">
             <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Search Company / Skills</label>
-            <input type="text" id="company-search" class="form-input" placeholder="Search TCS, Infosys, Google, Python, Java, Cloud..." style="padding: 9px 12px;">
+            <input type="text" id="company-search" class="form-input form-control" placeholder="Search TCS, Infosys, Google, Python, Java, Cloud..." style="padding: 9px 12px; width: 100%;">
           </div>
           <div>
             <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Category</label>
-            <select id="filter-category" class="form-input" style="padding: 9px 12px;">
+            <select id="filter-category" class="form-input form-select" style="padding: 9px 12px; width: 100%;">
               <option value="All">All Categories</option>
               <option value="IT Services">IT Services & Consulting</option>
               <option value="Consulting">Consulting & Advisory</option>
@@ -72,7 +72,7 @@
           </div>
           <div>
             <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Difficulty</label>
-            <select id="filter-difficulty" class="form-input" style="padding: 9px 12px;">
+            <select id="filter-difficulty" class="form-input form-select" style="padding: 9px 12px; width: 100%;">
               <option value="All">All Difficulties</option>
               <option value="Easy-Medium">Easy-Medium</option>
               <option value="Medium">Medium</option>
@@ -84,7 +84,7 @@
       </div>
 
       <!-- Companies Grid -->
-      <div id="companies-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
+      <div id="companies-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 20px;">
         <!-- Loaded via companies.js -->
       </div>
 

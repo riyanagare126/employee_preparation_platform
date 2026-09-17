@@ -233,8 +233,38 @@ document.addEventListener("DOMContentLoaded", () => {
   const navToggle = document.getElementById("nav-toggle");
   const navMenu = document.getElementById("nav-menu");
   if (navToggle && navMenu) {
-    navToggle.addEventListener("click", () => {
-      navMenu.classList.toggle("open");
+    const toggleNav = (forceState) => {
+      const isOpen = typeof forceState === "boolean" ? forceState : !navMenu.classList.contains("open");
+      navMenu.classList.toggle("open", isOpen);
+      navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      navToggle.innerHTML = isOpen ? "✕" : "☰";
+    };
+
+    navToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleNav();
+    });
+
+    // Auto-close nav when clicking a link or button inside the menu
+    navMenu.addEventListener("click", (e) => {
+      const link = e.target.closest("a, button");
+      if (link && !link.classList.contains("dropdown-toggle")) {
+        toggleNav(false);
+      }
+    });
+
+    // Close when tapping outside the navbar
+    document.addEventListener("click", (e) => {
+      if (navMenu.classList.contains("open") && !e.target.closest(".navbar")) {
+        toggleNav(false);
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && navMenu.classList.contains("open")) {
+        toggleNav(false);
+      }
     });
   }
 

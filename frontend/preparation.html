@@ -65,7 +65,7 @@
             
             <!-- Top Controls Row: Problem Dropdown & Quick Change Buttons -->
             <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;">
-              <div style="flex: 2; min-width: 260px;">
+              <div style="flex: 2; min-width: min(100%, 260px); width: 100%;">
                 <label for="select-problem" class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
                   <span>🎯 Select Coding Challenge:</span>
                   <span id="problem-count-badge" style="font-size: 0.78rem; color: var(--text-muted);">37 Problems Available</span>
@@ -209,10 +209,10 @@
                 <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #27c93f;"></span>
                 <span style="color: #a6adc8; font-size: 0.85rem; font-family: var(--font-mono); margin-left: 8px;" id="editor-filename">solution.py</span>
               </div>
-              <div style="display: flex; gap: 10px; align-items: center;">
-                <button type="button" class="btn btn-secondary btn-sm" id="btn-reset-code" style="background: #313244; color: #cdd6f4; border: 1px solid #45475a; cursor: pointer; transition: all 0.2s;" title="Reset code to initial starter template">🔄 Reset Code</button>
-                <button type="button" class="btn btn-success btn-sm" id="btn-run-code" style="cursor: pointer; font-weight: 700; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);" title="Run code against test cases">▶ Run Code</button>
-                <button type="button" class="btn btn-primary btn-sm" id="btn-submit-code" style="cursor: pointer; font-weight: 700; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);" title="Submit solution and record to profile">Submit Solution ✔</button>
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-reset-code" style="background: #313244; color: #cdd6f4; border: 1px solid #45475a; cursor: pointer; transition: all 0.2s;" title="Reset code to initial starter template">🔄 Reset</button>
+                <button type="button" class="btn btn-success btn-sm" id="btn-run-code" style="cursor: pointer; font-weight: 700; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);" title="Run code against test cases">▶ Run</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-submit-code" style="cursor: pointer; font-weight: 700; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);" title="Submit solution and record to profile">Submit ✔</button>
               </div>
             </div>
 
