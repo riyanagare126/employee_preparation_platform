@@ -1035,7 +1035,6 @@ def init_db():
     # Seed Admin User (admin@prep.com / AdminPassword123!)
     cursor.execute("SELECT id FROM employees WHERE LOWER(email) = 'admin@prep.com'")
     if not cursor.fetchone():
-        from werkzeug.security import generate_password_hash
         admin_pass_hash = generate_password_hash("AdminPassword123!")
         cursor.execute("""
             INSERT INTO employees (name, email, password, qualification, skills, experience, job_role, target_company, target_role, is_admin)
@@ -1046,7 +1045,6 @@ def init_db():
     cursor.execute("SELECT id FROM employees WHERE LOWER(email) = 'student@prep.com'")
     demo_emp = cursor.fetchone()
     if not demo_emp:
-        from werkzeug.security import generate_password_hash
         student_pass_hash = generate_password_hash("Student123!")
         cursor.execute("""
             INSERT INTO employees (name, email, password, qualification, skills, experience, job_role, target_company, target_role, is_admin)
