@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       e.preventDefault();
 
       let compName = selectCompany.value;
-      let compSlug = selectCompany.selectedOptions[0]?.getAttribute("data-slug") || "tcs";
+      let compSlug = selectCompany.selectedOptions[0]?.getAttribute("data-slug") || (compName ? getCompanySlugFromName(compName) : "");
 
       if (compName === "Custom / Other Enterprise") {
         compName = customInput.value.trim() || "Custom Enterprise";
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const data = await res.json();
         if (data.success && data.data) {
-          showToast(`Generated ${duration_days}-Day Roadmap for ${compName}! 🚀`, "success");
+          showToast(`Generated ${duration_days}-Day Roadmap for ${compName}!`, "success");
           currentRoadmap = data.data;
           renderRoadmap(currentRoadmap, employee.id);
         } else {
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         showToast("Error connecting to server to generate roadmap.", "error");
       } finally {
         btnSubmit.disabled = false;
-        btnSubmit.innerHTML = `Generate AI Roadmap 🚀`;
+        btnSubmit.innerHTML = `Generate AI Roadmap <i class="fa-solid fa-rocket"></i>`;
       }
     });
   }
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           const alertBox = document.getElementById("calibration-alert");
           if (alertBox) {
             alertBox.style.display = "block";
-            alertBox.innerHTML = `<strong>🤖 AI Diagnostic Calibration:</strong> ${escapeHtml(data.ai_notes || '')}`;
+            alertBox.innerHTML = `<strong><i class="fa-solid fa-robot"></i> AI Diagnostic Calibration:</strong> ${escapeHtml(data.ai_notes || '')}`;
           }
           const notesEl = document.getElementById("active-roadmap-notes");
           if (notesEl && data.ai_notes) notesEl.textContent = data.ai_notes;
@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         showToast("Error connecting to calibration engine.", "error");
       } finally {
         btnAutoAdjust.disabled = false;
-        btnAutoAdjust.textContent = "⚡ Auto-Calibrate with AI";
+        btnAutoAdjust.innerHTML = '<i class="fa-solid fa-bolt"></i> Auto-Calibrate with AI';
       }
     });
   }
@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (pctEl) pctEl.textContent = `${pct}%`;
     if (ratioEl) ratioEl.textContent = `${roadmap.completed_tasks || 0} of ${roadmap.total_tasks || 0} tasks completed`;
     if (barFill) barFill.style.width = `${pct}%`;
-    if (streakEl) streakEl.textContent = `🔥 ${roadmap.streak_days || 5}d`;
+    if (streakEl) streakEl.innerHTML = `<i class="fa-solid fa-fire text-warning"></i> ${roadmap.streak_days || 5}d`;
 
     if (container && roadmap.tasks) {
       if (roadmap.tasks.length === 0) {
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     ${escapeHtml(task.phase_name)}
                   </span>
                   <span class="badge ${catClass}" style="font-size: 0.72rem;">${escapeHtml(task.category)}</span>
-                  <span style="font-size: 0.75rem; color: #94a3b8;">⏱️ ${task.estimated_minutes} mins</span>
+                  <span style="font-size: 0.75rem; color: #94a3b8;"><i class="fa-solid fa-stopwatch"></i> ${task.estimated_minutes} mins</span>
                 </div>
 
                 <label for="chk-task-${task.id}" style="font-weight: 700; font-size: 1.05rem; cursor: pointer; color: ${isDone ? '#15803d' : 'var(--text-main)'}; text-decoration: ${isDone ? 'line-through' : 'none'};">
@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             <div style="text-align: right; flex-shrink: 0;">
               <span style="font-size: 0.8rem; font-weight: 600; color: ${isDone ? '#16a34a' : '#94a3b8'};">
-                ${isDone ? '✔ Completed' : 'Pending'}
+                ${isDone ? '<i class="fa-solid fa-check text-success"></i> Completed' : 'Pending'}
               </span>
             </div>
           </div>
@@ -249,7 +249,7 @@ async function toggleTask(taskId, employeeId) {
       if (card) {
         if (data.is_completed) {
           card.classList.add("completed");
-          showToast("Task completed! 🎯 +15 XP earned", "success");
+          showToast("Task completed! +15 XP earned", "success");
         } else {
           card.classList.remove("completed");
           showToast("Task marked as pending.", "info");

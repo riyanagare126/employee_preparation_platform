@@ -29,7 +29,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (btnOpenHub) {
     btnOpenHub.addEventListener("click", () => {
       const active = getSelectedCompany();
-      window.location.href = `company-prep.html?company=${encodeURIComponent(active.slug || 'tcs')}`;
+      if (active && active.slug) {
+        window.location.href = `company-prep.html?company=${encodeURIComponent(active.slug)}`;
+      } else {
+        window.location.href = "companies.html";
+      }
     });
   }
 });
@@ -44,7 +48,7 @@ function setupDashboardProfile(employee) {
   if (nameEl) nameEl.textContent = employee.name || "Candidate";
   
   const welcomeEl = document.getElementById("welcome-heading");
-  if (welcomeEl) welcomeEl.textContent = `Welcome, ${employee.name || 'Candidate'}! 👋`;
+  if (welcomeEl) welcomeEl.innerHTML = `Welcome, ${escapeHtml(employee.name || 'Candidate')}! <i class="fa-solid fa-hand text-warning"></i>`;
 
   const jobRoleEl = document.getElementById("profile-job-role");
   if (jobRoleEl) jobRoleEl.textContent = employee.job_role || "Software Engineer";
@@ -65,8 +69,9 @@ function setupDashboardProfile(employee) {
   if (skillsEl) skillsEl.textContent = employee.skills || "Java, Python, SQL";
 
   // Career Goal Header & Sidebar
-  const company = employee.target_company || "Tata Consultancy Services (TCS)";
-  const role = employee.target_role || employee.job_role || "Java Developer";
+  const storedComp = getSelectedCompany();
+  const company = (storedComp && storedComp.name) ? storedComp.name : (employee.target_company || "Select Target Company");
+  const role = (storedComp && storedComp.role) ? storedComp.role : (employee.target_role || employee.job_role || "Software Engineer");
 
   const headComp = document.getElementById("header-target-company");
   const headRole = document.getElementById("header-target-role");
@@ -78,30 +83,25 @@ function setupDashboardProfile(employee) {
 }
 
 async function loadCompanyPreparationBanner(employee) {
-  const compName = employee.target_company || "Tata Consultancy Services (TCS)";
-  const roleName = employee.target_role || employee.job_role || "Java Developer";
-  
-  const compSlug = compName.toLowerCase().includes("infosys") ? "infosys"
-    : (compName.toLowerCase().includes("wipro") ? "wipro"
-    : (compName.toLowerCase().includes("deloitte") ? "deloitte"
-    : (compName.toLowerCase().includes("google") ? "google"
-    : (compName.toLowerCase().includes("amazon") ? "amazon"
-    : (compName.toLowerCase().includes("microsoft") ? "microsoft"
-    : (compName.toLowerCase().includes("accenture") ? "accenture"
-    : "tcs"))))));
+  const storedComp = getSelectedCompany();
+  const compName = (storedComp && storedComp.name) ? storedComp.name : (employee.target_company || "");
+  const roleName = (storedComp && storedComp.role) ? storedComp.role : (employee.target_role || employee.job_role || "Software Engineer");
+  const compSlug = (storedComp && storedComp.slug) ? storedComp.slug : getCompanySlugFromName(compName);
 
   const titleEl = document.getElementById("current-prep-title");
   const progEl = document.getElementById("current-prep-progress");
   const emojiEl = document.getElementById("current-prep-emoji");
 
-  if (titleEl) titleEl.textContent = `${compName} — ${roleName}`;
+  if (titleEl) titleEl.textContent = compName ? `${compName} — ${roleName}` : "Select Target Company";
+
+  if (!compSlug) return;
 
   try {
     const res = await fetch(`${API_BASE}/api/companies/${compSlug}/progress?employee_id=${employee.id}`);
     if (res.ok) {
       const data = await res.json();
       if (data.success) {
-        if (emojiEl && data.company) emojiEl.textContent = data.company.logo_emoji || "🏢";
+        if (emojiEl && data.company) emojiEl.innerHTML = '<i class="fa-solid fa-building"></i>';
         if (progEl && data.preparation) {
           const overall = data.preparation.progress || 0.0;
           progEl.textContent = `${Math.round(overall)}%`;
@@ -116,7 +116,7 @@ async function loadCompanyPreparationBanner(employee) {
 function setupGoalModal(employee) {
   const modal = document.getElementById("goal-modal");
   const btnChange = document.getElementById("btn-change-goal");
-  const btnClose = document.getElementById("btn-close-goal-modal");
+  const btnClose = document.getElementById("btn-close-goal") || document.getElementById("btn-close-goal-modal");
   const btnCancel = document.getElementById("btn-cancel-goal");
   const formGoal = document.getElementById("form-career-goal");
 
@@ -126,8 +126,8 @@ function setupGoalModal(employee) {
     modal.style.display = "flex";
     const curComp = employee.target_company || "Tata Consultancy Services (TCS)";
     const curRole = employee.target_role || employee.job_role || "Java Developer";
-    const compSelect = document.getElementById("goal-company-select");
-    const roleSelect = document.getElementById("goal-role-select");
+    const compSelect = document.getElementById("goal-company") || document.getElementById("goal-company-select");
+    const roleSelect = document.getElementById("goal-role") || document.getElementById("goal-role-select");
     if (compSelect) compSelect.value = curComp;
     if (roleSelect) roleSelect.value = curRole;
   }
@@ -143,8 +143,11 @@ function setupGoalModal(employee) {
   if (formGoal) {
     formGoal.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const target_company = document.getElementById("goal-company-select").value;
-      const target_role = document.getElementById("goal-role-select").value;
+      const compEl = document.getElementById("goal-company") || document.getElementById("goal-company-select");
+      const roleEl = document.getElementById("goal-role") || document.getElementById("goal-role-select");
+      const target_company = compEl ? compEl.value : "Tata Consultancy Services (TCS)";
+      const target_role = roleEl ? roleEl.value : "Software Engineer";
+      const slug = getCompanySlugFromName(target_company);
 
       try {
         const res = await fetch(`${API_BASE}/api/auth/set-career-goal`, {
@@ -155,16 +158,16 @@ function setupGoalModal(employee) {
         const data = await res.json();
         if (data.success) {
           employee.target_company = target_company;
+          employee.target_company_slug = slug;
           employee.target_role = target_role;
           setLoggedInEmployee(employee);
 
-          const slug = target_company.toLowerCase().includes("tcs") ? "tcs" : target_company.toLowerCase().split(" ")[0];
-          setSelectedCompany(slug, target_company, target_role);
+          await setSelectedCompany(slug, target_company, target_role);
 
           setupDashboardProfile(employee);
           await loadCompanyPreparationBanner(employee);
           closeModal();
-          showToast(`Target company updated to ${target_company} — ${target_role}! 🎯`, "success");
+          showToast(`Target company updated to ${target_company} — ${target_role}!`, "success");
           await loadDashboardAnalytics(employee.id);
         } else {
           showToast(data.message || "Failed to update goal.", "error");
@@ -249,7 +252,7 @@ function renderDashboardSummary(summary) {
     trendContainer.innerHTML = summary.trend_insights.map((tip, idx) => `
       <div class="trend-tip-box">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <span style="font-weight: 700; font-size: 0.95rem; color: #fff;">💡 ${escapeHtml(tip.title)}</span>
+          <span style="font-weight: 700; font-size: 0.95rem; color: #fff;"><i class="fa-solid fa-lightbulb text-warning"></i> ${escapeHtml(tip.title)}</span>
           <span style="background: rgba(99, 102, 241, 0.25); color: #c7d2fe; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;">
             ${escapeHtml(tip.category)}
           </span>
@@ -368,7 +371,7 @@ function renderReadinessAndSkills(assessment) {
     scoreVal.innerHTML = `${assessment.overall_readiness_score}<span style="font-size: 1.1rem; color: var(--text-muted); font-weight: 500;"> / 100</span>`;
   }
   if (tierBadge) {
-    tierBadge.textContent = `${assessment.status_tier} 🚀`;
+    tierBadge.innerHTML = `${escapeHtml(assessment.status_tier)} <i class="fa-solid fa-rocket"></i>`;
     tierBadge.className = `badge ${assessment.tier_badge || 'badge-success'}`;
   }
   if (tierDesc) {
@@ -434,7 +437,7 @@ function renderDailyPlan(planData, employeeId) {
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <span class="badge" style="font-size: 0.72rem; background: rgba(99,102,241,0.1); color: var(--primary-700);">${task.category}</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted);">⏱️ ${task.estimated_minutes}m</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-stopwatch"></i> ${task.estimated_minutes}m</span>
           </div>
         </div>
       `;
@@ -451,7 +454,7 @@ async function toggleDailyTask(taskId, employeeId) {
     });
     const data = await res.json();
     if (data.success) {
-      showToast("Daily task updated! 🎯 +15 XP", "success");
+      showToast("Daily task updated! +15 XP", "success");
       await loadDashboardAnalytics(employeeId);
     }
   } catch (err) {

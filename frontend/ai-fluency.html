@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="2026 AI Fluency Round - Practice Indirect AI Tool Mastery & Engineering Verification">
   <title>AI Fluency Round | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,11 +14,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">⚡</span>
+        <span class="brand-icon"><i class="fa-solid fa-bolt"></i></span>
         <span>Employee<span class="brand-highlight">Prep</span> AI</span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
@@ -29,7 +30,7 @@
         <li><a href="preparation.html" class="nav-link">Coding</a></li>
         <li><a href="aptitude.html" class="nav-link">Aptitude</a></li>
         <li><a href="companies.html" class="nav-link">Companies</a></li>
-        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges <i class="fa-solid fa-trophy"></i></a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -41,7 +42,7 @@
       <!-- Header -->
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
         <div>
-          <span class="trend-badge-2026">🔥 2026 Recruiter Benchmark</span>
+          <span class="trend-badge-2026"><i class="fa-solid fa-fire text-warning"></i> 2026 Recruiter Benchmark</span>
           <h1 style="font-size: 2rem; margin-top: 4px;">AI Fluency Round: Indirect Tool Mastery</h1>
           <p style="color: var(--text-muted); font-size: 0.95rem;">
             Enterprise interviewers test how naturally you leverage Copilot, Cursor, and LLMs in daily engineering while maintaining strict verification and architectural mastery.
@@ -49,14 +50,14 @@
         </div>
 
         <div style="display: flex; gap: 10px;">
-          <button id="btn-random-question" class="btn btn-outline-primary btn-sm">🎲 Random Question</button>
+          <button id="btn-random-question" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-dice"></i> Random Question</button>
         </div>
       </div>
 
       <!-- Trend Explainer Banner -->
       <div class="card" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); color: #fff; padding: 20px 24px; margin-bottom: 24px; border: none; border-radius: var(--radius-lg);">
         <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-          <div style="font-size: 2.2rem; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 12px;">🧠</div>
+          <div style="font-size: 2.2rem; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 12px; color: var(--primary-400);"><i class="fa-solid fa-brain"></i></div>
           <div style="flex: 1;">
             <h3 style="font-size: 1.15rem; color: #38bdf8; margin: 0 0 4px 0;">Why is this round critical in 2026?</h3>
             <p style="color: #cbd5e1; font-size: 0.88rem; margin: 0; line-height: 1.5;">
@@ -111,7 +112,7 @@
 
           <!-- Submit Button -->
           <button type="button" id="btn-evaluate-fluency" class="btn btn-primary btn-block btn-lg" style="font-weight: 700;">
-            Evaluate AI Fluency Score 🤖
+            Evaluate AI Fluency Score <i class="fa-solid fa-robot"></i>
           </button>
         </div>
 
@@ -119,7 +120,7 @@
         <div>
           <!-- Initial Placeholder -->
           <div id="fluency-results-empty" class="card" style="padding: 40px 24px; text-align: center; color: var(--text-muted);">
-            <div style="font-size: 3rem; margin-bottom: 12px;">📊</div>
+            <div style="font-size: 3rem; margin-bottom: 12px; color: var(--primary-600);"><i class="fa-solid fa-chart-column"></i></div>
             <h3 style="font-size: 1.15rem; color: var(--text-main); margin-bottom: 6px;">Evaluation Awaiting Input</h3>
             <p style="font-size: 0.88rem; margin: 0;">
               Type your answer on the left and click <strong>Evaluate AI Fluency Score</strong>. The AI will score your tool integration, verification discipline, velocity impact, and natural communication.
@@ -136,7 +137,7 @@
               </div>
               <div style="text-align: right;">
                 <div id="eval-overall-score" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-600); line-height: 1;">88%</div>
-                <span id="eval-overall-grade" class="badge badge-success" style="font-size: 0.72rem; margin-top: 4px;">Fluent 🚀</span>
+                <span id="eval-overall-grade" class="badge badge-success" style="font-size: 0.72rem; margin-top: 4px;">Fluent <i class="fa-solid fa-rocket"></i></span>
               </div>
             </div>
 
@@ -169,8 +170,8 @@
             <!-- Natural AI Weaver Rewrite Sample -->
             <div class="fluency-rewrite-card">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <strong style="font-size: 0.9rem; color: var(--primary-700);">💡 How to Naturally Weave AI Tools Into This Answer:</strong>
-                <button type="button" id="btn-copy-rewrite" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 3px 8px;">Copy 📋</button>
+                <strong style="font-size: 0.9rem; color: var(--primary-700);"><i class="fa-solid fa-lightbulb text-warning"></i> How to Naturally Weave AI Tools Into This Answer:</strong>
+                <button type="button" id="btn-copy-rewrite" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 3px 8px;">Copy <i class="fa-solid fa-clipboard"></i></button>
               </div>
               <p id="eval-rewrite-sample" style="font-size: 0.86rem; color: #334155; line-height: 1.55; margin: 0; font-style: italic;"></p>
             </div>
@@ -179,7 +180,7 @@
           <!-- History & Score Progression Card -->
           <div class="card" style="padding: 20px; margin-top: 24px;">
             <h3 style="font-size: 1.05rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-              <span>📈</span> <span>Your Past Fluency Attempts</span>
+              <span><i class="fa-solid fa-chart-line"></i></span> <span>Your Past Fluency Attempts</span>
             </h3>
             <div id="fluency-history-list" style="display: flex; flex-direction: column; gap: 8px;">
               <div style="font-size: 0.82rem; color: var(--text-muted);">Loading past sessions...</div>

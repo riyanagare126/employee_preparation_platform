@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="AI Skill Assessment - AI Employee Preparation Platform">
   <title>AI Skill Assessment | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,11 +14,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">🤖</span>
+        <span class="brand-icon"><i class="fa-solid fa-robot"></i></span>
         <span>AI Employee <span class="brand-highlight">Prep</span></span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
@@ -30,7 +31,7 @@
         <li><a href="analyzer.html" class="nav-link">Resume Analyzer</a></li>
         <li><a href="companies.html" class="nav-link">Companies</a></li>
         <li><a href="history.html" class="nav-link">History</a></li>
-        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges <i class="fa-solid fa-trophy"></i></a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -50,7 +51,7 @@
         </div>
 
         <div>
-          <button id="btn-re-evaluate" class="btn btn-primary btn-sm">🔄 Re-Evaluate Skills</button>
+          <button id="btn-re-evaluate" class="btn btn-primary btn-sm"><i class="fa-solid fa-arrows-rotate"></i> Re-Evaluate Skills</button>
         </div>
       </div>
 
@@ -93,7 +94,7 @@
         <div class="card">
           <div class="card-header" style="border-bottom: 2px solid #bbf7d0;">
             <h2 class="card-title" style="color: #166534; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-              <span>🟢</span> Strong Competencies
+              <i class="fa-solid fa-circle text-success status-indicator-dot"></i> Strong Competencies
             </h2>
             <span class="badge badge-success">High Mastery</span>
           </div>
@@ -106,7 +107,7 @@
         <div class="card">
           <div class="card-header" style="border-bottom: 2px solid #fef08a;">
             <h2 class="card-title" style="color: #854d0e; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-              <span>🟡</span> Average Skills
+              <i class="fa-solid fa-circle text-warning status-indicator-dot"></i> Average Skills
             </h2>
             <span class="badge badge-warning">Needs Practice</span>
           </div>
@@ -119,7 +120,7 @@
         <div class="card">
           <div class="card-header" style="border-bottom: 2px solid #fecaca;">
             <h2 class="card-title" style="color: #991b1b; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-              <span>🔴</span> Priority Focus Areas
+              <i class="fa-solid fa-circle text-danger status-indicator-dot"></i> Priority Focus Areas
             </h2>
             <span class="badge badge-purple" style="background: #fee2e2; color: #991b1b;">Immediate Action</span>
           </div>
@@ -134,7 +135,7 @@
       <div class="card" style="padding: 28px;">
         <div class="card-header">
           <h2 class="card-title" style="font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-            <span>🎯</span> Targeted Practice Recommendations
+            <span><i class="fa-solid fa-bullseye"></i></span> Targeted Practice Recommendations
           </h2>
         </div>
         <div id="recommendations-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">

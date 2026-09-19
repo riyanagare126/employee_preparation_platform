@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Placement Aptitude Test - AI Employee Preparation Platform">
   <title>Aptitude Test | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,11 +14,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">🤖</span>
+        <span class="brand-icon"><i class="fa-solid fa-robot"></i></span>
         <span>AI Employee <span class="brand-highlight">Prep</span></span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
@@ -30,7 +31,7 @@
         <li><a href="analyzer.html" class="nav-link">Resume Analyzer</a></li>
         <li><a href="companies.html" class="nav-link">Companies</a></li>
         <li><a href="history.html" class="nav-link">History</a></li>
-        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges <i class="fa-solid fa-trophy"></i></a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -50,18 +51,18 @@
           <div style="display: flex; align-items: center; gap: 6px;">
             <label for="select-apt-difficulty" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Difficulty:</label>
             <select id="select-apt-difficulty" class="form-select" style="padding: 5px 10px; font-size: 0.85rem; width: auto; font-weight: 600;">
-              <option value="all">⚡ All Levels (Mixed)</option>
-              <option value="low">🟢 Low (Easy)</option>
-              <option value="medium">🟡 Medium</option>
-              <option value="high">🔴 High (Hard)</option>
+              <option value="all">All Levels (Mixed)</option>
+              <option value="low">Low (Easy)</option>
+              <option value="medium">Medium</option>
+              <option value="high">High (Hard)</option>
             </select>
           </div>
           <button id="btn-new-aptitude" class="btn btn-secondary btn-sm" style="cursor: pointer;" title="Generate a fresh set of questions">
-            🔄 New Questions
+            <i class="fa-solid fa-arrows-rotate"></i> New Questions
           </button>
           <!-- 15 Minute Countdown Timer -->
           <div class="timer-box" id="timer-box">
-            <span>⏱️</span>
+            <span><i class="fa-solid fa-stopwatch"></i></span>
             <span id="timer-display">15:00</span>
           </div>
         </div>
@@ -100,18 +101,18 @@
         <!-- Navigation Buttons -->
         <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 20px; flex-wrap: wrap; gap: 12px;">
           <button class="btn btn-secondary" id="btn-prev" disabled>
-            ← Previous
+            <i class="fa-solid fa-arrow-left"></i> Previous
           </button>
 
           <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             <button class="btn btn-secondary" id="btn-change-apt-q" title="Swap this question with another question from this category" style="display: flex; align-items: center; gap: 6px;">
-              <span>🎲 Change Question</span>
+              <span><i class="fa-solid fa-dice"></i> Change Question</span>
             </button>
             <button class="btn btn-secondary" id="btn-next">
-              Next →
+              Next <i class="fa-solid fa-arrow-right"></i>
             </button>
             <button class="btn btn-primary" id="btn-submit-test">
-              Submit Test 🚀
+              Submit Test <i class="fa-solid fa-rocket"></i>
             </button>
           </div>
         </div>
@@ -130,7 +131,7 @@
 
       <!-- Test Results View (Hidden Initially) -->
       <div id="test-result-screen" class="card" style="display: none; padding: 40px; text-align: center;">
-        <div style="font-size: 3.5rem; margin-bottom: 12px;">🎉</div>
+        <div style="font-size: 3.5rem; margin-bottom: 12px; color: var(--primary-600);"><i class="fa-solid fa-award"></i></div>
         <h2 style="font-size: 2rem; margin-bottom: 8px;">Test Completed!</h2>
         <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 24px;">
           Here is your comprehensive aptitude assessment breakdown:
@@ -153,8 +154,8 @@
 
         <div style="display: flex; justify-content: center; gap: 16px; margin-bottom: 40px;">
           <a href="dashboard.html" class="btn btn-primary">Back to Dashboard</a>
-          <button id="btn-retake-test" class="btn btn-secondary">Retake Test 🔄</button>
-          <button id="btn-toggle-review" class="btn btn-outline-primary">Review Answers 🔍</button>
+          <button id="btn-retake-test" class="btn btn-secondary">Retake Test <i class="fa-solid fa-arrows-rotate"></i></button>
+          <button id="btn-toggle-review" class="btn btn-outline-primary">Review Answers <i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
 
         <!-- Answers Review Section -->

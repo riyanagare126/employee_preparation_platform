@@ -47,9 +47,20 @@ function renderAchievements(stats, badges) {
       <div style="background: ${isUnlocked ? 'var(--bg-card)' : 'var(--bg-subtle)'}; border: 1px solid ${isUnlocked ? 'var(--primary-200)' : 'var(--border-color)'}; border-radius: var(--radius-md); padding: 18px; display: flex; flex-direction: column; justify-content: space-between; opacity: ${isUnlocked ? '1' : '0.65'}; transition: var(--transition);">
         <div>
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-            <span style="font-size: 2.2rem; filter: ${isUnlocked ? 'none' : 'grayscale(1)'};">${b.emoji}</span>
+            <span style="font-size: 2.2rem; color: ${isUnlocked ? 'var(--primary-600)' : 'var(--text-muted)'};">
+              <i class="fa-solid ${{
+                badge_aptitude_starter: 'fa-bullseye',
+                badge_aptitude_master: 'fa-brain',
+                badge_coding_beginner: 'fa-laptop-code',
+                badge_coding_master: 'fa-rocket',
+                badge_interview_ready: 'fa-microphone',
+                badge_resume_ready: 'fa-file-lines',
+                badge_streak_3: 'fa-fire',
+                badge_streak_7: 'fa-bolt'
+              }[b.id] || 'fa-award'}"></i>
+            </span>
             <span class="badge ${isUnlocked ? 'badge-success' : 'badge-info'}" style="font-size: 0.75rem;">
-              ${isUnlocked ? '✓ Unlocked' : '🔒 Locked'}
+              ${isUnlocked ? '<i class="fa-solid fa-check"></i> Unlocked' : '<i class="fa-solid fa-lock"></i> Locked'}
             </span>
           </div>
 

@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       meterFill.style.width = "100%";
       meterFill.style.backgroundColor = "#ef4444"; // red
     } else {
-      gaugeBadge.textContent = "Sweet Spot 🎯 (50-70s)";
+      gaugeBadge.innerHTML = 'Sweet Spot <i class="fa-solid fa-bullseye"></i> (50-70s)';
       gaugeBadge.className = "badge badge-success";
       const pct = Math.min(95, 50 + Math.round(((estSeconds - 40) / 35) * 45));
       meterFill.style.width = `${pct}%`;
@@ -105,9 +105,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selectedKey = selectQuestion.value;
     const matched = questionsBank.find(q => q.key === selectedKey);
     if (matched && matched.hint) {
-      questionHintBox.innerHTML = `💡 <strong>Recruiter Benchmark:</strong> ${escapeHtml(matched.hint)}`;
+      questionHintBox.innerHTML = `<i class="fa-solid fa-lightbulb text-warning"></i> <strong>Recruiter Benchmark:</strong> ${escapeHtml(matched.hint)}`;
     } else {
-      questionHintBox.innerHTML = `💡 <strong>Recruiter Benchmark:</strong> Start with your active technical focus, back it up with past metrics, and end with company impact.`;
+      questionHintBox.innerHTML = `<i class="fa-solid fa-lightbulb text-warning"></i> <strong>Recruiter Benchmark:</strong> Start with your active technical focus, back it up with past metrics, and end with company impact.`;
     }
   });
 
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     inputPast.value = "Previously, during my engineering residency, I re-architected an enterprise query cache that reduced 95th percentile database latency by 44% and successfully sustained 120,000 daily active requests without failure. I also automated test coverage to 92%.";
     inputFuture.value = "Looking forward, I want to join Google's Cloud Platform team because of your relentless focus on zero-trust reliability. In my first 90 days, I plan to leverage my API optimization expertise to ship microservice latency enhancements from day one.";
     updateSpeakingGauge();
-    showToast("Loaded high-impact 60-second pitch sample! 🎯", "info");
+    showToast("Loaded high-impact 60-second pitch sample!", "info");
   });
 
   // 5. Reset Draft
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const company = (inputCompany.value || "Target Enterprise").trim();
 
     btnAnalyze.disabled = true;
-    btnAnalyze.innerHTML = `<span>Analyzing flow & pacing... ⏳</span>`;
+    btnAnalyze.innerHTML = `<span>Analyzing flow & pacing... <i class="fa-solid fa-hourglass-half fa-spin"></i></span>`;
 
     try {
       const response = await fetch(`${API_BASE}/api/answer-builder/analyze`, {
@@ -197,14 +197,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       resultsSection.style.display = "block";
       resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      showToast("Pitch analyzed and polished by AI! ✨", "success");
+      showToast("Pitch analyzed and polished by AI!", "success");
 
     } catch (err) {
       console.error("Error analyzing pitch:", err);
       showToast(err.message || "Network error while analyzing pitch.", "error");
     } finally {
       btnAnalyze.disabled = false;
-      btnAnalyze.innerHTML = `Analyze & Polish with AI ✨`;
+      btnAnalyze.innerHTML = `Analyze & Polish with AI <i class="fa-solid fa-wand-magic-sparkles"></i>`;
     }
   });
 
@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!pitchText) return;
     try {
       await navigator.clipboard.writeText(pitchText);
-      showToast("60-second pitch copied to clipboard! 📋", "success");
+      showToast("60-second pitch copied to clipboard!", "success");
     } catch (e) {
       showToast("Could not access clipboard automatically.", "info");
     }
@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     btnSavePitch.disabled = true;
-    btnSavePitch.textContent = "Saving... 💾";
+    btnSavePitch.innerHTML = 'Saving... <i class="fa-solid fa-floppy-disk fa-spin"></i>';
 
     try {
       const response = await fetch(`${API_BASE}/api/answer-builder/save`, {
@@ -255,7 +255,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error(res.message || "Failed to save pitch.");
       }
 
-      showToast("Saved pitch to your library! 💾", "success");
+      showToast("Saved pitch to your library!", "success");
       await loadSavedPitches(employee.id);
 
     } catch (err) {
@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       showToast(err.message || "Error saving pitch.", "error");
     } finally {
       btnSavePitch.disabled = false;
-      btnSavePitch.textContent = "💾 Save to My Library";
+      btnSavePitch.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save to My Library';
     }
   });
 
@@ -284,7 +284,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ).join("");
 
         if (questionsBank[0] && questionsBank[0].hint) {
-          questionHintBox.innerHTML = `💡 <strong>Recruiter Benchmark:</strong> ${escapeHtml(questionsBank[0].hint)}`;
+          questionHintBox.innerHTML = `<i class="fa-solid fa-lightbulb text-warning"></i> <strong>Recruiter Benchmark:</strong> ${escapeHtml(questionsBank[0].hint)}`;
         }
       }
     } catch (e) {
@@ -305,7 +305,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         savedPitchCount.textContent = "0";
         savedPitchesList.innerHTML = `
           <div style="text-align: center; padding: 28px; background: var(--bg-subtle); border-radius: var(--radius-md); color: var(--text-muted);">
-            <div style="font-size: 2rem; margin-bottom: 8px;">📂</div>
+            <div style="font-size: 2rem; margin-bottom: 8px; color: var(--primary-600);"><i class="fa-solid fa-folder-open"></i></div>
             <div style="font-weight: 600; margin-bottom: 4px;">No saved elevator pitches yet</div>
             <div style="font-size: 0.85rem;">Draft your Present-Past-Future narrative above and click "Save to My Library".</div>
           </div>
@@ -328,8 +328,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             <div style="display: flex; align-items: center; gap: 12px;">
               <span class="badge badge-success">Score: ${item.structure_score || 90}/100</span>
               <span class="badge badge-secondary">~${item.speaking_time_seconds || 60}s</span>
-              <button class="btn btn-outline-primary btn-sm btn-load-saved" data-id="${item.id}" style="padding: 3px 10px; font-size: 0.78rem;">Load ✏️</button>
-              <button class="btn btn-ghost btn-sm btn-delete-saved" data-id="${item.id}" style="padding: 3px 8px; font-size: 0.78rem; color: var(--danger-600);">🗑️</button>
+              <button class="btn btn-outline-primary btn-sm btn-load-saved" data-id="${item.id}" style="padding: 3px 10px; font-size: 0.78rem;">Load <i class="fa-solid fa-pencil"></i></button>
+              <button class="btn btn-ghost btn-sm btn-delete-saved" data-id="${item.id}" style="padding: 3px 8px; font-size: 0.78rem; color: var(--danger-600);"><i class="fa-solid fa-trash-can"></i></button>
             </div>
           </div>
 
@@ -361,7 +361,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             updateSpeakingGauge();
             window.scrollTo({ top: 0, behavior: "smooth" });
-            showToast(`Loaded saved pitch for ${item.target_company}! 🎯`, "info");
+            showToast(`Loaded saved pitch for ${item.target_company}!`, "info");
           }
         });
       });

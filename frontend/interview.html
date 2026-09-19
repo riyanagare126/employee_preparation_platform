@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="AI Mock Interview Assistant - AI Employee Preparation Platform">
   <title>AI Mock Interview | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,11 +14,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">🤖</span>
+        <span class="brand-icon"><i class="fa-solid fa-robot"></i></span>
         <span>AI Employee <span class="brand-highlight">Prep</span></span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
@@ -30,7 +31,7 @@
         <li><a href="analyzer.html" class="nav-link">Resume Analyzer</a></li>
         <li><a href="companies.html" class="nav-link">Companies</a></li>
         <li><a href="history.html" class="nav-link">History</a></li>
-        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges <i class="fa-solid fa-trophy"></i></a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -64,15 +65,15 @@
           <div class="form-group" style="margin-bottom: 20px;">
             <label for="interview-difficulty-select" class="form-label">Select Difficulty Tier:</label>
             <select id="interview-difficulty-select" class="form-select">
-              <option value="all">⚡ Balanced (All Levels)</option>
-              <option value="low">🟢 Low (Junior / Fresher - Core Fundamentals)</option>
-              <option value="medium">🟡 Medium (Associate / Mid-Level - Practical Architecture)</option>
-              <option value="high">🔴 High (Senior / Lead - Scalability & Edge Cases)</option>
+              <option value="all">Balanced (All Levels)</option>
+              <option value="low">Low (Junior / Fresher - Core Fundamentals)</option>
+              <option value="medium">Medium (Associate / Mid-Level - Practical Architecture)</option>
+              <option value="high">High (Senior / Lead - Scalability & Edge Cases)</option>
             </select>
           </div>
 
           <div style="background: var(--bg-subtle); padding: 18px; border-radius: var(--radius-md); margin-bottom: 24px; font-size: 0.9rem;">
-            <strong style="color: var(--primary-900); display: block; margin-bottom: 6px;">📋 Interview Format:</strong>
+            <strong style="color: var(--primary-900); display: block; margin-bottom: 6px;"><i class="fa-solid fa-clipboard-list"></i> Interview Format:</strong>
             <ul style="padding-left: 20px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px;">
               <li>Phase 1: Professional Introduction & Background</li>
               <li>Phase 2: Core Technical & Conceptual Deep-Dive</li>
@@ -83,7 +84,7 @@
           </div>
 
           <button id="btn-start-interview" class="btn btn-primary btn-block btn-lg">
-            Start AI Interview 🎙️
+            Start AI Interview <i class="fa-solid fa-microphone"></i>
           </button>
         </div>
       </div>
@@ -100,7 +101,7 @@
           </div>
           <div style="display: flex; gap: 8px; align-items: center;">
             <button id="btn-shuffle-interview" class="btn btn-secondary btn-sm" title="Generate 5 brand new questions" style="cursor: pointer;">
-              🔄 New Questions
+              <i class="fa-solid fa-arrows-rotate"></i> New Questions
             </button>
             <button id="btn-abort-interview" class="btn btn-secondary btn-sm" style="color: var(--rose-500); cursor: pointer;">
               End Interview
@@ -120,11 +121,11 @@
             <div class="chat-bubble chat-ai" id="ai-question-bubble">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                 <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--primary-700); font-size: 0.85rem;">
-                  <span>🤖 AI Interviewer</span>
+                  <span><i class="fa-solid fa-robot"></i> AI Interviewer</span>
                   <span class="badge badge-info" id="int-cat-badge" style="font-size: 0.7rem;">Introduction</span>
                 </div>
                 <button id="btn-change-single-q" class="btn btn-secondary btn-sm" style="font-size: 0.76rem; padding: 4px 10px; cursor: pointer;" title="Swap this question for another relevant question">
-                  🎲 Change Question
+                  <i class="fa-solid fa-dice"></i> Change Question
                 </button>
               </div>
               <p id="ai-question-text" style="font-size: 1.05rem; font-weight: 500;">
@@ -138,7 +139,7 @@
             <!-- Real-Time AI Feedback Box (Appears after answer evaluation) -->
             <div id="ai-instant-feedback-box" style="display: none; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 16px;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <strong style="color: #166534; font-size: 0.95rem;">⚡ AI Response Feedback:</strong>
+                <strong style="color: #166534; font-size: 0.95rem;"><i class="fa-solid fa-bolt"></i> AI Response Feedback:</strong>
                 <span class="badge badge-success" id="instant-score-badge">Score: 85/100</span>
               </div>
               <p id="instant-feedback-text" style="font-size: 0.88rem; color: #166534; line-height: 1.5;">
@@ -155,7 +156,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
               <span style="font-size: 0.8rem; color: var(--text-muted);" id="char-count">0 words</span>
               <button class="btn btn-primary" id="btn-submit-answer">
-                Submit Response & Next →
+                Submit Response & Next <i class="fa-solid fa-arrow-right"></i>
               </button>
             </div>
           </div>
@@ -167,7 +168,7 @@
       <!-- STEP 3: INTERVIEW SCORECARD & SUMMARY (After Completion) -->
       <div id="interview-summary-screen" style="display: none; max-width: 800px; margin: 0 auto;">
         <div class="card" style="padding: 40px; text-align: center;">
-          <div style="font-size: 3.5rem; margin-bottom: 8px;">🎯</div>
+          <div style="font-size: 3.5rem; margin-bottom: 8px; color: var(--primary-600);"><i class="fa-solid fa-bullseye"></i></div>
           <h2 style="font-size: 2rem; margin-bottom: 6px;">Interview Completed!</h2>
           <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 28px;">
             Here is your AI Interview Performance Scorecard:
@@ -191,7 +192,7 @@
 
           <!-- Overall Feedback Card -->
           <div style="text-align: left; background: var(--primary-50); border: 1px solid var(--primary-200); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 32px;">
-            <h3 style="font-size: 1.15rem; color: var(--primary-900); margin-bottom: 10px;">🌟 Executive AI Summary</h3>
+            <h3 style="font-size: 1.15rem; color: var(--primary-900); margin-bottom: 10px;"><i class="fa-solid fa-star text-warning"></i> Executive AI Summary</h3>
             <p id="int-overall-feedback" style="font-size: 0.95rem; color: var(--primary-900); line-height: 1.6;">
               Solid performance across technical and behavioral aspects.
             </p>
@@ -199,7 +200,7 @@
 
           <!-- Question-by-Question Breakdown -->
           <div style="text-align: left; margin-bottom: 32px;">
-            <h3 style="font-size: 1.2rem; margin-bottom: 16px;">📝 Question-by-Question Breakdown</h3>
+            <h3 style="font-size: 1.2rem; margin-bottom: 16px;"><i class="fa-solid fa-pen-to-square"></i> Question-by-Question Breakdown</h3>
             <div id="int-breakdown-list" style="display: flex; flex-direction: column; gap: 14px;">
               <!-- Dynamic Rows -->
             </div>
@@ -207,7 +208,7 @@
 
           <div style="display: flex; justify-content: center; gap: 16px;">
             <a href="dashboard.html" class="btn btn-primary">Back to Dashboard</a>
-            <button id="btn-restart-interview" class="btn btn-secondary">New Interview 🔄</button>
+            <button id="btn-restart-interview" class="btn btn-secondary">New Interview <i class="fa-solid fa-arrows-rotate"></i></button>
           </div>
         </div>
       </div>

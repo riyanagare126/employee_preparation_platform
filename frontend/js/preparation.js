@@ -121,11 +121,11 @@ function setupEditorWorkspace() {
   if (shuffleBtn) {
     shuffleBtn.addEventListener("click", async () => {
       shuffleBtn.disabled = true;
-      shuffleBtn.textContent = "🔄 Shuffling...";
+      shuffleBtn.innerHTML = '<i class="fa-solid fa-shuffle fa-spin"></i> Shuffling...';
       await loadProblems(true, true);
       shuffleBtn.disabled = false;
-      shuffleBtn.textContent = "🔄 Shuffle All";
-      showToast("Coding challenge bank shuffled! Fresh problem loaded 💻", "success");
+      shuffleBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> Shuffle All';
+      showToast("Coding challenge bank shuffled! Fresh problem loaded", "success");
     });
   }
 
@@ -261,7 +261,7 @@ function applyFilters() {
     filteredProblems.forEach((p, idx) => {
       const opt = document.createElement("option");
       opt.value = p.id;
-      const demandIcon = p.is_high_demand ? "🔥 " : "";
+      const demandIcon = p.is_high_demand ? '<i class="fa-solid fa-fire text-danger"></i> ' : "";
       opt.textContent = `${demandIcon}${idx + 1}. ${p.title} [${p.difficulty}]`;
       problemSelect.appendChild(opt);
     });
@@ -299,7 +299,7 @@ function changeToProblem(problemId, notify = true) {
   }
 
   if (notify) {
-    showToast(`Switched to: "${currentProblem.title}" (${currentProblem.difficulty}) 💻`, "info");
+    showToast(`Switched to: "${currentProblem.title}" (${currentProblem.difficulty})`, "info");
   }
 }
 
@@ -317,7 +317,7 @@ function changeToRandomProblem() {
 
   const randomPicked = candidates[Math.floor(Math.random() * candidates.length)] || pool[0];
   changeToProblem(randomPicked.id, false);
-  showToast(`🎲 Switched to: "${randomPicked.title}" (${randomPicked.difficulty})!`, "success");
+  showToast(`Switched to: "${randomPicked.title}" (${randomPicked.difficulty})!`, "success");
 }
 
 /**
@@ -332,7 +332,7 @@ function changeToNextProblem() {
   const nextProblem = pool[nextIndex];
 
   changeToProblem(nextProblem.id, false);
-  showToast(`Next Challenge: "${nextProblem.title}" ➡️`, "info");
+  showToast(`Next Challenge: "${nextProblem.title}"`, "info");
 }
 
 /**
@@ -347,7 +347,7 @@ function changeToPrevProblem() {
   const prevProblem = pool[prevIndex];
 
   changeToProblem(prevProblem.id, false);
-  showToast(`Previous Challenge: "${prevProblem.title}" ⬅️`, "info");
+  showToast(`Previous Challenge: "${prevProblem.title}"`, "info");
 }
 
 /**
@@ -432,7 +432,7 @@ function renderProblemDetails() {
       const storageKey = employee && employee.id ? `solvedCodingProblems_${employee.id}` : "solvedCodingProblems";
       const solvedList = JSON.parse(localStorage.getItem(storageKey) || "[]");
       if (solvedList.includes(currentProblem.title)) {
-        solvedStatus.innerHTML = `<span style="color: var(--emerald-600); font-weight: 700;">✔ Status: Solved</span>`;
+        solvedStatus.innerHTML = `<span style="color: var(--emerald-600); font-weight: 700;"><i class="fa-solid fa-check"></i> Status: Solved</span>`;
       } else {
         solvedStatus.innerHTML = `Status: Unsolved`;
       }
@@ -502,7 +502,7 @@ function handleResetCode() {
     terminal.textContent = "=== Console Output ===\nClick \"Run Code\" to compile & test your solution against test cases.";
   }
 
-  showToast("Code reset to starter template! 🔄", "info");
+  showToast("Code reset to starter template!", "info");
 }
 
 /**
@@ -521,10 +521,10 @@ async function handleRunCode() {
     return;
   }
 
-  terminal.textContent = "⚡ Compiling and executing in sandbox environment...\n";
+  terminal.textContent = "Compiling and executing in sandbox environment...\n";
   if (runBtn) {
     runBtn.disabled = true;
-    runBtn.textContent = "⏳ Running...";
+    runBtn.innerHTML = '<i class="fa-solid fa-hourglass-half fa-spin"></i> Running...';
   }
 
   try {
@@ -542,19 +542,19 @@ async function handleRunCode() {
 
     if (res.ok && data.success) {
       terminal.textContent = data.output;
-      showToast("Code executed successfully! ✔", "success");
+      showToast("Code executed successfully!", "success");
     } else {
-      terminal.textContent = `❌ ${data.output || "Execution failed."}`;
+      terminal.textContent = `[FAILED] ${data.output || "Execution failed."}`;
       showToast("Code run returned error.", "error");
     }
   } catch (err) {
     console.error("Run code error:", err);
-    terminal.textContent = `=== Standard Output ===\n${currentProblem ? currentProblem.expected_output : "Execution verified."}\n\n=== Test Case Summary ===\n✔ Test Case 1: PASSED (0.02s)\n✔ Test Case 2: PASSED (0.03s)\nAll test cases passed successfully!`;
+    terminal.textContent = `=== Standard Output ===\n${currentProblem ? currentProblem.expected_output : "Execution verified."}\n\n=== Test Case Summary ===\n[PASSED] Test Case 1 (0.02s)\n[PASSED] Test Case 2 (0.03s)\nAll test cases passed successfully!`;
     showToast("Executed in local sandbox mode.", "info");
   } finally {
     if (runBtn) {
       runBtn.disabled = false;
-      runBtn.textContent = "▶ Run Code";
+      runBtn.innerHTML = '<i class="fa-solid fa-play"></i> Run Code';
     }
   }
 }
@@ -611,12 +611,12 @@ async function handleSubmitCode() {
     } catch (e) {}
 
     if (res.ok) {
-      showToast(`Challenge "${currentProblem.title}" marked as Solved! 🎉`, "success");
+      showToast(`Challenge "${currentProblem.title}" marked as Solved!`, "success");
       if (solvedStatus) {
-        solvedStatus.innerHTML = `<span style="color: var(--emerald-600); font-weight: 700;">✔ Status: Solved</span>`;
+        solvedStatus.innerHTML = `<span style="color: var(--emerald-600); font-weight: 700;"><i class="fa-solid fa-check"></i> Status: Solved</span>`;
       }
       if (terminal) {
-        terminal.textContent = `=== Submission Result ===\n✔ Status: ACCEPTED & RECORDED\n✔ Problem: ${currentProblem.title}\n✔ Difficulty: ${currentProblem.difficulty}\n✔ Language: ${currentLanguage.toUpperCase()}\n✔ Result: All test cases passed. Recorded to your employee profile!`;
+        terminal.textContent = `=== Submission Result ===\n[ACCEPTED] Status: ACCEPTED & RECORDED\n[PROBLEM]: ${currentProblem.title}\n[DIFFICULTY]: ${currentProblem.difficulty}\n[LANGUAGE]: ${currentLanguage.toUpperCase()}\n[RESULT]: All test cases passed. Recorded to your employee profile!`;
       }
     } else {
       showToast("Solution recorded with warnings.", "warning");
@@ -630,17 +630,17 @@ async function handleSubmitCode() {
         localStorage.setItem(storageKey, JSON.stringify(solvedList));
       }
     } catch (e) {}
-    showToast("Solution recorded locally! 🎉", "success");
+    showToast("Solution recorded locally!", "success");
     if (solvedStatus) {
-      solvedStatus.innerHTML = `<span style="color: var(--emerald-600); font-weight: 700;">✔ Status: Solved</span>`;
+      solvedStatus.innerHTML = `<span style="color: var(--emerald-600); font-weight: 700;"><i class="fa-solid fa-check"></i> Status: Solved</span>`;
     }
     if (terminal) {
-      terminal.textContent = `=== Submission Result ===\n✔ Status: SAVED LOCALLY\n✔ Problem: ${currentProblem.title}\n✔ Language: ${currentLanguage.toUpperCase()}`;
+      terminal.textContent = `=== Submission Result ===\n[SAVED] Status: SAVED LOCALLY\n[PROBLEM]: ${currentProblem.title}\n[LANGUAGE]: ${currentLanguage.toUpperCase()}`;
     }
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Solution ✔";
+      submitBtn.innerHTML = 'Submit Solution <i class="fa-solid fa-check"></i>';
     }
   }
 }
@@ -671,7 +671,7 @@ async function loadConcepts() {
   if (btnShuffle) {
     btnShuffle.addEventListener("click", async () => {
       btnShuffle.disabled = true;
-      btnShuffle.innerHTML = "<span>🔄 Shuffling...</span>";
+      btnShuffle.innerHTML = '<span><i class="fa-solid fa-arrows-rotate fa-spin"></i> Shuffling...</span>';
 
       try {
         const res = await fetch(`${API_BASE}/api/coding/concepts?_t=${Date.now()}`);
@@ -680,14 +680,14 @@ async function loadConcepts() {
           if (data.success && data.all_concepts) {
             conceptsData = data.all_concepts;
             renderConcepts();
-            showToast("Fresh randomized concept questions loaded! 🎲", "success");
+            showToast("Fresh randomized concept questions loaded!", "success");
           }
         }
       } catch (err) {
         console.error("Error shuffling concepts:", err);
       } finally {
         btnShuffle.disabled = false;
-        btnShuffle.innerHTML = "<span>🎲 Change / Shuffle Questions</span>";
+        btnShuffle.innerHTML = '<span><i class="fa-solid fa-dice"></i> Change / Shuffle Questions</span>';
       }
     });
   }
@@ -745,7 +745,7 @@ function renderConcepts() {
       </div>
 
       <div id="c-exp-${idx}" style="display: none; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-md); padding: 12px 16px; font-size: 0.88rem; color: #166534;">
-        <strong>💡 Explanation:</strong> ${q.explanation}
+        <strong><i class="fa-solid fa-lightbulb text-warning"></i> Explanation:</strong> ${q.explanation}
       </div>
     `;
 
@@ -768,7 +768,7 @@ function renderConcepts() {
           if (isCorrect) {
             optEl.style.borderColor = "var(--emerald-500)";
             optEl.style.background = "#d1fae5";
-            showToast("Correct Answer! 🎉", "success");
+            showToast("Correct Answer!", "success");
           } else {
             optEl.style.borderColor = "var(--rose-500)";
             optEl.style.background = "#ffe4e6";

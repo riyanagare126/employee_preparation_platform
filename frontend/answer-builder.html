@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="2026 Present-Past-Future 60-Second Answer Builder - Recruiter-Tested Elevator Pitch Framework">
   <title>60s Pitch Builder (Present-Past-Future) | AI Employee Prep</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,11 +17,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">⚡</span>
+        <span class="brand-icon"><i class="fa-solid fa-bolt"></i></span>
         <span>Employee<span class="brand-highlight">Prep</span> AI</span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
@@ -32,7 +33,7 @@
         <li><a href="preparation.html" class="nav-link">Coding</a></li>
         <li><a href="aptitude.html" class="nav-link">Aptitude</a></li>
         <li><a href="companies.html" class="nav-link">Companies</a></li>
-        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges <i class="fa-solid fa-trophy"></i></a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -44,7 +45,7 @@
       <!-- Header Section -->
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
         <div>
-          <span class="trend-badge-2026">🔥 2026 Recruiter Standard</span>
+          <span class="trend-badge-2026"><i class="fa-solid fa-fire text-warning"></i> 2026 Recruiter Standard</span>
           <h1 style="font-size: 2rem; margin-top: 4px;">Present-Past-Future: 60-Second Pitch Builder</h1>
           <p style="color: var(--text-muted); font-size: 0.95rem;">
             Recruiters make 70% of initial impressions in the opening minute. Structure your self-introduction into an engaging 60-second narrative with live speaking cadence calibration.
@@ -52,14 +53,14 @@
         </div>
 
         <div style="display: flex; gap: 10px;">
-          <a href="#saved-library-section" class="btn btn-outline-primary btn-sm">📚 My Pitch Library (<span id="saved-pitch-count">0</span>)</a>
+          <a href="#saved-library-section" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-book"></i> My Pitch Library (<span id="saved-pitch-count">0</span>)</a>
         </div>
       </div>
 
       <!-- Strategy Explainer Banner -->
       <div class="card" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); color: #fff; padding: 20px 24px; margin-bottom: 24px; border: none; border-radius: var(--radius-lg);">
         <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
-          <div style="font-size: 2.2rem; background: rgba(255,255,255,0.1); padding: 10px 14px; border-radius: 12px;">🎙️</div>
+          <div style="font-size: 2.2rem; background: rgba(255,255,255,0.1); padding: 10px 14px; border-radius: 12px; color: var(--primary-400);"><i class="fa-solid fa-microphone"></i></div>
           <div style="flex: 1;">
             <h3 style="font-size: 1.15rem; color: #38bdf8; margin: 0 0 4px 0;">The 2026 Interview Opening Rule: 120 to 165 Words in 60 Seconds</h3>
             <p style="color: #cbd5e1; font-size: 0.88rem; margin: 0; line-height: 1.5;">
@@ -93,7 +94,7 @@
         </div>
 
         <div id="question-hint-box" style="margin-top: 14px; padding: 10px 14px; background: var(--bg-subtle); border-left: 3px solid var(--primary-600); border-radius: 4px; font-size: 0.85rem; color: var(--text-muted);">
-          💡 <strong>Tip:</strong> Start with your active technical focus, back it up with past metrics, and end with company impact.
+          <i class="fa-solid fa-lightbulb text-warning"></i> <strong>Tip:</strong> Start with your active technical focus, back it up with past metrics, and end with company impact.
         </div>
       </div>
 
@@ -125,7 +126,7 @@
         <div style="flex: 1; max-width: 380px;">
           <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">
             <span>0s (Too Short)</span>
-            <span style="color: var(--emerald-600);">50-70s Sweet Spot 🎯</span>
+            <span style="color: var(--emerald-600);">50-70s Sweet Spot <i class="fa-solid fa-bullseye"></i></span>
             <span>>75s (Too Long)</span>
           </div>
           <div class="speaking-meter-bar">
@@ -196,13 +197,13 @@
       <!-- Actions Toolbar -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 14px;">
         <div style="display: flex; gap: 10px;">
-          <button id="btn-load-sample" class="btn btn-outline-secondary btn-sm">💡 Load High-Impact Sample</button>
-          <button id="btn-reset-draft" class="btn btn-ghost btn-sm">🔄 Clear Draft</button>
+          <button id="btn-load-sample" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-lightbulb"></i> Load High-Impact Sample</button>
+          <button id="btn-reset-draft" class="btn btn-ghost btn-sm"><i class="fa-solid fa-arrows-rotate"></i> Clear Draft</button>
         </div>
 
         <div style="display: flex; gap: 12px;">
           <button id="btn-analyze-pitch" class="btn btn-primary" style="padding: 10px 24px; font-weight: 700;">
-            Analyze & Polish with AI ✨
+            Analyze & Polish with AI <i class="fa-solid fa-wand-magic-sparkles"></i>
           </button>
         </div>
       </div>
@@ -249,7 +250,7 @@
         <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid var(--primary-500); border-radius: var(--radius-md); padding: 22px; position: relative;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 1.2rem;">🎙️</span>
+              <span style="font-size: 1.2rem;"><i class="fa-solid fa-microphone"></i></span>
               <h3 style="font-size: 1.1rem; margin: 0; color: var(--primary-800);">AI-Optimized 60-Second Spoken Pitch</h3>
             </div>
             <span class="badge badge-purple" style="font-size: 0.78rem;">Spoken-Word Flow</span>
@@ -258,8 +259,8 @@
           <p id="result-optimized-pitch" style="font-size: 1rem; line-height: 1.7; color: #1e293b; font-style: normal; margin-bottom: 18px; white-space: pre-line;"></p>
 
           <div style="display: flex; justify-content: flex-end; gap: 12px; flex-wrap: wrap;">
-            <button id="btn-copy-pitch" class="btn btn-outline-primary btn-sm">📋 Copy Pitch</button>
-            <button id="btn-save-pitch" class="btn btn-success btn-sm">💾 Save to My Library</button>
+            <button id="btn-copy-pitch" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-clipboard"></i> Copy Pitch</button>
+            <button id="btn-save-pitch" class="btn btn-success btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save to My Library</button>
           </div>
         </div>
       </div>
@@ -273,7 +274,7 @@
               Saved pitches stored per employee profile. Quickly load past pitches for specific target companies or interview rounds.
             </p>
           </div>
-          <button id="btn-refresh-saved" class="btn btn-outline-secondary btn-sm">🔄 Refresh</button>
+          <button id="btn-refresh-saved" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
         </div>
 
         <div id="saved-pitches-list" style="display: flex; flex-direction: column; gap: 14px;">
@@ -289,7 +290,7 @@
   <footer class="footer">
     <div class="container footer-container">
       <div class="footer-brand">
-        <span class="brand-icon">⚡</span>
+        <span class="brand-icon"><i class="fa-solid fa-bolt"></i></span>
         <span>Employee<span class="brand-highlight">Prep</span> AI</span>
         <p class="footer-tagline">2026 Enterprise-Grade Interview & Employee Preparation Platform</p>
       </div>

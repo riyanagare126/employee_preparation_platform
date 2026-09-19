@@ -78,7 +78,7 @@ class TrendingTemplate(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     template_id = Column(String(80), unique=True, nullable=False)
     name = Column(String(120), nullable=False)
-    badge_text = Column(String(80), default="🔥 Trending 2026")
+    badge_text = Column(String(80), default="Trending 2026")
     description = Column(Text, nullable=False)
     css_class = Column(String(100), nullable=False)
     is_trending = Column(Integer, default=1)
@@ -198,3 +198,51 @@ class StructuredAnswer(Base):
     updated_at = Column(DateTime, default=datetime.utcnow)
 
     employee = relationship("User", back_populates="structured_answers")
+
+
+class Company(Base):
+    __tablename__ = "companies"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String(150), nullable=False)
+    slug = Column(String(100), unique=True, nullable=False, index=True)
+    industry = Column(String(100), default="IT Services")
+    difficulty = Column(String(50), default="Medium")
+    logo = Column(String(255), default="fas fa-building")
+    is_active = Column(Integer, default=1)
+    description = Column(Text, nullable=True)
+    common_roles = Column(Text, nullable=True)
+    hiring_rounds = Column(Text, nullable=True)
+    aptitude_pattern = Column(Text, nullable=True)
+    coding_pattern = Column(Text, nullable=True)
+    technical_focus = Column(Text, nullable=True)
+    hr_tips = Column(Text, nullable=True)
+    recommended_skills = Column(Text, nullable=True)
+    roadmap_json = Column(Text, nullable=True)
+    intel_json = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    questions = relationship("CompanyQuestion", back_populates="company", cascade="all, delete-orphan")
+
+
+class CompanyQuestion(Base):
+    __tablename__ = "company_questions"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    company_id = Column(Integer, ForeignKey("companies.id", ondelete="CASCADE"), nullable=False, index=True)
+    category = Column(String(50), nullable=False, index=True)
+    role = Column(String(100), default="All", index=True)
+    difficulty = Column(String(50), default="Medium")
+    question = Column(Text, nullable=False)
+    options = Column(Text, nullable=True)
+    correct_answer = Column(Text, nullable=True)
+    explanation = Column(Text, nullable=True)
+    extra = Column(Text, nullable=True)
+    is_active = Column(Integer, default=1)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    company = relationship("Company", back_populates="questions")

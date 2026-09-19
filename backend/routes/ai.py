@@ -85,23 +85,23 @@ def generate_expert_recommendations(profile: dict, aptitude_stat: dict, coding_s
     performance_feedback = []
     if aptitude_score is not None:
         if aptitude_score >= 80:
-            performance_feedback.append(f"✅ Outstanding Aptitude Rating ({aptitude_score}%). Your logical and analytical foundation is strong.")
+            performance_feedback.append(f"Outstanding Aptitude Rating ({aptitude_score}%). Your logical and analytical foundation is strong.")
         elif aptitude_score >= 50:
-            performance_feedback.append(f"⚡ Good Aptitude Progress ({aptitude_score}%). We recommend practicing Data Interpretation and Speed Math to reach 85%+.")
+            performance_feedback.append(f"Good Aptitude Progress ({aptitude_score}%). We recommend practicing Data Interpretation and Speed Math to reach 85%+.")
         else:
-            performance_feedback.append(f"⚠️ Aptitude Test ({aptitude_score}%) needs attention. Spend 20 minutes daily solving Quantitative & Logical reasoning problems.")
+            performance_feedback.append(f"Aptitude Test ({aptitude_score}%) needs attention. Spend 20 minutes daily solving Quantitative & Logical reasoning problems.")
     else:
-        performance_feedback.append("📌 Aptitude Test not taken yet. Complete a 10-question test on the platform to baseline your quantitative score.")
+        performance_feedback.append("Aptitude Test not taken yet. Complete a 10-question test on the platform to baseline your quantitative score.")
 
     if coding_count > 0:
-        performance_feedback.append(f"✅ Great coding engagement! Solved {coding_count} challenge(s). Continue with medium-difficulty array and string problems.")
+        performance_feedback.append(f"Great coding engagement! Solved {coding_count} challenge(s). Continue with medium-difficulty array and string problems.")
     else:
-        performance_feedback.append("📌 Start your Coding Practice today! Solve the basic String and Array challenges in the Preparation module.")
+        performance_feedback.append("Start your Coding Practice today! Solve the basic String and Array challenges in the Preparation module.")
 
     if interview_score is not None:
-        performance_feedback.append(f"✅ AI Mock Interview Score: {interview_score}/100. Good communication flow!")
+        performance_feedback.append(f"AI Mock Interview Score: {interview_score}/100. Good communication flow!")
     else:
-        performance_feedback.append("📌 Take an AI Mock Interview session to get real-time feedback on your verbal and technical answers.")
+        performance_feedback.append("Take an AI Mock Interview session to get real-time feedback on your verbal and technical answers.")
 
     # 4-Week Tailored Action Plan
     study_plan = [

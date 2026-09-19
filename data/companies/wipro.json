@@ -1,0 +1,2751 @@
+{
+  "name": "Wipro",
+  "slug": "wipro",
+  "industry": "IT Services & Consulting",
+  "difficulty": "Medium",
+  "logo": "fas fa-building",
+  "is_active": 1,
+  "description": "Targeted placement preparation for Wipro covering Wipro Elite NTH / Turbo patterns.",
+  "common_roles": "Java Developer, Python Developer, Data Analyst, Software Engineer",
+  "hiring_rounds": "Online Assessment (Aptitude, Written Comm, Coding) -> Business Discussion (Tech+HR)",
+  "aptitude_pattern": "Quantitative Aptitude (16 Qs, 16 mins) + Logical (14 Qs, 14 mins) + Verbal (18 Qs, 18 mins)",
+  "coding_pattern": "2 Coding Problems (Java/Python/C++) - 60 minutes total",
+  "technical_focus": "Java Collections, REST APIs, SQL joins, unit testing, Git workflows",
+  "hr_tips": "Demonstrate Spirit of Wipro: Intensity to win, Act with sensitivity, Unyielding integrity",
+  "recommended_skills": "Java, Python, SQL, DSA, System Design, Git",
+  "questions": [
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q1] In a Wipro project assessment with factor 7, if efficiency increases by 5% and input capacity is 120 units, what is the net operational yield per hour?",
+      "options": [
+        "126 units/hr",
+        "115 units/hr",
+        "136 units/hr",
+        "105 units/hr"
+      ],
+      "correct_answer": "126 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (120) * (1 + 5%) = 126 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q2] In a Wipro project assessment with factor 14, if efficiency increases by 10% and input capacity is 240 units, what is the net operational yield per hour?",
+      "options": [
+        "264 units/hr",
+        "242 units/hr",
+        "286 units/hr",
+        "220 units/hr"
+      ],
+      "correct_answer": "264 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (240) * (1 + 10%) = 264 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q3] In a Wipro project assessment with factor 21, if efficiency increases by 15% and input capacity is 360 units, what is the net operational yield per hour?",
+      "options": [
+        "414 units/hr",
+        "379 units/hr",
+        "448 units/hr",
+        "345 units/hr"
+      ],
+      "correct_answer": "414 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (360) * (1 + 15%) = 414 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q4] In a Wipro project assessment with factor 28, if efficiency increases by 20% and input capacity is 480 units, what is the net operational yield per hour?",
+      "options": [
+        "576 units/hr",
+        "528 units/hr",
+        "624 units/hr",
+        "480 units/hr"
+      ],
+      "correct_answer": "576 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (480) * (1 + 20%) = 576 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q5] In a Wipro project assessment with factor 35, if efficiency increases by 25% and input capacity is 600 units, what is the net operational yield per hour?",
+      "options": [
+        "750 units/hr",
+        "687 units/hr",
+        "812 units/hr",
+        "625 units/hr"
+      ],
+      "correct_answer": "750 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (600) * (1 + 25%) = 750 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q6] In a Wipro project assessment with factor 42, if efficiency increases by 30% and input capacity is 720 units, what is the net operational yield per hour?",
+      "options": [
+        "936 units/hr",
+        "858 units/hr",
+        "1014 units/hr",
+        "780 units/hr"
+      ],
+      "correct_answer": "936 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (720) * (1 + 30%) = 936 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q7] In a Wipro project assessment with factor 49, if efficiency increases by 35% and input capacity is 840 units, what is the net operational yield per hour?",
+      "options": [
+        "1134 units/hr",
+        "1039 units/hr",
+        "1228 units/hr",
+        "945 units/hr"
+      ],
+      "correct_answer": "1134 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (840) * (1 + 35%) = 1134 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q8] In a Wipro project assessment with factor 56, if efficiency increases by 40% and input capacity is 960 units, what is the net operational yield per hour?",
+      "options": [
+        "1344 units/hr",
+        "1232 units/hr",
+        "1456 units/hr",
+        "1120 units/hr"
+      ],
+      "correct_answer": "1344 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (960) * (1 + 40%) = 1344 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q9] In a Wipro project assessment with factor 63, if efficiency increases by 45% and input capacity is 1080 units, what is the net operational yield per hour?",
+      "options": [
+        "1566 units/hr",
+        "1435 units/hr",
+        "1696 units/hr",
+        "1305 units/hr"
+      ],
+      "correct_answer": "1566 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1080) * (1 + 45%) = 1566 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q10] In a Wipro project assessment with factor 70, if efficiency increases by 50% and input capacity is 1200 units, what is the net operational yield per hour?",
+      "options": [
+        "1800 units/hr",
+        "1650 units/hr",
+        "1950 units/hr",
+        "1500 units/hr"
+      ],
+      "correct_answer": "1800 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1200) * (1 + 50%) = 1800 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q11] In a Wipro project assessment with factor 77, if efficiency increases by 55% and input capacity is 1320 units, what is the net operational yield per hour?",
+      "options": [
+        "2046 units/hr",
+        "1875 units/hr",
+        "2216 units/hr",
+        "1705 units/hr"
+      ],
+      "correct_answer": "2046 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1320) * (1 + 55%) = 2046 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q12] In a Wipro project assessment with factor 84, if efficiency increases by 60% and input capacity is 1440 units, what is the net operational yield per hour?",
+      "options": [
+        "2304 units/hr",
+        "2112 units/hr",
+        "2496 units/hr",
+        "1920 units/hr"
+      ],
+      "correct_answer": "2304 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1440) * (1 + 60%) = 2304 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q13] In a Wipro project assessment with factor 91, if efficiency increases by 65% and input capacity is 1560 units, what is the net operational yield per hour?",
+      "options": [
+        "2574 units/hr",
+        "2359 units/hr",
+        "2788 units/hr",
+        "2145 units/hr"
+      ],
+      "correct_answer": "2574 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1560) * (1 + 65%) = 2574 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q14] In a Wipro project assessment with factor 98, if efficiency increases by 70% and input capacity is 1680 units, what is the net operational yield per hour?",
+      "options": [
+        "2856 units/hr",
+        "2618 units/hr",
+        "3094 units/hr",
+        "2380 units/hr"
+      ],
+      "correct_answer": "2856 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1680) * (1 + 70%) = 2856 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Java Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo - Java Developer Q15] In a Wipro project assessment with factor 105, if efficiency increases by 75% and input capacity is 1800 units, what is the net operational yield per hour?",
+      "options": [
+        "3150 units/hr",
+        "2887 units/hr",
+        "3412 units/hr",
+        "2625 units/hr"
+      ],
+      "correct_answer": "3150 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1800) * (1 + 75%) = 3150 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Java Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo Coding - Java Developer #1] Implement an optimal solution for Wipro candidate challenge #1: given an array of size N and target threshold K=15, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [2, 3, 4, 5, 6], target = 15",
+        "sample_output": "3",
+        "starter_code": "// Wipro Java Developer Coding Round #1\nimport java.util.*;\n\npublic class Solution {\n    public static int minSubArrayLen(int target, int[] nums) {\n        // Write your optimal Wipro code here\n        return 0;\n    }\n}",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Java Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo Coding - Java Developer #2] Implement an optimal solution for Wipro candidate challenge #2: given an array of size N and target threshold K=30, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [4, 6, 8, 10, 12], target = 30",
+        "sample_output": "3",
+        "starter_code": "// Wipro Java Developer Coding Round #2\nimport java.util.*;\n\npublic class Solution {\n    public static int minSubArrayLen(int target, int[] nums) {\n        // Write your optimal Wipro code here\n        return 0;\n    }\n}",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Java Developer #3] Implement an optimal solution for Wipro candidate challenge #3: given an array of size N and target threshold K=45, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [6, 9, 12, 15, 18], target = 45",
+        "sample_output": "3",
+        "starter_code": "// Wipro Java Developer Coding Round #3\nimport java.util.*;\n\npublic class Solution {\n    public static int minSubArrayLen(int target, int[] nums) {\n        // Write your optimal Wipro code here\n        return 0;\n    }\n}",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Java Developer #4] Implement an optimal solution for Wipro candidate challenge #4: given an array of size N and target threshold K=60, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [8, 12, 16, 20, 24], target = 60",
+        "sample_output": "3",
+        "starter_code": "// Wipro Java Developer Coding Round #4\nimport java.util.*;\n\npublic class Solution {\n    public static int minSubArrayLen(int target, int[] nums) {\n        // Write your optimal Wipro code here\n        return 0;\n    }\n}",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Java Developer #5] Implement an optimal solution for Wipro candidate challenge #5: given an array of size N and target threshold K=75, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [10, 15, 20, 25, 30], target = 75",
+        "sample_output": "3",
+        "starter_code": "// Wipro Java Developer Coding Round #5\nimport java.util.*;\n\npublic class Solution {\n    public static int minSubArrayLen(int target, int[] nums) {\n        // Write your optimal Wipro code here\n        return 0;\n    }\n}",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Java Developer #6] Implement an optimal solution for Wipro candidate challenge #6: given an array of size N and target threshold K=90, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [12, 18, 24, 30, 36], target = 90",
+        "sample_output": "3",
+        "starter_code": "// Wipro Java Developer Coding Round #6\nimport java.util.*;\n\npublic class Solution {\n    public static int minSubArrayLen(int target, int[] nums) {\n        // Write your optimal Wipro code here\n        return 0;\n    }\n}",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Java Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo Coding - Java Developer #7] Implement an optimal solution for Wipro candidate challenge #7: given an array of size N and target threshold K=105, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [14, 21, 28, 35, 42], target = 105",
+        "sample_output": "3",
+        "starter_code": "// Wipro Java Developer Coding Round #7\nimport java.util.*;\n\npublic class Solution {\n    public static int minSubArrayLen(int target, int[] nums) {\n        // Write your optimal Wipro code here\n        return 0;\n    }\n}",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Java Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo Coding - Java Developer #8] Implement an optimal solution for Wipro candidate challenge #8: given an array of size N and target threshold K=120, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [16, 24, 32, 40, 48], target = 120",
+        "sample_output": "3",
+        "starter_code": "// Wipro Java Developer Coding Round #8\nimport java.util.*;\n\npublic class Solution {\n    public static int minSubArrayLen(int target, int[] nums) {\n        // Write your optimal Wipro code here\n        return 0;\n    }\n}",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Java Developer Technical Q1] Explain in detail: JVM Memory Model & Garbage Collection Tuning. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of JVM Memory Model & Garbage Collection Tuning, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "JVM Memory Model & Garbage Collection Tuning",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Java Developer Technical Q2] Explain in detail: Spring Boot Bean Lifecycle & @Scope. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Spring Boot Bean Lifecycle & @Scope, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Spring Boot Bean Lifecycle & @Scope",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Java Developer Technical Q3] Explain in detail: ConcurrentHashMap Internal Bucketing & Locking. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of ConcurrentHashMap Internal Bucketing & Locking, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "ConcurrentHashMap Internal Bucketing & Locking",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Java Developer Technical Q4] Explain in detail: Java 17 Sealed Classes & Records. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Java 17 Sealed Classes & Records, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Java 17 Sealed Classes & Records",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Java Developer Technical Q5] Explain in detail: Hibernate First vs Second Level Cache. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Hibernate First vs Second Level Cache, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Hibernate First vs Second Level Cache",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Java Developer Technical Q6] Explain in detail: RESTful API Idempotency and HTTP Verbs. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of RESTful API Idempotency and HTTP Verbs, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "RESTful API Idempotency and HTTP Verbs",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Java Developer Technical Q7] Explain in detail: Kafka Producer-Consumer Architecture. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Kafka Producer-Consumer Architecture, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Kafka Producer-Consumer Architecture",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Java Developer Technical Q8] Explain in detail: CompletableFuture Asynchronous Execution. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of CompletableFuture Asynchronous Execution, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "CompletableFuture Asynchronous Execution",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Java Developer Technical Q9] Explain in detail: SQL Index Types (B-Tree vs Hash Index). How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of SQL Index Types (B-Tree vs Hash Index), followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "SQL Index Types (B-Tree vs Hash Index)",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Java Developer Technical Q10] Explain in detail: Database Transaction Isolation Levels. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Database Transaction Isolation Levels, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Database Transaction Isolation Levels",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Java Developer Technical Q11] Explain in detail: SOLID Principles in Microservices Architecture. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of SOLID Principles in Microservices Architecture, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "SOLID Principles in Microservices Architecture",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Java Developer Technical Q12] Explain in detail: Dockerizing Spring Boot Applications. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Dockerizing Spring Boot Applications, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Dockerizing Spring Boot Applications",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Java Developer Technical Q13] Explain in detail: Circuit Breaker Pattern with Resilience4j. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Circuit Breaker Pattern with Resilience4j, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Circuit Breaker Pattern with Resilience4j",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Java Developer Technical Q14] Explain in detail: Java Reflection API Security Implications. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Java Reflection API Security Implications, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Java Reflection API Security Implications",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Java Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Java Developer Technical Q15] Explain in detail: Thread Pool Executor Rejection Execution Policies. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Thread Pool Executor Rejection Execution Policies, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Thread Pool Executor Rejection Execution Policies",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Java Developer #1] In a modern development team at Wipro, how do you approach: AI Code Assistants (Copilot/Cursor) in Production Workflows? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "AI Code Assistants (Copilot/Cursor) in Production Workflows",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Java Developer #2] In a modern development team at Wipro, how do you approach: Mitigating Hallucination in Automated Output Parsing? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Mitigating Hallucination in Automated Output Parsing",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Java Developer #3] In a modern development team at Wipro, how do you approach: Prompt Engineering for Complex Logic Decomposition? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Prompt Engineering for Complex Logic Decomposition",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Java Developer #4] In a modern development team at Wipro, how do you approach: Automated Unit Test Generation using Generative AI? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Automated Unit Test Generation using Generative AI",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Java Developer #5] In a modern development team at Wipro, how do you approach: Integrating LLM APIs Securely with Enterprise Data? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Integrating LLM APIs Securely with Enterprise Data",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Java Developer #6] In a modern development team at Wipro, how do you approach: Continuous Verification of AI-Generated Code Commits? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Continuous Verification of AI-Generated Code Commits",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Java Developer #7] In a modern development team at Wipro, how do you approach: Retrieval-Augmented Generation (RAG) System Architecture? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Retrieval-Augmented Generation (RAG) System Architecture",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Java Developer #8] In a modern development team at Wipro, how do you approach: Data Privacy & Proprietary Code Compliance with Cloud AI? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Data Privacy & Proprietary Code Compliance with Cloud AI",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Java Developer #9] In a modern development team at Wipro, how do you approach: AI Tool Velocity Tracking vs Human Code Review Rigor? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "AI Tool Velocity Tracking vs Human Code Review Rigor",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Java Developer #10] In a modern development team at Wipro, how do you approach: Debugging Subtle Logical Edge Cases in AI Generated Stubs? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Debugging Subtle Logical Edge Cases in AI Generated Stubs",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Java Developer #1] Why do you specifically wish to build your career at Wipro rather than other IT services firms?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #1",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Java Developer #2] How do your personal principles align with Wipro's values (Intensity to win, Act with sensitivity, Unyielding integrity)?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #2",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Java Developer #3] Describe a challenging situation in a past project where a deadline was at risk and how you handled client expectations at Wipro.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #3",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Java Developer #4] Are you open to relocating to any of Wipro's major development centers and working in rotational project shifts?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #4",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Java Developer #5] How do you handle constructive criticism from a technical lead when your code review receives extensive requested revisions?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #5",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Java Developer #6] Tell me about a time you had a disagreement with a team member over an implementation approach. How was it resolved?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #6",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Java Developer #7] Where do you envision your technical growth at Wipro over the next 3 to 5 years as a Java Developer?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #7",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Java Developer #8] Describe a scenario where you had to learn a completely new technical framework in a very short span to deliver a client requirement.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #8",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Java Developer #9] What differentiates you from other qualified Java Developer candidates interviewing for Wipro today?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #9",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Java Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Java Developer #10] Do you have any questions for Wipro's leadership regarding project onboarding, team culture, or mentoring?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #10",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q1] In a Wipro project assessment with factor 7, if efficiency increases by 5% and input capacity is 120 units, what is the net operational yield per hour?",
+      "options": [
+        "126 units/hr",
+        "115 units/hr",
+        "136 units/hr",
+        "105 units/hr"
+      ],
+      "correct_answer": "126 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (120) * (1 + 5%) = 126 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q2] In a Wipro project assessment with factor 14, if efficiency increases by 10% and input capacity is 240 units, what is the net operational yield per hour?",
+      "options": [
+        "264 units/hr",
+        "242 units/hr",
+        "286 units/hr",
+        "220 units/hr"
+      ],
+      "correct_answer": "264 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (240) * (1 + 10%) = 264 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q3] In a Wipro project assessment with factor 21, if efficiency increases by 15% and input capacity is 360 units, what is the net operational yield per hour?",
+      "options": [
+        "414 units/hr",
+        "379 units/hr",
+        "448 units/hr",
+        "345 units/hr"
+      ],
+      "correct_answer": "414 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (360) * (1 + 15%) = 414 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q4] In a Wipro project assessment with factor 28, if efficiency increases by 20% and input capacity is 480 units, what is the net operational yield per hour?",
+      "options": [
+        "576 units/hr",
+        "528 units/hr",
+        "624 units/hr",
+        "480 units/hr"
+      ],
+      "correct_answer": "576 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (480) * (1 + 20%) = 576 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q5] In a Wipro project assessment with factor 35, if efficiency increases by 25% and input capacity is 600 units, what is the net operational yield per hour?",
+      "options": [
+        "750 units/hr",
+        "687 units/hr",
+        "812 units/hr",
+        "625 units/hr"
+      ],
+      "correct_answer": "750 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (600) * (1 + 25%) = 750 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q6] In a Wipro project assessment with factor 42, if efficiency increases by 30% and input capacity is 720 units, what is the net operational yield per hour?",
+      "options": [
+        "936 units/hr",
+        "858 units/hr",
+        "1014 units/hr",
+        "780 units/hr"
+      ],
+      "correct_answer": "936 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (720) * (1 + 30%) = 936 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q7] In a Wipro project assessment with factor 49, if efficiency increases by 35% and input capacity is 840 units, what is the net operational yield per hour?",
+      "options": [
+        "1134 units/hr",
+        "1039 units/hr",
+        "1228 units/hr",
+        "945 units/hr"
+      ],
+      "correct_answer": "1134 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (840) * (1 + 35%) = 1134 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q8] In a Wipro project assessment with factor 56, if efficiency increases by 40% and input capacity is 960 units, what is the net operational yield per hour?",
+      "options": [
+        "1344 units/hr",
+        "1232 units/hr",
+        "1456 units/hr",
+        "1120 units/hr"
+      ],
+      "correct_answer": "1344 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (960) * (1 + 40%) = 1344 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q9] In a Wipro project assessment with factor 63, if efficiency increases by 45% and input capacity is 1080 units, what is the net operational yield per hour?",
+      "options": [
+        "1566 units/hr",
+        "1435 units/hr",
+        "1696 units/hr",
+        "1305 units/hr"
+      ],
+      "correct_answer": "1566 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1080) * (1 + 45%) = 1566 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q10] In a Wipro project assessment with factor 70, if efficiency increases by 50% and input capacity is 1200 units, what is the net operational yield per hour?",
+      "options": [
+        "1800 units/hr",
+        "1650 units/hr",
+        "1950 units/hr",
+        "1500 units/hr"
+      ],
+      "correct_answer": "1800 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1200) * (1 + 50%) = 1800 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q11] In a Wipro project assessment with factor 77, if efficiency increases by 55% and input capacity is 1320 units, what is the net operational yield per hour?",
+      "options": [
+        "2046 units/hr",
+        "1875 units/hr",
+        "2216 units/hr",
+        "1705 units/hr"
+      ],
+      "correct_answer": "2046 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1320) * (1 + 55%) = 2046 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q12] In a Wipro project assessment with factor 84, if efficiency increases by 60% and input capacity is 1440 units, what is the net operational yield per hour?",
+      "options": [
+        "2304 units/hr",
+        "2112 units/hr",
+        "2496 units/hr",
+        "1920 units/hr"
+      ],
+      "correct_answer": "2304 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1440) * (1 + 60%) = 2304 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q13] In a Wipro project assessment with factor 91, if efficiency increases by 65% and input capacity is 1560 units, what is the net operational yield per hour?",
+      "options": [
+        "2574 units/hr",
+        "2359 units/hr",
+        "2788 units/hr",
+        "2145 units/hr"
+      ],
+      "correct_answer": "2574 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1560) * (1 + 65%) = 2574 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q14] In a Wipro project assessment with factor 98, if efficiency increases by 70% and input capacity is 1680 units, what is the net operational yield per hour?",
+      "options": [
+        "2856 units/hr",
+        "2618 units/hr",
+        "3094 units/hr",
+        "2380 units/hr"
+      ],
+      "correct_answer": "2856 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1680) * (1 + 70%) = 2856 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Python Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo - Python Developer Q15] In a Wipro project assessment with factor 105, if efficiency increases by 75% and input capacity is 1800 units, what is the net operational yield per hour?",
+      "options": [
+        "3150 units/hr",
+        "2887 units/hr",
+        "3412 units/hr",
+        "2625 units/hr"
+      ],
+      "correct_answer": "3150 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1800) * (1 + 75%) = 3150 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Python Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo Coding - Python Developer #1] Implement an optimal solution for Wipro candidate challenge #1: given an array of size N and target threshold K=15, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [2, 3, 4, 5, 6], target = 15",
+        "sample_output": "3",
+        "starter_code": "# Wipro Python Developer Coding Round #1\ndef min_subarray_len(target: int, nums: list[int]) -> int:\n    # Write your optimal Wipro code here\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Python Developer",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo Coding - Python Developer #2] Implement an optimal solution for Wipro candidate challenge #2: given an array of size N and target threshold K=30, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [4, 6, 8, 10, 12], target = 30",
+        "sample_output": "3",
+        "starter_code": "# Wipro Python Developer Coding Round #2\ndef min_subarray_len(target: int, nums: list[int]) -> int:\n    # Write your optimal Wipro code here\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Python Developer #3] Implement an optimal solution for Wipro candidate challenge #3: given an array of size N and target threshold K=45, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [6, 9, 12, 15, 18], target = 45",
+        "sample_output": "3",
+        "starter_code": "# Wipro Python Developer Coding Round #3\ndef min_subarray_len(target: int, nums: list[int]) -> int:\n    # Write your optimal Wipro code here\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Python Developer #4] Implement an optimal solution for Wipro candidate challenge #4: given an array of size N and target threshold K=60, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [8, 12, 16, 20, 24], target = 60",
+        "sample_output": "3",
+        "starter_code": "# Wipro Python Developer Coding Round #4\ndef min_subarray_len(target: int, nums: list[int]) -> int:\n    # Write your optimal Wipro code here\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Python Developer #5] Implement an optimal solution for Wipro candidate challenge #5: given an array of size N and target threshold K=75, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [10, 15, 20, 25, 30], target = 75",
+        "sample_output": "3",
+        "starter_code": "# Wipro Python Developer Coding Round #5\ndef min_subarray_len(target: int, nums: list[int]) -> int:\n    # Write your optimal Wipro code here\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Python Developer #6] Implement an optimal solution for Wipro candidate challenge #6: given an array of size N and target threshold K=90, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [12, 18, 24, 30, 36], target = 90",
+        "sample_output": "3",
+        "starter_code": "# Wipro Python Developer Coding Round #6\ndef min_subarray_len(target: int, nums: list[int]) -> int:\n    # Write your optimal Wipro code here\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Python Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo Coding - Python Developer #7] Implement an optimal solution for Wipro candidate challenge #7: given an array of size N and target threshold K=105, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [14, 21, 28, 35, 42], target = 105",
+        "sample_output": "3",
+        "starter_code": "# Wipro Python Developer Coding Round #7\ndef min_subarray_len(target: int, nums: list[int]) -> int:\n    # Write your optimal Wipro code here\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Python Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo Coding - Python Developer #8] Implement an optimal solution for Wipro candidate challenge #8: given an array of size N and target threshold K=120, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [16, 24, 32, 40, 48], target = 120",
+        "sample_output": "3",
+        "starter_code": "# Wipro Python Developer Coding Round #8\ndef min_subarray_len(target: int, nums: list[int]) -> int:\n    # Write your optimal Wipro code here\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Python Developer Technical Q1] Explain in detail: Python Global Interpreter Lock (GIL) Mechanics. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Python Global Interpreter Lock (GIL) Mechanics, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Python Global Interpreter Lock (GIL) Mechanics",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Python Developer Technical Q2] Explain in detail: Decorators with Arguments & Metaprogramming. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Decorators with Arguments & Metaprogramming, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Decorators with Arguments & Metaprogramming",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Python Developer Technical Q3] Explain in detail: FastAPI Asynchronous Request Handling vs Flask. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of FastAPI Asynchronous Request Handling vs Flask, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "FastAPI Asynchronous Request Handling vs Flask",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Python Developer Technical Q4] Explain in detail: Generators vs Iterators Memory Footprint. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Generators vs Iterators Memory Footprint, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Generators vs Iterators Memory Footprint",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Python Developer Technical Q5] Explain in detail: Python Garbage Collection (Reference Counting & Cyclical GC). How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Python Garbage Collection (Reference Counting & Cyclical GC), followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Python Garbage Collection (Reference Counting & Cyclical GC)",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Python Developer Technical Q6] Explain in detail: Context Managers & the __exit__ Protocol. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Context Managers & the __exit__ Protocol, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Context Managers & the __exit__ Protocol",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Python Developer Technical Q7] Explain in detail: Multiprocessing vs Multithreading CPU Bounds. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Multiprocessing vs Multithreading CPU Bounds, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Multiprocessing vs Multithreading CPU Bounds",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Python Developer Technical Q8] Explain in detail: Celery Distributed Task Queue Integration. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Celery Distributed Task Queue Integration, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Celery Distributed Task Queue Integration",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Python Developer Technical Q9] Explain in detail: SQLAlchemy Query Optimization & Eager Loading. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of SQLAlchemy Query Optimization & Eager Loading, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "SQLAlchemy Query Optimization & Eager Loading",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro Python Developer Technical Q10] Explain in detail: Type Hinting & Pydantic Runtime Validation. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Type Hinting & Pydantic Runtime Validation, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Type Hinting & Pydantic Runtime Validation",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Python Developer Technical Q11] Explain in detail: Python Dunder / Magic Methods and Operator Overloading. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Python Dunder / Magic Methods and Operator Overloading, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Python Dunder / Magic Methods and Operator Overloading",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Python Developer Technical Q12] Explain in detail: Redis Caching Strategies with Python APIs. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Redis Caching Strategies with Python APIs, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Redis Caching Strategies with Python APIs",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Python Developer Technical Q13] Explain in detail: PyTest Fixtures and Mocking Network Dependencies. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of PyTest Fixtures and Mocking Network Dependencies, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "PyTest Fixtures and Mocking Network Dependencies",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Python Developer Technical Q14] Explain in detail: Handling Race Conditions in Python Asyncio. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Handling Race Conditions in Python Asyncio, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Handling Race Conditions in Python Asyncio",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Python Developer",
+      "difficulty": "Hard",
+      "question": "[Wipro Python Developer Technical Q15] Explain in detail: Virtual Environments & Secure Dependency Pinning. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Virtual Environments & Secure Dependency Pinning, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Virtual Environments & Secure Dependency Pinning",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Python Developer #1] In a modern development team at Wipro, how do you approach: AI Code Assistants (Copilot/Cursor) in Production Workflows? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "AI Code Assistants (Copilot/Cursor) in Production Workflows",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Python Developer #2] In a modern development team at Wipro, how do you approach: Mitigating Hallucination in Automated Output Parsing? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Mitigating Hallucination in Automated Output Parsing",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Python Developer #3] In a modern development team at Wipro, how do you approach: Prompt Engineering for Complex Logic Decomposition? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Prompt Engineering for Complex Logic Decomposition",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Python Developer #4] In a modern development team at Wipro, how do you approach: Automated Unit Test Generation using Generative AI? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Automated Unit Test Generation using Generative AI",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Python Developer #5] In a modern development team at Wipro, how do you approach: Integrating LLM APIs Securely with Enterprise Data? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Integrating LLM APIs Securely with Enterprise Data",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Python Developer #6] In a modern development team at Wipro, how do you approach: Continuous Verification of AI-Generated Code Commits? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Continuous Verification of AI-Generated Code Commits",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Python Developer #7] In a modern development team at Wipro, how do you approach: Retrieval-Augmented Generation (RAG) System Architecture? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Retrieval-Augmented Generation (RAG) System Architecture",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Python Developer #8] In a modern development team at Wipro, how do you approach: Data Privacy & Proprietary Code Compliance with Cloud AI? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Data Privacy & Proprietary Code Compliance with Cloud AI",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Python Developer #9] In a modern development team at Wipro, how do you approach: AI Tool Velocity Tracking vs Human Code Review Rigor? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "AI Tool Velocity Tracking vs Human Code Review Rigor",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Python Developer #10] In a modern development team at Wipro, how do you approach: Debugging Subtle Logical Edge Cases in AI Generated Stubs? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Debugging Subtle Logical Edge Cases in AI Generated Stubs",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Python Developer #1] Why do you specifically wish to build your career at Wipro rather than other IT services firms?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #1",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Python Developer #2] How do your personal principles align with Wipro's values (Intensity to win, Act with sensitivity, Unyielding integrity)?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #2",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Python Developer #3] Describe a challenging situation in a past project where a deadline was at risk and how you handled client expectations at Wipro.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #3",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Python Developer #4] Are you open to relocating to any of Wipro's major development centers and working in rotational project shifts?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #4",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Python Developer #5] How do you handle constructive criticism from a technical lead when your code review receives extensive requested revisions?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #5",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Python Developer #6] Tell me about a time you had a disagreement with a team member over an implementation approach. How was it resolved?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #6",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Python Developer #7] Where do you envision your technical growth at Wipro over the next 3 to 5 years as a Python Developer?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #7",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Python Developer #8] Describe a scenario where you had to learn a completely new technical framework in a very short span to deliver a client requirement.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #8",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Python Developer #9] What differentiates you from other qualified Python Developer candidates interviewing for Wipro today?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #9",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Python Developer",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Python Developer #10] Do you have any questions for Wipro's leadership regarding project onboarding, team culture, or mentoring?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #10",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q1] In a Wipro project assessment with factor 7, if efficiency increases by 5% and input capacity is 120 units, what is the net operational yield per hour?",
+      "options": [
+        "126 units/hr",
+        "115 units/hr",
+        "136 units/hr",
+        "105 units/hr"
+      ],
+      "correct_answer": "126 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (120) * (1 + 5%) = 126 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q2] In a Wipro project assessment with factor 14, if efficiency increases by 10% and input capacity is 240 units, what is the net operational yield per hour?",
+      "options": [
+        "264 units/hr",
+        "242 units/hr",
+        "286 units/hr",
+        "220 units/hr"
+      ],
+      "correct_answer": "264 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (240) * (1 + 10%) = 264 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q3] In a Wipro project assessment with factor 21, if efficiency increases by 15% and input capacity is 360 units, what is the net operational yield per hour?",
+      "options": [
+        "414 units/hr",
+        "379 units/hr",
+        "448 units/hr",
+        "345 units/hr"
+      ],
+      "correct_answer": "414 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (360) * (1 + 15%) = 414 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q4] In a Wipro project assessment with factor 28, if efficiency increases by 20% and input capacity is 480 units, what is the net operational yield per hour?",
+      "options": [
+        "576 units/hr",
+        "528 units/hr",
+        "624 units/hr",
+        "480 units/hr"
+      ],
+      "correct_answer": "576 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (480) * (1 + 20%) = 576 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q5] In a Wipro project assessment with factor 35, if efficiency increases by 25% and input capacity is 600 units, what is the net operational yield per hour?",
+      "options": [
+        "750 units/hr",
+        "687 units/hr",
+        "812 units/hr",
+        "625 units/hr"
+      ],
+      "correct_answer": "750 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (600) * (1 + 25%) = 750 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q6] In a Wipro project assessment with factor 42, if efficiency increases by 30% and input capacity is 720 units, what is the net operational yield per hour?",
+      "options": [
+        "936 units/hr",
+        "858 units/hr",
+        "1014 units/hr",
+        "780 units/hr"
+      ],
+      "correct_answer": "936 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (720) * (1 + 30%) = 936 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q7] In a Wipro project assessment with factor 49, if efficiency increases by 35% and input capacity is 840 units, what is the net operational yield per hour?",
+      "options": [
+        "1134 units/hr",
+        "1039 units/hr",
+        "1228 units/hr",
+        "945 units/hr"
+      ],
+      "correct_answer": "1134 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (840) * (1 + 35%) = 1134 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q8] In a Wipro project assessment with factor 56, if efficiency increases by 40% and input capacity is 960 units, what is the net operational yield per hour?",
+      "options": [
+        "1344 units/hr",
+        "1232 units/hr",
+        "1456 units/hr",
+        "1120 units/hr"
+      ],
+      "correct_answer": "1344 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (960) * (1 + 40%) = 1344 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q9] In a Wipro project assessment with factor 63, if efficiency increases by 45% and input capacity is 1080 units, what is the net operational yield per hour?",
+      "options": [
+        "1566 units/hr",
+        "1435 units/hr",
+        "1696 units/hr",
+        "1305 units/hr"
+      ],
+      "correct_answer": "1566 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1080) * (1 + 45%) = 1566 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q10] In a Wipro project assessment with factor 70, if efficiency increases by 50% and input capacity is 1200 units, what is the net operational yield per hour?",
+      "options": [
+        "1800 units/hr",
+        "1650 units/hr",
+        "1950 units/hr",
+        "1500 units/hr"
+      ],
+      "correct_answer": "1800 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1200) * (1 + 50%) = 1800 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q11] In a Wipro project assessment with factor 77, if efficiency increases by 55% and input capacity is 1320 units, what is the net operational yield per hour?",
+      "options": [
+        "2046 units/hr",
+        "1875 units/hr",
+        "2216 units/hr",
+        "1705 units/hr"
+      ],
+      "correct_answer": "2046 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1320) * (1 + 55%) = 2046 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q12] In a Wipro project assessment with factor 84, if efficiency increases by 60% and input capacity is 1440 units, what is the net operational yield per hour?",
+      "options": [
+        "2304 units/hr",
+        "2112 units/hr",
+        "2496 units/hr",
+        "1920 units/hr"
+      ],
+      "correct_answer": "2304 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1440) * (1 + 60%) = 2304 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q13] In a Wipro project assessment with factor 91, if efficiency increases by 65% and input capacity is 1560 units, what is the net operational yield per hour?",
+      "options": [
+        "2574 units/hr",
+        "2359 units/hr",
+        "2788 units/hr",
+        "2145 units/hr"
+      ],
+      "correct_answer": "2574 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1560) * (1 + 65%) = 2574 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q14] In a Wipro project assessment with factor 98, if efficiency increases by 70% and input capacity is 1680 units, what is the net operational yield per hour?",
+      "options": [
+        "2856 units/hr",
+        "2618 units/hr",
+        "3094 units/hr",
+        "2380 units/hr"
+      ],
+      "correct_answer": "2856 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1680) * (1 + 70%) = 2856 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "aptitude",
+      "role": "Data Analyst",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo - Data Analyst Q15] In a Wipro project assessment with factor 105, if efficiency increases by 75% and input capacity is 1800 units, what is the net operational yield per hour?",
+      "options": [
+        "3150 units/hr",
+        "2887 units/hr",
+        "3412 units/hr",
+        "2625 units/hr"
+      ],
+      "correct_answer": "3150 units/hr",
+      "explanation": "Under Wipro's Wipro Elite NTH / Turbo pattern: Net yield = Capacity (1800) * (1 + 75%) = 3150 units/hr.",
+      "extra": {
+        "section": "Numerical Ability",
+        "pattern_tag": "Wipro Elite NTH / Turbo"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Data Analyst",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo Coding - Data Analyst #1] Implement an optimal solution for Wipro candidate challenge #1: given an array of size N and target threshold K=15, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [2, 3, 4, 5, 6], target = 15",
+        "sample_output": "3",
+        "starter_code": "# Wipro Data Analyst Analytics / Algorithmic Round #1\nimport pandas as pd\nimport numpy as np\n\ndef compute_threshold_window(df: pd.DataFrame, threshold: int = 15):\n    # Optimal aggregation for Wipro\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Data Analyst",
+      "difficulty": "Easy",
+      "question": "[Wipro Elite NTH / Turbo Coding - Data Analyst #2] Implement an optimal solution for Wipro candidate challenge #2: given an array of size N and target threshold K=30, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [4, 6, 8, 10, 12], target = 30",
+        "sample_output": "3",
+        "starter_code": "# Wipro Data Analyst Analytics / Algorithmic Round #2\nimport pandas as pd\nimport numpy as np\n\ndef compute_threshold_window(df: pd.DataFrame, threshold: int = 30):\n    # Optimal aggregation for Wipro\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Data Analyst #3] Implement an optimal solution for Wipro candidate challenge #3: given an array of size N and target threshold K=45, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [6, 9, 12, 15, 18], target = 45",
+        "sample_output": "3",
+        "starter_code": "# Wipro Data Analyst Analytics / Algorithmic Round #3\nimport pandas as pd\nimport numpy as np\n\ndef compute_threshold_window(df: pd.DataFrame, threshold: int = 45):\n    # Optimal aggregation for Wipro\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Data Analyst #4] Implement an optimal solution for Wipro candidate challenge #4: given an array of size N and target threshold K=60, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [8, 12, 16, 20, 24], target = 60",
+        "sample_output": "3",
+        "starter_code": "# Wipro Data Analyst Analytics / Algorithmic Round #4\nimport pandas as pd\nimport numpy as np\n\ndef compute_threshold_window(df: pd.DataFrame, threshold: int = 60):\n    # Optimal aggregation for Wipro\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Data Analyst #5] Implement an optimal solution for Wipro candidate challenge #5: given an array of size N and target threshold K=75, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [10, 15, 20, 25, 30], target = 75",
+        "sample_output": "3",
+        "starter_code": "# Wipro Data Analyst Analytics / Algorithmic Round #5\nimport pandas as pd\nimport numpy as np\n\ndef compute_threshold_window(df: pd.DataFrame, threshold: int = 75):\n    # Optimal aggregation for Wipro\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Elite NTH / Turbo Coding - Data Analyst #6] Implement an optimal solution for Wipro candidate challenge #6: given an array of size N and target threshold K=90, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [12, 18, 24, 30, 36], target = 90",
+        "sample_output": "3",
+        "starter_code": "# Wipro Data Analyst Analytics / Algorithmic Round #6\nimport pandas as pd\nimport numpy as np\n\ndef compute_threshold_window(df: pd.DataFrame, threshold: int = 90):\n    # Optimal aggregation for Wipro\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Data Analyst",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo Coding - Data Analyst #7] Implement an optimal solution for Wipro candidate challenge #7: given an array of size N and target threshold K=105, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [14, 21, 28, 35, 42], target = 105",
+        "sample_output": "3",
+        "starter_code": "# Wipro Data Analyst Analytics / Algorithmic Round #7\nimport pandas as pd\nimport numpy as np\n\ndef compute_threshold_window(df: pd.DataFrame, threshold: int = 105):\n    # Optimal aggregation for Wipro\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "coding",
+      "role": "Data Analyst",
+      "difficulty": "Hard",
+      "question": "[Wipro Elite NTH / Turbo Coding - Data Analyst #8] Implement an optimal solution for Wipro candidate challenge #8: given an array of size N and target threshold K=120, find the minimum continuous subarray whose sum meets or exceeds K.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Recommended approach for Wipro: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
+      "extra": {
+        "sample_input": "nums = [16, 24, 32, 40, 48], target = 120",
+        "sample_output": "3",
+        "starter_code": "# Wipro Data Analyst Analytics / Algorithmic Round #8\nimport pandas as pd\nimport numpy as np\n\ndef compute_threshold_window(df: pd.DataFrame, threshold: int = 120):\n    # Optimal aggregation for Wipro\n    pass\n",
+        "time_complexity": "O(N)",
+        "space_complexity": "O(1)"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Data Analyst Technical Q1] Explain in detail: SQL Window Functions: ROW_NUMBER vs RANK vs DENSE_RANK. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of SQL Window Functions: ROW_NUMBER vs RANK vs DENSE_RANK, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "SQL Window Functions: ROW_NUMBER vs RANK vs DENSE_RANK",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Data Analyst Technical Q2] Explain in detail: Handling Imbalanced Datasets for Predictive Analytics. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Handling Imbalanced Datasets for Predictive Analytics, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Handling Imbalanced Datasets for Predictive Analytics",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Data Analyst Technical Q3] Explain in detail: ETL Pipeline Design with Automated Data Quality Checks. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of ETL Pipeline Design with Automated Data Quality Checks, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "ETL Pipeline Design with Automated Data Quality Checks",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Data Analyst Technical Q4] Explain in detail: Star Schema vs Snowflake Schema Data Warehouses. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Star Schema vs Snowflake Schema Data Warehouses, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Star Schema vs Snowflake Schema Data Warehouses",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Data Analyst Technical Q5] Explain in detail: SQL Recursive Common Table Expressions (CTEs). How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of SQL Recursive Common Table Expressions (CTEs), followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "SQL Recursive Common Table Expressions (CTEs)",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Data Analyst Technical Q6] Explain in detail: Exploratory Data Analysis (EDA) Best Practices. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Exploratory Data Analysis (EDA) Best Practices, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Exploratory Data Analysis (EDA) Best Practices",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Data Analyst Technical Q7] Explain in detail: A/B Testing Statistical Significance & P-Values. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of A/B Testing Statistical Significance & P-Values, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "A/B Testing Statistical Significance & P-Values",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Data Analyst Technical Q8] Explain in detail: Detecting Outliers: IQR vs Z-Score Methods. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Detecting Outliers: IQR vs Z-Score Methods, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Detecting Outliers: IQR vs Z-Score Methods",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Data Analyst Technical Q9] Explain in detail: Data Normalization (1NF, 2NF, 3NF, BCNF) in Practice. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Data Normalization (1NF, 2NF, 3NF, BCNF) in Practice, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Data Normalization (1NF, 2NF, 3NF, BCNF) in Practice",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro Data Analyst Technical Q10] Explain in detail: PowerBI / Tableau Dashboard Performance Optimization. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of PowerBI / Tableau Dashboard Performance Optimization, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "PowerBI / Tableau Dashboard Performance Optimization",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Hard",
+      "question": "[Wipro Data Analyst Technical Q11] Explain in detail: Time Series Forecasting: Moving Average vs ARIMA. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Time Series Forecasting: Moving Average vs ARIMA, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Time Series Forecasting: Moving Average vs ARIMA",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Hard",
+      "question": "[Wipro Data Analyst Technical Q12] Explain in detail: SQL Self Joins for Hierarchical Data Analysis. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of SQL Self Joins for Hierarchical Data Analysis, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "SQL Self Joins for Hierarchical Data Analysis",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Hard",
+      "question": "[Wipro Data Analyst Technical Q13] Explain in detail: Pandas Vectorization vs Itertuples Performance. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Pandas Vectorization vs Itertuples Performance, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Pandas Vectorization vs Itertuples Performance",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Hard",
+      "question": "[Wipro Data Analyst Technical Q14] Explain in detail: Missing Value Imputation: Mean vs KNN vs Forward Fill. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Missing Value Imputation: Mean vs KNN vs Forward Fill, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Missing Value Imputation: Mean vs KNN vs Forward Fill",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "technical",
+      "role": "Data Analyst",
+      "difficulty": "Hard",
+      "question": "[Wipro Data Analyst Technical Q15] Explain in detail: Business Metric Framing: LTV, CAC, and Churn Rate. How would you architect this specifically for Wipro's Spirit of Wipro client infrastructure?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "For Wipro's enterprise engagements, explain the foundational theory of Business Metric Framing: LTV, CAC, and Churn Rate, followed by production engineering tradeoffs, error handling, and performance metrics.",
+      "extra": {
+        "topic": "Business Metric Framing: LTV, CAC, and Churn Rate",
+        "company_focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Data Analyst #1] In a modern development team at Wipro, how do you approach: AI Code Assistants (Copilot/Cursor) in Production Workflows? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "AI Code Assistants (Copilot/Cursor) in Production Workflows",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Data Analyst #2] In a modern development team at Wipro, how do you approach: Mitigating Hallucination in Automated Output Parsing? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Mitigating Hallucination in Automated Output Parsing",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Data Analyst #3] In a modern development team at Wipro, how do you approach: Prompt Engineering for Complex Logic Decomposition? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Prompt Engineering for Complex Logic Decomposition",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Data Analyst #4] In a modern development team at Wipro, how do you approach: Automated Unit Test Generation using Generative AI? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Automated Unit Test Generation using Generative AI",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Data Analyst #5] In a modern development team at Wipro, how do you approach: Integrating LLM APIs Securely with Enterprise Data? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Integrating LLM APIs Securely with Enterprise Data",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Data Analyst #6] In a modern development team at Wipro, how do you approach: Continuous Verification of AI-Generated Code Commits? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Continuous Verification of AI-Generated Code Commits",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Data Analyst #7] In a modern development team at Wipro, how do you approach: Retrieval-Augmented Generation (RAG) System Architecture? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Retrieval-Augmented Generation (RAG) System Architecture",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Data Analyst #8] In a modern development team at Wipro, how do you approach: Data Privacy & Proprietary Code Compliance with Cloud AI? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Data Privacy & Proprietary Code Compliance with Cloud AI",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Data Analyst #9] In a modern development team at Wipro, how do you approach: AI Tool Velocity Tracking vs Human Code Review Rigor? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "AI Tool Velocity Tracking vs Human Code Review Rigor",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "ai_interview",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro AI Interview - Data Analyst #10] In a modern development team at Wipro, how do you approach: Debugging Subtle Logical Edge Cases in AI Generated Stubs? Provide a structured answer with concrete workflow steps.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
+      "extra": {
+        "ai_rubric": "Debugging Subtle Logical Edge Cases in AI Generated Stubs",
+        "company": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Data Analyst #1] Why do you specifically wish to build your career at Wipro rather than other IT services firms?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #1",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Data Analyst #2] How do your personal principles align with Wipro's values (Intensity to win, Act with sensitivity, Unyielding integrity)?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #2",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Data Analyst #3] Describe a challenging situation in a past project where a deadline was at risk and how you handled client expectations at Wipro.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #3",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Data Analyst #4] Are you open to relocating to any of Wipro's major development centers and working in rotational project shifts?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #4",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Data Analyst #5] How do you handle constructive criticism from a technical lead when your code review receives extensive requested revisions?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #5",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Data Analyst #6] Tell me about a time you had a disagreement with a team member over an implementation approach. How was it resolved?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #6",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Data Analyst #7] Where do you envision your technical growth at Wipro over the next 3 to 5 years as a Data Analyst?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #7",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Data Analyst #8] Describe a scenario where you had to learn a completely new technical framework in a very short span to deliver a client requirement.",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #8",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Data Analyst #9] What differentiates you from other qualified Data Analyst candidates interviewing for Wipro today?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #9",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    },
+    {
+      "category": "hr",
+      "role": "Data Analyst",
+      "difficulty": "Medium",
+      "question": "[Wipro HR Interview - Data Analyst #10] Do you have any questions for Wipro's leadership regarding project onboarding, team culture, or mentoring?",
+      "options": null,
+      "correct_answer": null,
+      "explanation": "Guidance for Wipro: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with Wipro values, and a collaborative team attitude.",
+      "extra": {
+        "hr_dimension": "Question #10",
+        "company_name": "Wipro"
+      },
+      "is_active": 1
+    }
+  ]
+}

@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const q = questionBank[randomIndex];
         selectQ.value = q.id;
         selectQuestion(q);
-        showToast("Loaded random practice question! 🎲", "info");
+        showToast("Loaded random practice question!", "info");
       }
     });
   }
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const sample = document.getElementById("eval-rewrite-sample").textContent;
       if (sample) {
         navigator.clipboard.writeText(sample);
-        showToast("Rewritten pitch copied to clipboard! 📋", "success");
+        showToast("Rewritten pitch copied to clipboard!", "success");
       }
     });
   }
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await res.json();
         if (data.success) {
           renderEvaluationResults(data);
-          showToast("Evaluation complete! 🎯 +25 XP earned", "success");
+          showToast("Evaluation complete! +25 XP earned", "success");
           await loadFluencyHistory(employee.id);
         } else {
           showToast(data.message || "Evaluation failed.", "error");
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         showToast("Error connecting to AI evaluation service.", "error");
       } finally {
         btnEvaluate.disabled = false;
-        btnEvaluate.innerHTML = `Evaluate AI Fluency Score 🤖`;
+        btnEvaluate.innerHTML = `Evaluate AI Fluency Score <i class="fa-solid fa-robot"></i>`;
       }
     });
   }
@@ -146,13 +146,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gradeBadge = document.getElementById("eval-overall-grade");
     if (gradeBadge) {
       if (res.overall_score >= 80) {
-        gradeBadge.textContent = "Fluent 🚀";
+        gradeBadge.innerHTML = 'Fluent <i class="fa-solid fa-rocket"></i>';
         gradeBadge.className = "badge badge-success";
       } else if (res.overall_score >= 60) {
-        gradeBadge.textContent = "Developing ⚡";
+        gradeBadge.innerHTML = 'Developing <i class="fa-solid fa-bolt text-warning"></i>';
         gradeBadge.className = "badge badge-warning";
       } else {
-        gradeBadge.textContent = "Needs Practice ⚠️";
+        gradeBadge.innerHTML = 'Needs Practice <i class="fa-solid fa-triangle-exclamation text-warning"></i>';
         gradeBadge.className = "badge badge-danger";
       }
     }

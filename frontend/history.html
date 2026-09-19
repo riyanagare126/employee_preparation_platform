@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Preparation History & Attempt Analytics - AI Employee Preparation Platform">
   <title>Preparation History | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,11 +14,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">🤖</span>
+        <span class="brand-icon"><i class="fa-solid fa-robot"></i></span>
         <span>AI Employee <span class="brand-highlight">Prep</span></span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
@@ -30,7 +31,7 @@
         <li><a href="resume.html" class="nav-link">Resume</a></li>
         <li><a href="analyzer.html" class="nav-link">Resume Analyzer</a></li>
         <li><a href="history.html" class="nav-link active">History</a></li>
-        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges <i class="fa-solid fa-trophy"></i></a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -50,7 +51,7 @@
 
       <!-- Company-Wise Isolated Progress Summary -->
       <div class="card" style="padding: 24px; margin-bottom: 24px;">
-        <h2 style="font-size: 1.15rem; margin-bottom: 14px;">🏢 Company-Wise Preparation Records</h2>
+        <h2 style="font-size: 1.15rem; margin-bottom: 14px;"><i class="fa-solid fa-building"></i> Company-Wise Preparation Records</h2>
         <div id="company-progress-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;">
           <!-- Injected dynamically -->
         </div>

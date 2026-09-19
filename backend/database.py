@@ -521,6 +521,52 @@ def init_db():
         );
     """)
 
+    # 16b. Companies Table (Dynamic Company Platform)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS companies (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            slug TEXT UNIQUE NOT NULL,
+            industry TEXT DEFAULT 'IT Services',
+            difficulty TEXT DEFAULT 'Medium',
+            logo TEXT DEFAULT 'fas fa-building',
+            is_active INTEGER DEFAULT 1,
+            description TEXT,
+            common_roles TEXT,
+            hiring_rounds TEXT,
+            aptitude_pattern TEXT,
+            coding_pattern TEXT,
+            technical_focus TEXT,
+            hr_tips TEXT,
+            recommended_skills TEXT,
+            roadmap_json TEXT,
+            intel_json TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    """)
+
+    # 16c. Company Questions Table (Per-company, per-category, per-role question bank)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS company_questions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            company_id INTEGER NOT NULL,
+            category TEXT NOT NULL,
+            role TEXT DEFAULT 'All',
+            difficulty TEXT DEFAULT 'Medium',
+            question TEXT NOT NULL,
+            options TEXT,
+            correct_answer TEXT,
+            explanation TEXT,
+            extra TEXT,
+            is_active INTEGER DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+        );
+    """)
+
+
     # 17. Admin Activity Log Table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS admin_logs (
@@ -583,7 +629,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             template_id TEXT UNIQUE NOT NULL,
             name TEXT NOT NULL,
-            badge_text TEXT DEFAULT '🔥 Trending 2026',
+            badge_text TEXT DEFAULT 'Trending 2026',
             description TEXT NOT NULL,
             css_class TEXT NOT NULL,
             is_trending INTEGER DEFAULT 1,
@@ -716,6 +762,43 @@ def init_db():
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_resume_ver_user ON resume_versions(employee_id);")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_ai_fluency_user ON ai_fluency_attempts(employee_id);")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_struct_ans_user ON structured_answers(employee_id);")
+    cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_companies_slug ON companies(slug);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_comp_questions_lookup ON company_questions(company_id, category, role);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_comp_questions_active ON company_questions(company_id, is_active);")
+
+    # Initial sync from company_prep to companies if empty
+    try:
+        cursor.execute("SELECT COUNT(*) FROM companies;")
+        row = cursor.fetchone()
+        comp_count = row[0] if row else 0
+        if comp_count == 0:
+            cursor.execute("""
+                SELECT company_name, slug, logo_emoji, category, difficulty, description,
+                       common_roles, hiring_rounds, aptitude_pattern, coding_pattern,
+                       technical_focus, hr_tips, recommended_skills, roadmap_json
+                FROM company_prep;
+            """)
+            legacy_comps = cursor.fetchall()
+            for lc in legacy_comps:
+                logo_val = lc["logo_emoji"] if lc["logo_emoji"] else "fas fa-building"
+                if not logo_val.startswith("fa"):
+                    logo_val = "fas fa-building"
+                cursor.execute("""
+                    INSERT OR IGNORE INTO companies (
+                        name, slug, industry, difficulty, logo, is_active,
+                        description, common_roles, hiring_rounds, aptitude_pattern,
+                        coding_pattern, technical_focus, hr_tips, recommended_skills, roadmap_json
+                    ) VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                """, (
+                    lc["company_name"], lc["slug"], lc["category"] or "IT Services",
+                    lc["difficulty"] or "Medium", logo_val, lc["description"],
+                    lc["common_roles"], lc["hiring_rounds"], lc["aptitude_pattern"],
+                    lc["coding_pattern"], lc["technical_focus"], lc["hr_tips"],
+                    lc["recommended_skills"], lc["roadmap_json"]
+                ))
+    except Exception as e:
+        print(f"Note: companies sync from company_prep skipped: {e}")
+
 
     # Seed Default Admin User if not exists
     cursor.execute("SELECT id FROM employees WHERE email = 'admin@prep.com'")
@@ -1150,9 +1233,9 @@ def init_db():
     cursor.execute("SELECT COUNT(*) as count FROM trending_templates")
     if cursor.fetchone()["count"] == 0:
         templates_data = [
-            ("modern-single", "Modern Single-Column", "🔥 Trending 2026", "Ultra-clean ATS-optimized layout with modern typography, crisp section dividers, and maximum scanability for enterprise ATS systems.", "template-modern-single", 1, 1),
-            ("minimalist-accent", "Minimalist Accent", "✨ Top Pick 2026", "Refined contemporary design featuring subtle indigo/teal left borders, modern badges, and structured technical skill chips.", "template-minimalist-accent", 1, 1),
-            ("classic-chrono", "Classic Reverse-Chronological", "💼 Corporate Standard", "Time-tested corporate format favored by Tier-1 consulting firms, investment banks, and enterprise leaders. Right-aligned dates and elegant serif headings.", "template-classic-chrono", 1, 1)
+            ("modern-single", "Modern Single-Column", "Trending 2026", "Ultra-clean ATS-optimized layout with modern typography, crisp section dividers, and maximum scanability for enterprise ATS systems.", "template-modern-single", 1, 1),
+            ("minimalist-accent", "Minimalist Accent", "Top Pick 2026", "Refined contemporary design featuring subtle indigo/teal left borders, modern badges, and structured technical skill chips.", "template-minimalist-accent", 1, 1),
+            ("classic-chrono", "Classic Reverse-Chronological", "Corporate Standard", "Time-tested corporate format favored by Tier-1 consulting firms, investment banks, and enterprise leaders. Right-aligned dates and elegant serif headings.", "template-classic-chrono", 1, 1)
         ]
         cursor.executemany("""
             INSERT INTO trending_templates (template_id, name, badge_text, description, css_class, is_trending, is_active)

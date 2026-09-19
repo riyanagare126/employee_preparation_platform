@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Top 20 Companies Placement Preparation - AI Employee Preparation Platform">
   <title>Top Companies Preparation | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,11 +14,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">🤖</span>
+        <span class="brand-icon"><i class="fa-solid fa-robot"></i></span>
         <span>AI Employee <span class="brand-highlight">Prep</span></span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
@@ -30,7 +31,7 @@
         <li><a href="analyzer.html" class="nav-link">Resume Analyzer</a></li>
         <li><a href="companies.html" class="nav-link active">Companies</a></li>
         <li><a href="history.html" class="nav-link">History</a></li>
-        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges <i class="fa-solid fa-trophy"></i></a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -49,7 +50,7 @@
           </p>
         </div>
         <button id="btn-open-compare" class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px;">
-          ⚖️ Compare Companies
+          <i class="fa-solid fa-scale-balanced"></i> Compare Companies
         </button>
       </div>
 
@@ -97,7 +98,7 @@
       
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
         <div style="display: flex; align-items: center; gap: 14px;">
-          <span style="font-size: 2.4rem;" id="modal-company-emoji">🏢</span>
+          <span style="font-size: 2.4rem;" id="modal-company-emoji"><i class="fa-solid fa-building"></i></span>
           <div>
             <h2 style="font-size: 1.4rem; color: var(--text-main); margin-bottom: 2px;" id="modal-company-name">Company Name</h2>
             <div style="display: flex; gap: 8px; align-items: center;">
@@ -113,7 +114,7 @@
       <div style="background: var(--bg-subtle); padding: 14px 18px; border-radius: 8px; margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
           <div>
-            <strong style="color: var(--text-main); font-size: 0.95rem;">🎯 Select Target Job Role:</strong>
+            <strong style="color: var(--text-main); font-size: 0.95rem;"><i class="fa-solid fa-bullseye"></i> Select Target Job Role:</strong>
             <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Personalizes questions, benchmarks, and AI gap recommendations.</p>
           </div>
           <select id="modal-role-select" class="form-input" style="max-width: 260px; font-weight: 500;">
@@ -130,7 +131,7 @@
 
       <!-- Company Preparation Roadmap -->
       <div style="margin-bottom: 24px;">
-        <h3 style="font-size: 1.05rem; margin-bottom: 10px; color: var(--text-main);">🗺️ Company Preparation Roadmap</h3>
+        <h3 style="font-size: 1.05rem; margin-bottom: 10px; color: var(--text-main);"><i class="fa-solid fa-map-location-dot"></i> Company Preparation Roadmap</h3>
         <div id="modal-roadmap-steps" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px;">
           <!-- Injected dynamically -->
         </div>
@@ -139,16 +140,16 @@
       <!-- AI Recommendations Widget -->
       <div id="modal-ai-recommendations" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-          <span style="font-size: 1.2rem;">🤖</span>
+          <span style="font-size: 1.2rem;"><i class="fa-solid fa-robot"></i></span>
           <strong style="color: #166534; font-size: 0.95rem;">AI Performance Gap & Recommendation Engine</strong>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;" id="modal-ai-skills-grid">
           <div>
-            <span style="font-size: 0.8rem; font-weight: 600; color: #166534;">🟢 Candidate Strong Skills:</span>
+            <span style="font-size: 0.8rem; font-weight: 600; color: #166534;"><i class="fa-solid fa-circle text-success status-indicator-dot"></i> Candidate Strong Skills:</span>
             <div id="modal-strong-skills" style="font-size: 0.85rem; color: #14532d; margin-top: 4px;">Loading...</div>
           </div>
           <div>
-            <span style="font-size: 0.8rem; font-weight: 600; color: #991b1b;">🔴 Recommended Focus Areas:</span>
+            <span style="font-size: 0.8rem; font-weight: 600; color: #991b1b;"><i class="fa-solid fa-circle text-danger status-indicator-dot"></i> Recommended Focus Areas:</span>
             <div id="modal-missing-skills" style="font-size: 0.85rem; color: #7f1d1d; margin-top: 4px;">Loading...</div>
           </div>
         </div>
@@ -158,45 +159,45 @@
       <!-- Round-by-Round Breakdown Accordion -->
       <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px;">
         <div>
-          <strong style="color: var(--primary-700); font-size: 0.95rem;">📌 Hiring Rounds & Process:</strong>
+          <strong style="color: var(--primary-700); font-size: 0.95rem;"><i class="fa-solid fa-thumbtack"></i> Hiring Rounds & Process:</strong>
           <div id="modal-rounds" style="background: var(--bg-subtle); padding: 10px 14px; border-radius: 6px; font-size: 0.9rem; margin-top: 4px; border-left: 3px solid var(--primary-500);"></div>
         </div>
 
         <div>
-          <strong style="color: var(--primary-700); font-size: 0.95rem;">🧮 Aptitude Pattern & Question Timing:</strong>
+          <strong style="color: var(--primary-700); font-size: 0.95rem;"><i class="fa-solid fa-calculator"></i> Aptitude Pattern & Question Timing:</strong>
           <div id="modal-aptitude" style="background: var(--bg-subtle); padding: 10px 14px; border-radius: 6px; font-size: 0.9rem; margin-top: 4px; border-left: 3px solid #3b82f6;"></div>
         </div>
 
         <div>
-          <strong style="color: var(--primary-700); font-size: 0.95rem;">💻 Coding Round Requirements:</strong>
+          <strong style="color: var(--primary-700); font-size: 0.95rem;"><i class="fa-solid fa-laptop-code"></i> Coding Round Requirements:</strong>
           <div id="modal-coding" style="background: var(--bg-subtle); padding: 10px 14px; border-radius: 6px; font-size: 0.9rem; margin-top: 4px; border-left: 3px solid #10b981;"></div>
         </div>
 
         <div>
-          <strong style="color: var(--primary-700); font-size: 0.95rem;">🎯 Technical Interview Core Domains:</strong>
+          <strong style="color: var(--primary-700); font-size: 0.95rem;"><i class="fa-solid fa-bullseye"></i> Technical Interview Core Domains:</strong>
           <div id="modal-technical" style="background: var(--bg-subtle); padding: 10px 14px; border-radius: 6px; font-size: 0.9rem; margin-top: 4px; border-left: 3px solid #f59e0b;"></div>
         </div>
 
         <div>
-          <strong style="color: var(--primary-700); font-size: 0.95rem;">🤝 HR & Behavioral Strategy Tips:</strong>
+          <strong style="color: var(--primary-700); font-size: 0.95rem;"><i class="fa-solid fa-handshake"></i> HR & Behavioral Strategy Tips:</strong>
           <div id="modal-hr" style="background: var(--bg-subtle); padding: 10px 14px; border-radius: 6px; font-size: 0.9rem; margin-top: 4px; border-left: 3px solid #8b5cf6;"></div>
         </div>
 
         <div>
-          <strong style="color: var(--primary-700); font-size: 0.95rem;">🔑 Recommended Skill Stack:</strong>
+          <strong style="color: var(--primary-700); font-size: 0.95rem;"><i class="fa-solid fa-key"></i> Recommended Skill Stack:</strong>
           <div id="modal-skills" style="margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px;"></div>
         </div>
       </div>
 
       <!-- Quick Action Buttons -->
       <div style="display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid var(--border-color); padding-top: 16px; flex-wrap: wrap;">
-        <a href="aptitude.html" class="btn btn-secondary">🧮 Practice Aptitude</a>
-        <a href="preparation.html" class="btn btn-secondary">💻 Practice Coding</a>
-        <a href="interview.html" class="btn btn-primary">🎙️ Launch Mock Interview →</a>
+        <a href="aptitude.html" class="btn btn-secondary"><i class="fa-solid fa-calculator"></i> Practice Aptitude</a>
+        <a href="preparation.html" class="btn btn-secondary"><i class="fa-solid fa-laptop-code"></i> Practice Coding</a>
+        <a href="interview.html" class="btn btn-primary"><i class="fa-solid fa-microphone"></i> Launch Mock Interview &rarr;</a>
       </div>
 
       <p style="color: var(--text-muted); font-size: 0.75rem; text-align: center; margin-top: 16px; margin-bottom: 0;">
-        ⚠️ Disclaimer: Placement patterns represent commonly referenced industry interview trends and educational benchmarks. Updated continuously by Platform Administrators.
+        <i class="fa-solid fa-triangle-exclamation text-warning"></i> Disclaimer: Placement patterns represent commonly referenced industry interview trends and educational benchmarks. Updated continuously by Platform Administrators.
       </p>
 
     </div>
@@ -207,7 +208,7 @@
     <div class="modal-card" style="max-width: 900px; max-height: 90vh; overflow-y: auto; padding: 28px;">
       
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
-        <h2 style="font-size: 1.3rem; color: var(--text-main);">⚖️ Side-by-Side Company Comparison</h2>
+        <h2 style="font-size: 1.3rem; color: var(--text-main);"><i class="fa-solid fa-scale-balanced"></i> Side-by-Side Company Comparison</h2>
         <button id="btn-close-compare" style="background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text-muted); line-height: 1;">&times;</button>
       </div>
 

@@ -74,7 +74,7 @@ function setupTemplateSelector() {
         resumeSheet.className = `resume-paper template-${activeTemplate}`;
       }
       updatePreviewFromForm();
-      showToast(`Switched to ${btn.textContent.trim().split('\n')[0]} template! 🎨`, "info");
+      showToast(`Switched to ${btn.textContent.trim().split('\n')[0]} template!`, "info");
     });
   });
 }
@@ -236,7 +236,7 @@ async function saveResumeToBackend(employee) {
     });
     const data = await res.json();
     if (data.success) {
-      showToast("Resume saved successfully! 💾", "success");
+      showToast("Resume saved successfully!", "success");
     } else {
       showToast(data.message || "Failed to save resume.", "error");
     }
@@ -330,7 +330,7 @@ function setupVersionManager(employee) {
         });
         const data = await res.json();
         if (data.success) {
-          showToast(`Saved version "${versionName}"! 📁`, "success");
+          showToast(`Saved version "${versionName}"!`, "success");
           await loadSavedVersionsList(employee.id);
         }
       } catch (e) {
@@ -354,7 +354,7 @@ function setupVersionManager(employee) {
           updatePreviewFromForm();
           const indicator = document.getElementById("version-status-indicator");
           if (indicator) indicator.textContent = `Active: ${data.data.version_name}`;
-          showToast(`Loaded version: "${data.data.version_name}" 📄`, "success");
+          showToast(`Loaded version: "${data.data.version_name}"`, "success");
         }
       } catch (e) {
         showToast("Error loading version.", "error");
@@ -439,9 +439,9 @@ function setupAITools(employee) {
         if (data.success) {
           lastRewrittenBullet = data.rewritten_bullet;
           resultBox.style.display = "block";
-          textEl.textContent = `✨ "${data.rewritten_bullet}"`;
+          textEl.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-primary"></i> "${escapeHtml(data.rewritten_bullet)}"`;
           explEl.textContent = `${data.score_boost} • ${data.explanation}`;
-          showToast("Bullet point enhanced with STAR metrics! 🚀", "success");
+          showToast("Bullet point enhanced with STAR metrics!", "success");
         } else {
           showToast(data.message || "Failed to rewrite bullet.", "error");
         }
@@ -449,7 +449,7 @@ function setupAITools(employee) {
         showToast("Error connecting to AI bullet rewriter.", "error");
       } finally {
         btnRewrite.disabled = false;
-        btnRewrite.textContent = "Rewrite ✨";
+        btnRewrite.innerHTML = 'Rewrite <i class="fa-solid fa-wand-magic-sparkles"></i>';
       }
     });
   }
@@ -465,7 +465,7 @@ function setupAITools(employee) {
           expArea.value = lastRewrittenBullet;
         }
         updatePreviewFromForm();
-        showToast("Applied rewritten bullet to Experience! ➕", "success");
+        showToast("Applied rewritten bullet to Experience!", "success");
         rawBulletInput.value = "";
         resultBox.style.display = "none";
       }
@@ -505,13 +505,13 @@ function setupAITools(employee) {
             ${data.missing_keywords && data.missing_keywords.length ? `<div style="color: #b91c1c; margin-top: 2px;"><strong>Missing:</strong> ${data.missing_keywords.join(", ")}</div>` : ''}
             <div style="margin-top: 4px; color: #166534;"><strong>Tip:</strong> ${data.suggestions[0] || 'Clean ATS formatting'}</div>
           `;
-          showToast(`ATS Analysis Complete: Score ${data.overall_score}% 🎯`, "success");
+          showToast(`ATS Analysis Complete: Score ${data.overall_score}%`, "success");
         }
       } catch (e) {
         showToast("Error calculating ATS score.", "error");
       } finally {
         btnCalcATS.disabled = false;
-        btnCalcATS.textContent = "Analyze 🤖";
+        btnCalcATS.innerHTML = 'Analyze <i class="fa-solid fa-robot"></i>';
       }
     });
   }

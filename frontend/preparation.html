@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Technical Preparation & Coding Practice - AI Employee Preparation Platform">
   <title>Technical Preparation & Coding | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,11 +14,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">🤖</span>
+        <span class="brand-icon"><i class="fa-solid fa-robot"></i></span>
         <span>AI Employee <span class="brand-highlight">Prep</span></span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
@@ -30,7 +31,7 @@
         <li><a href="analyzer.html" class="nav-link">Resume Analyzer</a></li>
         <li><a href="companies.html" class="nav-link">Companies</a></li>
         <li><a href="history.html" class="nav-link">History</a></li>
-        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges <i class="fa-solid fa-trophy"></i></a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -51,8 +52,8 @@
 
         <!-- Mode Toggle Tabs -->
         <div style="display: flex; background: var(--bg-card); padding: 4px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-          <button id="tab-coding" class="btn btn-primary btn-sm" style="border-radius: var(--radius-sm);">💻 Coding Challenges</button>
-          <button id="tab-concepts" class="btn btn-secondary btn-sm" style="border: none; border-radius: var(--radius-sm);">📚 Language Concepts</button>
+          <button id="tab-coding" class="btn btn-primary btn-sm" style="border-radius: var(--radius-sm);"><i class="fa-solid fa-laptop-code"></i> Coding Challenges</button>
+          <button id="tab-concepts" class="btn btn-secondary btn-sm" style="border: none; border-radius: var(--radius-sm);"><i class="fa-solid fa-book"></i> Language Concepts</button>
         </div>
       </div>
 
@@ -67,7 +68,7 @@
             <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;">
               <div style="flex: 2; min-width: min(100%, 260px); width: 100%;">
                 <label for="select-problem" class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
-                  <span>🎯 Select Coding Challenge:</span>
+                  <span><i class="fa-solid fa-bullseye"></i> Select Coding Challenge:</span>
                   <span id="problem-count-badge" style="font-size: 0.78rem; color: var(--text-muted);">37 Problems Available</span>
                 </label>
                 <div style="display: flex; gap: 8px;">
@@ -75,10 +76,10 @@
                     <!-- Injected dynamically -->
                   </select>
                   <button type="button" id="btn-prev-problem" class="btn btn-secondary btn-sm" title="Previous Coding Problem" style="padding: 0 12px; cursor: pointer;">
-                    ⬅️ Prev
+                    <i class="fa-solid fa-arrow-left"></i> Prev
                   </button>
                   <button type="button" id="btn-next-problem" class="btn btn-secondary btn-sm" title="Next Coding Problem" style="padding: 0 12px; cursor: pointer;">
-                    Next ➡️
+                    Next <i class="fa-solid fa-arrow-right"></i>
                   </button>
                 </div>
               </div>
@@ -86,10 +87,10 @@
               <!-- Instant Change Question & Shuffle Buttons -->
               <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                 <button type="button" id="btn-random-problem" class="btn btn-primary btn-sm" style="font-weight: 600; cursor: pointer;" title="Pick a random new coding challenge">
-                  🎲 Change Question
+                  <i class="fa-solid fa-dice"></i> Change Question
                 </button>
                 <button type="button" id="btn-shuffle-problems" class="btn btn-secondary btn-sm" style="cursor: pointer;" title="Shuffle question list and change problem">
-                  🔄 Shuffle All
+                  <i class="fa-solid fa-shuffle"></i> Shuffle All
                 </button>
               </div>
             </div>
@@ -111,7 +112,7 @@
                   <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Topic:</span>
                   <select id="filter-topic" class="form-select" style="width: auto; padding: 4px 10px; font-size: 0.85rem;">
                     <option value="all">All Topics</option>
-                    <option value="high_demand">🔥 High Demand (Top Companies)</option>
+                    <option value="high_demand"><i class="fa-solid fa-fire text-danger"></i> High Demand (Top Companies)</option>
                     <option value="arrays">Arrays & Greedy</option>
                     <option value="strings">Strings & Sliding Window</option>
                     <option value="dynamic programming">Dynamic Programming</option>
@@ -156,16 +157,16 @@
               <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                 <h2 class="card-title" id="problem-title-display" style="margin: 0;">Problem Title</h2>
                 <span class="badge badge-info" id="problem-category-badge">Category</span>
-                <span class="badge badge-warning" id="problem-demand-badge" style="font-size: 0.75rem;">🔥 High Demand</span>
+                <span class="badge badge-warning" id="problem-demand-badge" style="font-size: 0.75rem;"><i class="fa-solid fa-fire text-danger"></i> High Demand</span>
               </div>
               <button type="button" id="btn-quick-change" class="btn btn-secondary btn-sm" style="font-size: 0.8rem; padding: 4px 10px; cursor: pointer;" title="Change to a different coding problem">
-                🎲 Next Random
+                <i class="fa-solid fa-dice"></i> Next Random
               </button>
             </div>
 
             <!-- Companies Tag Banner -->
             <div id="problem-companies-banner" style="background: rgba(99, 102, 241, 0.08); border-left: 3px solid var(--primary-600); padding: 6px 12px; border-radius: 4px; margin-bottom: 14px; font-size: 0.83rem; color: var(--primary-700); font-weight: 500;">
-              🏢 Frequently Asked in: <span id="problem-companies-list">Amazon, TCS, Infosys, Google</span>
+              <i class="fa-solid fa-building"></i> Frequently Asked in: <span id="problem-companies-list">Amazon, TCS, Infosys, Google</span>
             </div>
 
             <div style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 16px; line-height: 1.6;" id="problem-desc-display">
@@ -175,18 +176,18 @@
             <!-- Structured Input/Output & Constraints -->
             <div style="margin-bottom: 16px; font-size: 0.9rem; line-height: 1.5;">
               <div style="margin-bottom: 8px;">
-                <strong>📥 Input Format:</strong> <span id="problem-input-format" style="color: var(--text-muted);">A single string 's'</span>
+                <strong><i class="fa-solid fa-download"></i> Input Format:</strong> <span id="problem-input-format" style="color: var(--text-muted);">A single string 's'</span>
               </div>
               <div style="margin-bottom: 8px;">
-                <strong>📤 Output Format:</strong> <span id="problem-output-format" style="color: var(--text-muted);">The reversed string</span>
+                <strong><i class="fa-solid fa-upload"></i> Output Format:</strong> <span id="problem-output-format" style="color: var(--text-muted);">The reversed string</span>
               </div>
               <div>
-                <strong>⚠️ Constraints:</strong> <span id="problem-constraints" style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.85rem;">1 <= length <= 10^5</span>
+                <strong><i class="fa-solid fa-triangle-exclamation text-warning"></i> Constraints:</strong> <span id="problem-constraints" style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.85rem;">1 <= length <= 10^5</span>
               </div>
             </div>
 
             <div style="margin-bottom: 16px;">
-              <h3 style="font-size: 0.95rem; margin-bottom: 6px;">📌 Sample Input & Output:</h3>
+              <h3 style="font-size: 0.95rem; margin-bottom: 6px;"><i class="fa-solid fa-thumbtack"></i> Sample Input & Output:</h3>
               <div id="problem-examples-display" style="background: var(--bg-subtle); padding: 12px 14px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.5;">
                 <!-- Examples -->
               </div>
@@ -210,9 +211,9 @@
                 <span style="color: #a6adc8; font-size: 0.85rem; font-family: var(--font-mono); margin-left: 8px;" id="editor-filename">solution.py</span>
               </div>
               <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <button type="button" class="btn btn-secondary btn-sm" id="btn-reset-code" style="background: #313244; color: #cdd6f4; border: 1px solid #45475a; cursor: pointer; transition: all 0.2s;" title="Reset code to initial starter template">🔄 Reset</button>
-                <button type="button" class="btn btn-success btn-sm" id="btn-run-code" style="cursor: pointer; font-weight: 700; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);" title="Run code against test cases">▶ Run</button>
-                <button type="button" class="btn btn-primary btn-sm" id="btn-submit-code" style="cursor: pointer; font-weight: 700; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);" title="Submit solution and record to profile">Submit ✔</button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-reset-code" style="background: #313244; color: #cdd6f4; border: 1px solid #45475a; cursor: pointer; transition: all 0.2s;" title="Reset code to initial starter template"><i class="fa-solid fa-arrows-rotate"></i> Reset</button>
+                <button type="button" class="btn btn-success btn-sm" id="btn-run-code" style="cursor: pointer; font-weight: 700; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);" title="Run code against test cases"><i class="fa-solid fa-play"></i> Run</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-submit-code" style="cursor: pointer; font-weight: 700; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);" title="Submit solution and record to profile">Submit <i class="fa-solid fa-check"></i></button>
               </div>
             </div>
 
@@ -265,7 +266,7 @@
 
             <div>
               <button id="btn-shuffle-concepts" class="btn btn-secondary" style="height: 38px; display: flex; align-items: center; gap: 8px;" title="Fetch fresh randomized concept questions">
-                <span>🎲 Change / Shuffle Questions</span>
+                <span><i class="fa-solid fa-dice"></i> Change / Shuffle Questions</span>
               </button>
             </div>
           </div>

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Gamification & Achievements - AI Employee Preparation Platform">
   <title>Achievements & Badges | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,11 +14,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">🤖</span>
+        <span class="brand-icon"><i class="fa-solid fa-robot"></i></span>
         <span>AI Employee <span class="brand-highlight">Prep</span></span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
@@ -30,7 +31,7 @@
         <li><a href="analyzer.html" class="nav-link">Resume Analyzer</a></li>
         <li><a href="companies.html" class="nav-link">Companies</a></li>
         <li><a href="history.html" class="nav-link">History</a></li>
-        <li><a href="achievements.html" class="nav-link active">Badges 🏆</a></li>
+        <li><a href="achievements.html" class="nav-link active">Badges <i class="fa-solid fa-trophy"></i></a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -51,7 +52,7 @@
       <!-- Gamification Hero Stats -->
       <div class="hero-stats" style="margin-bottom: 32px;">
         <div class="stat-card">
-          <div class="stat-icon" style="background: rgba(99, 102, 241, 0.1); color: var(--primary-600);">⚡</div>
+          <div class="stat-icon" style="background: rgba(99, 102, 241, 0.1); color: var(--primary-600);"><i class="fa-solid fa-bolt"></i></div>
           <div class="stat-info">
             <div class="stat-number" id="achieve-points-val">50</div>
             <div class="stat-label">Total XP Points</div>
@@ -59,7 +60,7 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--emerald-600);">🎖️</div>
+          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--emerald-600);"><i class="fa-solid fa-medal"></i></div>
           <div class="stat-info">
             <div class="stat-number" id="achieve-level-val">Level 1</div>
             <div class="stat-label">Placement Rank</div>
@@ -67,7 +68,7 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--amber-500);">🔥</div>
+          <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--amber-500);"><i class="fa-solid fa-fire"></i></div>
           <div class="stat-info">
             <div class="stat-number" id="achieve-streak-val">1 Day</div>
             <div class="stat-label">Daily Active Streak</div>
@@ -75,7 +76,7 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: var(--violet-500);">🏆</div>
+          <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: var(--violet-500);"><i class="fa-solid fa-trophy"></i></div>
           <div class="stat-info">
             <div class="stat-number" id="achieve-unlocked-count">1 / 8</div>
             <div class="stat-label">Badges Unlocked</div>
@@ -85,7 +86,7 @@
 
       <!-- Badges Showcase Grid -->
       <div class="card" style="padding: 28px;">
-        <h2 style="font-size: 1.25rem; margin-bottom: 20px;">🏆 Achievement Badges Showcase</h2>
+        <h2 style="font-size: 1.25rem; margin-bottom: 20px;"><i class="fa-solid fa-trophy"></i> Achievement Badges Showcase</h2>
 
         <div id="badges-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px;">
           <!-- Injected dynamically -->

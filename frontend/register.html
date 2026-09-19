@@ -1,23 +1,28 @@
+emj
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Register an employee/candidate account on AI Employee Preparation Platform">
   <title>Create Account | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
   <!-- Minimal Header -->
   <nav class="navbar">
     <div class="container nav-container">
       <a href="index.html" class="nav-brand">
-        <span class="brand-icon">🤖</span>
+        <span class="brand-icon"><i class="fa-solid fa-robot"></i></span>
         <span>AI Employee <span class="brand-highlight">Prep</span></span>
       </a>
       <div>
-        <a href="login.html" class="btn btn-outline-primary btn-sm"><span class="desktop-only">Already have an account? </span>Login</a>
+        <a href="login.html" class="btn btn-outline-primary btn-sm"><span class="desktop-only">Already have an account?
+          </span>Login</a>
       </div>
     </div>
   </nav>
@@ -27,13 +32,15 @@
       <div class="auth-wrapper">
         <div class="auth-box" style="max-width: 650px;">
           <div class="auth-header">
-            <div class="auth-icon">📝</div>
+            <div class="auth-icon"><i class="fa-solid fa-pen-to-square"></i></div>
             <h1 class="auth-title">Candidate Registration</h1>
             <p class="auth-subtitle">Create your preparation account and personalize your AI learning path</p>
           </div>
 
           <!-- Registration Alert Message Box -->
-          <div id="register-alert" style="display: none; padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 20px; font-size: 0.9rem; font-weight: 500;"></div>
+          <div id="register-alert"
+            style="display: none; padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 20px; font-size: 0.9rem; font-weight: 500;">
+          </div>
 
           <form id="register-form">
             <div class="form-row">
@@ -45,29 +52,36 @@
 
               <!-- Email -->
               <div class="form-group">
-                <label for="email" class="form-label">Email Address <span style="color: var(--rose-500);">*</span></label>
-                <input type="email" id="email" name="email" class="form-control" placeholder="e.g. user@example.com" required>
+                <label for="email" class="form-label">Email Address <span
+                    style="color: var(--rose-500);">*</span></label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="e.g. user@example.com"
+                  required>
               </div>
             </div>
 
             <div class="form-row">
               <!-- Password -->
               <div class="form-group">
-                <label for="password" class="form-label">Password (min 6 chars) <span style="color: var(--rose-500);">*</span></label>
-                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" minlength="6" required>
+                <label for="password" class="form-label">Password (min 6 chars) <span
+                    style="color: var(--rose-500);">*</span></label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••"
+                  minlength="6" required>
               </div>
 
               <!-- Confirm Password -->
               <div class="form-group">
-                <label for="confirm_password" class="form-label">Confirm Password <span style="color: var(--rose-500);">*</span></label>
-                <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="••••••••" minlength="6" required>
+                <label for="confirm_password" class="form-label">Confirm Password <span
+                    style="color: var(--rose-500);">*</span></label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control"
+                  placeholder="••••••••" minlength="6" required>
               </div>
             </div>
 
             <div class="form-row">
               <!-- Qualification -->
               <div class="form-group">
-                <label for="qualification" class="form-label">Educational Qualification <span style="color: var(--rose-500);">*</span></label>
+                <label for="qualification" class="form-label">Educational Qualification <span
+                    style="color: var(--rose-500);">*</span></label>
                 <select id="qualification" name="qualification" class="form-select" required>
                   <option value="" disabled selected>Select Qualification</option>
                   <option value="BSc IT">BSc IT (Information Technology)</option>
@@ -82,7 +96,8 @@
 
               <!-- Experience -->
               <div class="form-group">
-                <label for="experience" class="form-label">Experience Level <span style="color: var(--rose-500);">*</span></label>
+                <label for="experience" class="form-label">Experience Level <span
+                    style="color: var(--rose-500);">*</span></label>
                 <select id="experience" name="experience" class="form-select" required>
                   <option value="" disabled selected>Select Experience</option>
                   <option value="Fresher" selected>Fresher (0 years)</option>
@@ -96,7 +111,8 @@
             <div class="form-row">
               <!-- Target Job Role -->
               <div class="form-group">
-                <label for="job_role" class="form-label">Target Job Role <span style="color: var(--rose-500);">*</span></label>
+                <label for="job_role" class="form-label">Target Job Role <span
+                    style="color: var(--rose-500);">*</span></label>
                 <select id="job_role" name="job_role" class="form-select" required>
                   <option value="" disabled selected>Select Target Career Role</option>
                   <option value="Software Developer">Software Developer</option>
@@ -139,13 +155,16 @@
 
             <!-- Skills -->
             <div class="form-group">
-              <label for="skills" class="form-label">Technical Skills (comma separated) <span style="color: var(--rose-500);">*</span></label>
-              <input type="text" id="skills" name="skills" class="form-control" placeholder="e.g. Java, Python, HTML, CSS, JavaScript, SQL" value="Java, Python, SQL, DSA" required>
+              <label for="skills" class="form-label">Technical Skills (comma separated) <span
+                  style="color: var(--rose-500);">*</span></label>
+              <input type="text" id="skills" name="skills" class="form-control"
+                placeholder="e.g. Java, Python, HTML, CSS, JavaScript, SQL" value="Java, Python, SQL, DSA" required>
               <div class="form-helper">List your programming languages, frameworks, or database skills.</div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-register-submit" style="margin-top: 12px;">
-              Create Account 🚀
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-register-submit"
+              style="margin-top: 12px;">
+              Create Account <i class="fa-solid fa-rocket"></i>
             </button>
           </form>
 
@@ -242,16 +261,17 @@
           } else {
             showAlert(data.message || "Registration failed. Please check your details.");
             submitBtn.disabled = false;
-            submitBtn.textContent = "Create Account 🚀";
+            submitBtn.innerHTML = 'Create Account <i class="fa-solid fa-rocket"></i>';
           }
         } catch (err) {
           console.error("Registration error:", err);
           showAlert("Could not connect to backend server. Please verify the server is running.");
           submitBtn.disabled = false;
-          submitBtn.textContent = "Create Account 🚀";
+          submitBtn.innerHTML = 'Create Account <i class="fa-solid fa-rocket"></i>';
         }
       });
     });
   </script>
 </body>
+
 </html>

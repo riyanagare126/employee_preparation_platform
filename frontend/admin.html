@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Secure Admin Dashboard - AI Employee Preparation Platform">
   <title>Admin Dashboard | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,11 +14,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">🛡️</span>
+        <span class="brand-icon"><i class="fa-solid fa-shield-halved"></i></span>
         <span>Platform <span class="brand-highlight" style="color: #f43f5e;">Admin</span></span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Candidate View</a></li>
@@ -42,14 +43,14 @@
         </div>
 
         <div>
-          <button id="btn-refresh-admin" class="btn btn-secondary btn-sm">🔄 Refresh Data</button>
+          <button id="btn-refresh-admin" class="btn btn-secondary btn-sm"><i class="fa-solid fa-arrows-rotate"></i> Refresh Data</button>
         </div>
       </div>
 
       <!-- Admin Platform Stat Metrics -->
       <div class="hero-stats" style="margin-bottom: 32px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
         <div class="stat-card">
-          <div class="stat-icon" style="background: rgba(99, 102, 241, 0.1); color: var(--primary-600);">👥</div>
+          <div class="stat-icon" style="background: rgba(99, 102, 241, 0.1); color: var(--primary-600);"><i class="fa-solid fa-users"></i></div>
           <div class="stat-info">
             <div class="stat-number" id="stat-total-users">0</div>
             <div class="stat-label">Registered Candidates</div>
@@ -57,7 +58,7 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--emerald-600);">🧮</div>
+          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--emerald-600);"><i class="fa-solid fa-calculator"></i></div>
           <div class="stat-info">
             <div class="stat-number" id="stat-total-aptitude">0</div>
             <div class="stat-label">Aptitude Tests Taken</div>
@@ -65,7 +66,7 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--amber-500);">💻</div>
+          <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--amber-500);"><i class="fa-solid fa-laptop-code"></i></div>
           <div class="stat-info">
             <div class="stat-number" id="stat-total-coding">0</div>
             <div class="stat-label">Coding Solutions Solved</div>
@@ -73,7 +74,7 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: var(--violet-500);">🏢</div>
+          <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: var(--violet-500);"><i class="fa-solid fa-building"></i></div>
           <div class="stat-info">
             <div class="stat-number" id="stat-total-companies">20</div>
             <div class="stat-label">Company Blueprints</div>
@@ -83,13 +84,13 @@
 
       <!-- Admin Tabs -->
       <div class="admin-tabs-nav" style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
-        <button id="tab-users-btn" class="btn btn-primary btn-sm">👥 Manage Candidates</button>
-        <button id="tab-companies-btn" class="btn btn-secondary btn-sm">🏢 Company Blueprints</button>
-        <button id="tab-roles-btn" class="btn btn-secondary btn-sm">🎯 Job Roles</button>
-        <button id="tab-questions-btn" class="btn btn-secondary btn-sm">❓ Question Banks & Custom Questions</button>
-        <button id="tab-trends-btn" class="btn btn-secondary btn-sm">💡 Trend Insights CMS</button>
-        <button id="tab-templates-btn" class="btn btn-secondary btn-sm">🎨 Resume Templates CMS</button>
-        <button id="tab-fluency-btn" class="btn btn-secondary btn-sm">🧠 AI Fluency Questions CMS</button>
+        <button id="tab-users-btn" class="btn btn-primary btn-sm"><i class="fa-solid fa-users"></i> Manage Candidates</button>
+        <button id="tab-companies-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-building"></i> Company Blueprints</button>
+        <button id="tab-roles-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-bullseye"></i> Job Roles</button>
+        <button id="tab-questions-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-circle-question"></i> Question Banks & Custom Questions</button>
+        <button id="tab-trends-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-lightbulb"></i> Trend Insights CMS</button>
+        <button id="tab-templates-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-palette"></i> Resume Templates CMS</button>
+        <button id="tab-fluency-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-brain"></i> AI Fluency Questions CMS</button>
       </div>
 
       <!-- Tab 1: Candidates Management Table -->
@@ -118,7 +119,7 @@
       <div id="admin-companies-view" class="card" style="padding: 24px; display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
           <h2 style="font-size: 1.15rem; margin: 0;">Enterprise Recruitment Blueprints</h2>
-          <button id="btn-add-company" class="btn btn-primary btn-sm">+ Add New Company 🏢</button>
+          <button id="btn-add-company" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add New Company <i class="fa-solid fa-building"></i></button>
         </div>
         <div style="overflow-x: auto;">
           <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
@@ -129,6 +130,7 @@
                 <th style="padding: 10px;">Category</th>
                 <th style="padding: 10px;">Difficulty</th>
                 <th style="padding: 10px;">Common Roles</th>
+                <th style="padding: 10px;">Status</th>
                 <th style="padding: 10px;">Actions</th>
               </tr>
             </thead>
@@ -143,7 +145,7 @@
       <div id="admin-roles-view" class="card" style="padding: 24px; display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
           <h2 style="font-size: 1.15rem; margin: 0;">Target Job Roles</h2>
-          <button id="btn-add-role" class="btn btn-primary btn-sm">+ Add Job Role 🎯</button>
+          <button id="btn-add-role" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add Job Role <i class="fa-solid fa-bullseye"></i></button>
         </div>
         <div style="overflow-x: auto;">
           <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
@@ -167,11 +169,74 @@
       <!-- Tab 4: Questions Management View -->
       <div id="admin-questions-view" class="card" style="padding: 24px; display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-          <h2 style="font-size: 1.15rem; margin: 0;">Custom Questions Assigned to Companies & Roles</h2>
-          <button id="btn-add-question" class="btn btn-primary btn-sm">+ Add & Assign Question ❓</button>
+          <div>
+            <h2 style="font-size: 1.25rem; margin: 0;">Company Questions CMS & Preparation Banks</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 2px 0 0 0;">Manage per-company questions across Aptitude, Coding, Technical, AI Interview, and HR. Add, edit, toggle, or bulk import/export.</p>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button id="btn-export-questions-csv" class="btn btn-secondary btn-sm"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+            <button id="btn-export-questions-json" class="btn btn-secondary btn-sm"><i class="fa-solid fa-file-code"></i> Export JSON</button>
+            <button id="btn-import-questions" class="btn btn-secondary btn-sm"><i class="fa-solid fa-file-import"></i> Bulk Import</button>
+            <button id="btn-add-company-question" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add Question</button>
+          </div>
         </div>
-        <div id="admin-questions-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 600px; overflow-y: auto;">
-          <!-- Injected dynamically -->
+
+        <!-- Filter Bar -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; background: var(--bg-subtle); padding: 14px; border-radius: 8px;">
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Filter by Company:</label>
+            <select id="q-filter-company" class="form-select" style="padding: 6px 10px; font-size: 0.88rem;">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Category:</label>
+            <select id="q-filter-category" class="form-select" style="padding: 6px 10px; font-size: 0.88rem;">
+              <option value="all">All Categories</option>
+              <option value="aptitude">Aptitude</option>
+              <option value="coding">Coding</option>
+              <option value="technical">Technical</option>
+              <option value="ai_interview">AI Interview</option>
+              <option value="hr">HR Interview</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Role:</label>
+            <select id="q-filter-role" class="form-select" style="padding: 6px 10px; font-size: 0.88rem;">
+              <option value="all">All Roles</option>
+              <option value="Java Developer">Java Developer</option>
+              <option value="Python Developer">Python Developer</option>
+              <option value="Data Analyst">Data Analyst</option>
+              <option value="Software Engineer">Software Engineer</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Search Questions:</label>
+            <input type="text" id="q-filter-search" class="form-control" placeholder="Search keywords..." style="padding: 6px 10px; font-size: 0.88rem;">
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 0.85rem; color: var(--text-muted);" id="q-count-label">Showing 0 questions</span>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+                <th style="padding: 10px; width: 60px;">ID</th>
+                <th style="padding: 10px; width: 110px;">Category</th>
+                <th style="padding: 10px; width: 130px;">Role</th>
+                <th style="padding: 10px;">Question Statement & Key Info</th>
+                <th style="padding: 10px; width: 85px;">Diff</th>
+                <th style="padding: 10px; width: 85px;">Status</th>
+                <th style="padding: 10px; width: 150px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-company-questions-tbody">
+              <!-- Injected dynamically -->
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -182,7 +247,7 @@
             <h2 style="font-size: 1.15rem; margin: 0;">2026 Hiring Trend Insights CMS</h2>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin: 2px 0 0 0;">Tips displayed dynamically on student dashboards matching target role and company.</p>
           </div>
-          <button id="btn-add-trend" class="btn btn-primary btn-sm">+ Add Trend Insight 💡</button>
+          <button id="btn-add-trend" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add Trend Insight <i class="fa-solid fa-lightbulb"></i></button>
         </div>
         <div style="overflow-x: auto;">
           <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
@@ -210,7 +275,7 @@
             <h2 style="font-size: 1.15rem; margin: 0;">Resume Templates Management CMS</h2>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin: 2px 0 0 0;">Control active resume templates, CSS class bindings, and trending badges.</p>
           </div>
-          <button id="btn-add-template" class="btn btn-primary btn-sm">+ Add Template 🎨</button>
+          <button id="btn-add-template" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add Template <i class="fa-solid fa-palette"></i></button>
         </div>
         <div style="overflow-x: auto;">
           <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
@@ -238,7 +303,7 @@
             <h2 style="font-size: 1.15rem; margin: 0;">AI Fluency Round Questions CMS</h2>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin: 2px 0 0 0;">Manage indirect AI tool fluency questions and evaluation rubrics.</p>
           </div>
-          <button id="btn-add-fluency" class="btn btn-primary btn-sm">+ Add Fluency Question 🧠</button>
+          <button id="btn-add-fluency" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add Fluency Question <i class="fa-solid fa-brain"></i></button>
         </div>
         <div id="admin-fluency-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 600px; overflow-y: auto;">
           <!-- Injected dynamically -->
@@ -253,7 +318,7 @@
     <div class="card" style="max-width: 650px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <h2 style="font-size: 1.25rem; margin: 0;" id="company-modal-title">Add Company Blueprint</h2>
-        <button id="btn-close-company-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+        <button id="btn-close-company-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <form id="form-company">
@@ -271,7 +336,7 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Company Logo (Emoji or Icon)</label>
-            <input type="text" id="comp-emoji" class="form-control" placeholder="e.g. 🌐" value="🏢">
+            <input type="text" id="comp-emoji" class="form-control" placeholder="e.g. fa-building" value="fa-building">
           </div>
           <div class="form-group">
             <label class="form-label">Category</label>
@@ -332,7 +397,7 @@
 
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
           <button type="button" id="btn-cancel-comp" class="btn btn-secondary">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Company Blueprint 💾</button>
+          <button type="submit" class="btn btn-primary">Save Company Blueprint <i class="fa-solid fa-floppy-disk"></i></button>
         </div>
       </form>
     </div>
@@ -343,7 +408,7 @@
     <div class="card" style="max-width: 500px; width: 100%; padding: 24px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <h2 style="font-size: 1.25rem; margin: 0;">Add Target Job Role</h2>
-        <button id="btn-close-role-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+        <button id="btn-close-role-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <form id="form-role">
@@ -369,7 +434,7 @@
 
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
           <button type="button" id="btn-cancel-role" class="btn btn-secondary">Cancel</button>
-          <button type="submit" class="btn btn-primary">Create Role 🎯</button>
+          <button type="submit" class="btn btn-primary">Create Role <i class="fa-solid fa-bullseye"></i></button>
         </div>
       </form>
     </div>
@@ -380,7 +445,7 @@
     <div class="card" style="max-width: 600px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <h2 style="font-size: 1.25rem; margin: 0;">Add & Assign Question</h2>
-        <button id="btn-close-q-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+        <button id="btn-close-q-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <form id="form-question">
@@ -423,7 +488,7 @@
 
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
           <button type="button" id="btn-cancel-q" class="btn btn-secondary">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Question 💾</button>
+          <button type="submit" class="btn btn-primary">Save Question <i class="fa-solid fa-floppy-disk"></i></button>
         </div>
       </form>
     </div>
@@ -432,7 +497,7 @@
     <div class="card" style="max-width: 600px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <h2 style="font-size: 1.25rem; margin: 0;">Add 2026 Trend Insight</h2>
-        <button id="btn-close-trend-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+        <button id="btn-close-trend-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <form id="form-trend">
@@ -481,7 +546,7 @@
 
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
           <button type="button" id="btn-cancel-trend" class="btn btn-secondary">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Trend Tip 💡</button>
+          <button type="submit" class="btn btn-primary">Save Trend Tip <i class="fa-solid fa-lightbulb"></i></button>
         </div>
       </form>
     </div>
@@ -492,7 +557,7 @@
     <div class="card" style="max-width: 550px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <h2 style="font-size: 1.25rem; margin: 0;">Add Resume Template</h2>
-        <button id="btn-close-template-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+        <button id="btn-close-template-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <form id="form-template">
@@ -509,7 +574,7 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Badge Text</label>
-            <input type="text" id="tmpl-badge" class="form-control" value="🔥 Trending 2026" placeholder="e.g. 99% ATS Pass">
+            <input type="text" id="tmpl-badge" class="form-control" value="Trending 2026" placeholder="e.g. 99% ATS Pass">
           </div>
           <div class="form-group">
             <label class="form-label">CSS Class</label>
@@ -524,7 +589,7 @@
 
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
           <button type="button" id="btn-cancel-template" class="btn btn-secondary">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Template 🎨</button>
+          <button type="submit" class="btn btn-primary">Save Template <i class="fa-solid fa-palette"></i></button>
         </div>
       </form>
     </div>
@@ -535,7 +600,7 @@
     <div class="card" style="max-width: 600px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <h2 style="font-size: 1.25rem; margin: 0;">Add AI Fluency Practice Question</h2>
-        <button id="btn-close-fluency-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+        <button id="btn-close-fluency-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <form id="form-fluency">
@@ -576,7 +641,136 @@
 
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
           <button type="button" id="btn-cancel-fluency" class="btn btn-secondary">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Question 🧠</button>
+          <button type="submit" class="btn btn-primary">Save Question <i class="fa-solid fa-brain"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD / EDIT COMPANY QUESTION (Task 3) -->
+  <div id="company-question-cms-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 650px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 1.25rem; margin: 0;" id="cq-modal-title">Add Company Question</h2>
+        <button id="btn-close-cq-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="form-company-question">
+        <input type="hidden" id="cq-edit-id" value="">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Target Company *</label>
+            <select id="cq-company-select" class="form-select" required>
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select id="cq-category-select" class="form-select" required>
+              <option value="aptitude">Aptitude (MCQ)</option>
+              <option value="coding">Coding Problem</option>
+              <option value="technical">Technical Question</option>
+              <option value="ai_interview">AI Interview</option>
+              <option value="hr">HR Interview</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Role *</label>
+            <select id="cq-role-select" class="form-select">
+              <option value="Java Developer">Java Developer</option>
+              <option value="Python Developer">Python Developer</option>
+              <option value="Data Analyst">Data Analyst</option>
+              <option value="Software Engineer">Software Engineer</option>
+              <option value="All">All Roles</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Difficulty Rating</label>
+            <select id="cq-difficulty-select" class="form-select">
+              <option value="Easy">Easy</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Question Statement / Challenge Title *</label>
+          <textarea id="cq-question-text" class="form-control" rows="3" placeholder="Enter question or coding prompt..." required></textarea>
+        </div>
+
+        <div class="form-group" id="cq-options-group">
+          <label class="form-label">MCQ Options (Separate by semicolon ';' or newline)</label>
+          <textarea id="cq-options-text" class="form-control" rows="2" placeholder="Option A; Option B; Option C; Option D"></textarea>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Required for Aptitude MCQs (at least 4 options).</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" id="cq-answer-group">
+            <label class="form-label">Correct Answer</label>
+            <input type="text" id="cq-answer-text" class="form-control" placeholder="Exact text matching one of the options">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="cq-active-select" class="form-select">
+              <option value="1">Active (Visible)</option>
+              <option value="0">Disabled (Hidden)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Detailed Explanation / Model Guidance</label>
+          <textarea id="cq-explanation-text" class="form-control" rows="2" placeholder="Explain the derivation or scoring rubric..."></textarea>
+        </div>
+
+        <div class="form-group" id="cq-starter-code-group">
+          <label class="form-label">Starter Code / Testcase JSON (For Coding Problems)</label>
+          <textarea id="cq-starter-code-text" class="form-control" rows="3" placeholder="// Starter code or JSON: {'starter_code': '...', 'sample_input': '...'}"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" id="btn-cancel-cq" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Question <i class="fa-solid fa-floppy-disk"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: BULK IMPORT QUESTIONS (JSON / CSV) -->
+  <div id="bulk-import-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 600px; width: 100%; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 1.25rem; margin: 0;">Bulk Import Company Questions</h2>
+        <button id="btn-close-import-modal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="form-bulk-import">
+        <div class="form-group">
+          <label class="form-label">Target Company *</label>
+          <select id="import-company-select" class="form-select" required>
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Upload CSV or JSON File</label>
+          <input type="file" id="import-file-input" class="form-control" accept=".csv,.json">
+          <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 4px;">CSV headers: category, role, difficulty, question, options, correct_answer, explanation</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Or Paste JSON Array of Questions</label>
+          <textarea id="import-json-text" class="form-control" rows="4" placeholder='[{"category": "aptitude", "role": "Java Developer", "question": "...", "options": ["A","B","C","D"], "correct_answer": "A", "explanation": "..."}]'></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" id="btn-cancel-import" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Start Import <i class="fa-solid fa-upload"></i></button>
         </div>
       </form>
     </div>

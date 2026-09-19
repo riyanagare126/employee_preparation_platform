@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Personalized AI Based Employee Preparation Dashboard">
   <title>Personalized Dashboard | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,11 +14,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">⚡</span>
+        <span class="brand-icon"><i class="fa-solid fa-bolt"></i></span>
         <span>Employee<span class="brand-highlight">Prep</span> AI</span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link active">Dashboard</a></li>
@@ -31,8 +32,8 @@
         <li><a href="interview.html" class="nav-link">AI Interview</a></li>
         <li><a href="skills.html" class="nav-link">Skill Matrix</a></li>
         <li><a href="history.html" class="nav-link">History</a></li>
-        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
-        <li><a href="report.html" class="nav-link" target="_blank" style="color: #38bdf8; font-weight: 600;">Report 📄</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges <i class="fa-solid fa-trophy"></i></a></li>
+        <li><a href="report.html" class="nav-link" target="_blank" style="color: #38bdf8; font-weight: 600;">Report <i class="fa-solid fa-file-lines"></i></a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -45,7 +46,7 @@
       <div style="margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
         <div>
           <h1 id="welcome-heading" style="font-size: 2.1rem; margin-bottom: 4px;">
-            Welcome, Candidate! 👋
+            Welcome, Candidate! <i class="fa-solid fa-hand text-warning"></i>
           </h1>
           <p style="color: var(--text-muted); font-size: 0.95rem;">
             Adaptive preparation system tracking your performance and personalizing your path.
@@ -54,13 +55,13 @@
 
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
           <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
-            <span>🏢 <strong id="header-target-company">TCS</strong></span>
+            <span><i class="fa-solid fa-building"></i> <strong id="header-target-company">Target Company</strong></span>
             <span style="color: var(--border-color);">|</span>
-            <span>🎯 <strong id="header-target-role">Java Developer</strong></span>
+            <span><i class="fa-solid fa-bullseye"></i> <strong id="header-target-role">Target Role</strong></span>
           </div>
-          <button id="btn-change-goal" class="btn btn-outline-primary btn-sm">Switch Company 🔄</button>
-          <a href="report.html" target="_blank" class="btn btn-outline-primary btn-sm" style="border-color: #38bdf8; color: #38bdf8;">📄 Final Report</a>
-          <button id="btn-quick-ai" class="btn btn-primary btn-sm">Ask AI Assistant 🤖</button>
+          <button id="btn-change-goal" class="btn btn-outline-primary btn-sm">Switch Company <i class="fa-solid fa-arrows-rotate"></i></button>
+          <a href="report.html" target="_blank" class="btn btn-outline-primary btn-sm" style="border-color: #38bdf8; color: #38bdf8;"><i class="fa-solid fa-file-lines"></i> Final Report</a>
+          <button id="btn-quick-ai" class="btn btn-primary btn-sm">Ask AI Assistant <i class="fa-solid fa-robot"></i></button>
         </div>
       </div>
 
@@ -68,10 +69,10 @@
       <div class="card" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: #fff; padding: 22px 28px; margin-bottom: 24px; border: none; border-radius: var(--radius-lg); box-shadow: 0 8px 20px -4px rgba(49, 46, 129, 0.3);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
           <div style="display: flex; align-items: center; gap: 16px;">
-            <div style="font-size: 2.8rem; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 12px;" id="current-prep-emoji">🏢</div>
+            <div style="font-size: 2.8rem; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 12px;" id="current-prep-emoji"><i class="fa-solid fa-building"></i></div>
             <div>
               <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Current Target Preparation</span>
-              <h2 style="font-size: 1.6rem; color: #fff; margin: 4px 0 2px 0;" id="current-prep-title">TCS — Java Developer</h2>
+              <h2 style="font-size: 1.6rem; color: #fff; margin: 4px 0 2px 0;" id="current-prep-title">Company Preparation</h2>
               <p style="color: #cbd5e1; font-size: 0.88rem; margin: 0;">
                 Isolated progress and customized interview questions tracked for this company.
               </p>
@@ -84,7 +85,7 @@
               <div style="font-size: 1.4rem; font-weight: 800; color: #38bdf8;" id="current-prep-progress">0%</div>
             </div>
             <button id="btn-open-comp-hub" class="btn btn-primary" style="background: #38bdf8; color: #0f172a; font-weight: 700; border: none; padding: 10px 18px;">
-              Open Company Hub 🚀
+              Open Company Hub <i class="fa-solid fa-rocket"></i>
             </button>
           </div>
         </div>
@@ -111,7 +112,7 @@
 
               <div class="profile-detail-item">
                 <span class="detail-label">Target Company</span>
-                <span class="detail-val" id="profile-target-company" style="font-weight: 700; color: var(--primary-600);">TCS</span>
+                <span class="detail-val" id="profile-target-company" style="font-weight: 700; color: var(--primary-600);">Target Company</span>
               </div>
 
               <div class="profile-detail-item">
@@ -138,21 +139,21 @@
             <!-- Gamification Streak & Points -->
             <div style="margin-top: 16px; padding: 12px; background: var(--bg-subtle); border-radius: 8px; display: flex; justify-content: space-around; text-align: center;">
               <div>
-                <span style="font-size: 1.3rem;">🔥</span>
+                <span style="font-size: 1.3rem; color: #f59e0b;"><i class="fa-solid fa-fire"></i></span>
                 <div style="font-weight: 700; font-size: 1.1rem; color: #ea580c;" id="gamification-streak">1</div>
                 <div style="font-size: 0.72rem; color: var(--text-muted);">Day Streak</div>
               </div>
               <div style="border-left: 1px solid var(--border-color);"></div>
               <div>
-                <span style="font-size: 1.3rem;">⚡</span>
+                <span style="font-size: 1.3rem; color: #6366f1;"><i class="fa-solid fa-bolt"></i></span>
                 <div style="font-weight: 700; font-size: 1.1rem; color: var(--primary-600);" id="gamification-points">120</div>
                 <div style="font-size: 0.72rem; color: var(--text-muted);">XP Points</div>
               </div>
             </div>
 
             <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 8px;">
-              <a href="skills.html" class="btn btn-secondary btn-block btn-sm">View Full Skill Matrix 🟢</a>
-              <a href="resume.html" class="btn btn-secondary btn-block btn-sm">Edit Resume 📄</a>
+              <a href="skills.html" class="btn btn-secondary btn-block btn-sm">View Full Skill Matrix <i class="fa-solid fa-chart-simple"></i></a>
+              <a href="resume.html" class="btn btn-secondary btn-block btn-sm">Edit Resume <i class="fa-solid fa-file-lines"></i></a>
             </div>
           </div>
         </aside>
@@ -163,25 +164,25 @@
           <!-- 2026 Stat Cards (Live DB values per employee_id) -->
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px;">
             <div class="card" style="padding: 18px; border-left: 4px solid var(--primary-600); box-shadow: var(--shadow-sm);">
-              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">🎙️ Interviews Taken</div>
+              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;"><i class="fa-solid fa-microphone"></i> Interviews Taken</div>
               <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-main); margin-top: 4px;" id="stat-interviews-taken">1</div>
               <div style="font-size: 0.75rem; color: var(--text-muted);">Live from database</div>
             </div>
 
             <div class="card" style="padding: 18px; border-left: 4px solid var(--emerald-500); box-shadow: var(--shadow-sm);">
-              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">📊 Avg Interview Score</div>
+              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;"><i class="fa-solid fa-chart-column"></i> Avg Interview Score</div>
               <div style="font-size: 1.8rem; font-weight: 800; color: var(--emerald-600); margin-top: 4px;" id="stat-avg-score">84%</div>
               <div style="font-size: 0.75rem; color: var(--text-muted);">STAR evaluated</div>
             </div>
 
             <div class="card" style="padding: 18px; border-left: 4px solid var(--violet-500); box-shadow: var(--shadow-sm);">
-              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">📄 Resume ATS Score</div>
+              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;"><i class="fa-solid fa-file-lines"></i> Resume ATS Score</div>
               <div style="font-size: 1.8rem; font-weight: 800; color: var(--violet-600); margin-top: 4px;" id="stat-resume-score">84%</div>
               <div style="font-size: 0.75rem; color: var(--text-muted);">High scanability</div>
             </div>
 
             <div class="card" style="padding: 18px; border-left: 4px solid var(--cyan-500); box-shadow: var(--shadow-sm);">
-              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">🧠 2026 AI Fluency</div>
+              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;"><i class="fa-solid fa-brain"></i> 2026 AI Fluency</div>
               <div style="font-size: 1.8rem; font-weight: 800; color: var(--cyan-600); margin-top: 4px;" id="stat-fluency-score">88%</div>
               <div style="font-size: 0.75rem; color: var(--text-muted);">Indirect tool mastery</div>
             </div>
@@ -191,7 +192,7 @@
           <div class="trend-widget-card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
               <div style="display: flex; align-items: center; gap: 10px;">
-                <span class="trend-badge-2026">🔥 2026 Hiring Insight</span>
+                <span class="trend-badge-2026"><i class="fa-solid fa-fire text-warning"></i> 2026 Hiring Insight</span>
                 <h2 style="font-size: 1.25rem; margin: 0; color: #fff;">Curated Market & Enterprise Trends</h2>
               </div>
               <span style="font-size: 0.8rem; color: #94a3b8;" id="trend-target-label">Relevant to your active target</span>
@@ -208,7 +209,7 @@
           <div class="card" style="padding: 22px; margin-bottom: 24px; box-shadow: var(--shadow-sm);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
               <div>
-                <h2 style="font-size: 1.2rem; margin: 0;">📈 Improvement Trend Across Sessions</h2>
+                <h2 style="font-size: 1.2rem; margin: 0;"><i class="fa-solid fa-chart-line"></i> Improvement Trend Across Sessions</h2>
                 <p style="font-size: 0.84rem; color: var(--text-muted); margin: 2px 0 0 0;">Historical progression tracked per session in database</p>
               </div>
               <div style="display: flex; gap: 8px; font-size: 0.78rem;">
@@ -225,11 +226,11 @@
           <!-- Quick-Access Shortcuts to Every Module -->
           <div style="margin-bottom: 24px;">
             <h2 style="font-size: 1.2rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
-              <span>⚡</span> <span>Quick-Access Preparation Modules</span>
+              <span><i class="fa-solid fa-bolt text-warning"></i></span> <span>Quick-Access Preparation Modules</span>
             </h2>
             <div class="quick-shortcuts-grid">
               <a href="roadmap.html" class="shortcut-card">
-                <div class="shortcut-icon" style="background: #eef2ff; color: #4f46e5;">🗺️</div>
+                <div class="shortcut-icon" style="background: #eef2ff; color: #4f46e5;"><i class="fa-solid fa-map-location-dot"></i></div>
                 <div>
                   <div style="font-weight: 700; font-size: 0.95rem;">Smart Roadmap</div>
                   <div style="font-size: 0.78rem; color: var(--text-muted);">Company-specific days</div>
@@ -237,7 +238,7 @@
               </a>
 
               <a href="resume.html" class="shortcut-card">
-                <div class="shortcut-icon" style="background: #f0fdf4; color: #16a34a;">📄</div>
+                <div class="shortcut-icon" style="background: #f0fdf4; color: #16a34a;"><i class="fa-solid fa-file-lines"></i></div>
                 <div>
                   <div style="font-weight: 700; font-size: 0.95rem;">Resume Builder</div>
                   <div style="font-size: 0.78rem; color: var(--text-muted);">3 Trending Templates</div>
@@ -245,7 +246,7 @@
               </a>
 
               <a href="ai-fluency.html" class="shortcut-card">
-                <div class="shortcut-icon" style="background: #ecfeff; color: #0891b2;">🧠</div>
+                <div class="shortcut-icon" style="background: #ecfeff; color: #0891b2;"><i class="fa-solid fa-brain"></i></div>
                 <div>
                   <div style="font-weight: 700; font-size: 0.95rem;">AI Fluency Round</div>
                   <div style="font-size: 0.78rem; color: var(--text-muted);">2026 Indirect tests</div>
@@ -253,7 +254,7 @@
               </a>
 
               <a href="answer-builder.html" class="shortcut-card">
-                <div class="shortcut-icon" style="background: #fefce8; color: #ca8a04;">⏱️</div>
+                <div class="shortcut-icon" style="background: #fefce8; color: #ca8a04;"><i class="fa-solid fa-stopwatch"></i></div>
                 <div>
                   <div style="font-weight: 700; font-size: 0.95rem;">60s Pitch Builder</div>
                   <div style="font-size: 0.78rem; color: var(--text-muted);">Present-Past-Future</div>
@@ -261,7 +262,7 @@
               </a>
 
               <a href="interview.html" class="shortcut-card">
-                <div class="shortcut-icon" style="background: #fdf2f8; color: #db2777;">🎯</div>
+                <div class="shortcut-icon" style="background: #fdf2f8; color: #db2777;"><i class="fa-solid fa-bullseye"></i></div>
                 <div>
                   <div style="font-weight: 700; font-size: 0.95rem;">Mock Interview</div>
                   <div style="font-size: 0.78rem; color: var(--text-muted);">STAR Simulator</div>
@@ -269,7 +270,7 @@
               </a>
 
               <a href="preparation.html" class="shortcut-card">
-                <div class="shortcut-icon" style="background: #faf5ff; color: #9333ea;">💻</div>
+                <div class="shortcut-icon" style="background: #faf5ff; color: #9333ea;"><i class="fa-solid fa-laptop-code"></i></div>
                 <div>
                   <div style="font-weight: 700; font-size: 0.95rem;">Coding Practice</div>
                   <div style="font-size: 0.78rem; color: var(--text-muted);">In-browser compiler</div>
@@ -277,7 +278,7 @@
               </a>
 
               <a href="aptitude.html" class="shortcut-card">
-                <div class="shortcut-icon" style="background: #eff6ff; color: #2563eb;">📊</div>
+                <div class="shortcut-icon" style="background: #eff6ff; color: #2563eb;"><i class="fa-solid fa-chart-column"></i></div>
                 <div>
                   <div style="font-weight: 700; font-size: 0.95rem;">Aptitude Tests</div>
                   <div style="font-size: 0.78rem; color: var(--text-muted);">Low/Med/High tiers</div>
@@ -285,7 +286,7 @@
               </a>
 
               <a href="analyzer.html" class="shortcut-card">
-                <div class="shortcut-icon" style="background: #f0fdfa; color: #0d9488;">🔍</div>
+                <div class="shortcut-icon" style="background: #f0fdfa; color: #0d9488;"><i class="fa-solid fa-magnifying-glass"></i></div>
                 <div>
                   <div style="font-weight: 700; font-size: 0.95rem;">Resume-to-JD</div>
                   <div style="font-size: 0.78rem; color: var(--text-muted);">Keyword gap check</div>
@@ -293,7 +294,7 @@
               </a>
 
               <a href="achievements.html" class="shortcut-card">
-                <div class="shortcut-icon" style="background: #fffbeb; color: #d97706;">🏆</div>
+                <div class="shortcut-icon" style="background: #fffbeb; color: #d97706;"><i class="fa-solid fa-trophy"></i></div>
                 <div>
                   <div style="font-weight: 700; font-size: 0.95rem;">Badges & Streaks</div>
                   <div style="font-size: 0.78rem; color: var(--text-muted);">Gamified milestones</div>
@@ -301,7 +302,7 @@
               </a>
 
               <a href="admin.html" class="shortcut-card">
-                <div class="shortcut-icon" style="background: #fff1f2; color: #e11d48;">⚙️</div>
+                <div class="shortcut-icon" style="background: #fff1f2; color: #e11d48;"><i class="fa-solid fa-gear"></i></div>
                 <div>
                   <div style="font-weight: 700; font-size: 0.95rem;">Trend Admin CMS</div>
                   <div style="font-size: 0.78rem; color: var(--text-muted);">Manage trends & Qs</div>
@@ -316,7 +317,7 @@
               <div>
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <h2 style="font-size: 1.3rem; margin: 0;">Employee Readiness Score</h2>
-                  <span class="badge badge-success" id="readiness-tier-badge">Job Ready 🚀</span>
+                  <span class="badge badge-success" id="readiness-tier-badge">Job Ready <i class="fa-solid fa-rocket"></i></span>
                 </div>
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;" id="readiness-tier-desc">
                   Transparent weighted preparation index calculated from 5 performance dimensions.
@@ -336,23 +337,23 @@
             <!-- 5-Pillar Score Components -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 12px;">
               <div style="background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
-                <div style="font-size: 0.75rem; color: var(--text-muted);">🧮 Aptitude (25%)</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-calculator"></i> Aptitude (25%)</div>
                 <div style="font-weight: 700; font-size: 1.1rem; color: var(--primary-700);" id="pillar-aptitude">0%</div>
               </div>
               <div style="background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
-                <div style="font-size: 0.75rem; color: var(--text-muted);">💻 Coding (25%)</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-laptop-code"></i> Coding (25%)</div>
                 <div style="font-weight: 700; font-size: 1.1rem; color: var(--emerald-600);" id="pillar-coding">0%</div>
               </div>
               <div style="background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
-                <div style="font-size: 0.75rem; color: var(--text-muted);">⚙️ Technical (20%)</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-gear"></i> Technical (20%)</div>
                 <div style="font-weight: 700; font-size: 1.1rem; color: #0284c7;" id="pillar-technical">0%</div>
               </div>
               <div style="background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
-                <div style="font-size: 0.75rem; color: var(--text-muted);">🎙️ Interview (15%)</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-microphone"></i> Interview (15%)</div>
                 <div style="font-weight: 700; font-size: 1.1rem; color: var(--violet-600);" id="pillar-interview">0%</div>
               </div>
               <div style="background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
-                <div style="font-size: 0.75rem; color: var(--text-muted);">📄 Resume ATS (15%)</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-file-lines"></i> Resume ATS (15%)</div>
                 <div style="font-weight: 700; font-size: 1.1rem; color: #059669;" id="pillar-resume">80%</div>
               </div>
             </div>
@@ -362,7 +363,7 @@
           <div class="card" style="padding: 20px 24px; margin-bottom: 24px; border-left: 5px solid var(--emerald-600);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
               <div>
-                <span class="badge badge-success" style="font-size: 0.75rem;">📅 Today's AI Plan</span>
+                <span class="badge badge-success" style="font-size: 0.75rem;"><i class="fa-solid fa-calendar-days"></i> Today's AI Plan</span>
                 <h3 style="font-size: 1.15rem; margin: 4px 0 0 0;">Personalized Daily Preparation Agenda</h3>
               </div>
               <span style="font-size: 0.8rem; color: var(--text-muted);" id="daily-plan-date">Today</span>
@@ -377,13 +378,13 @@
           <div class="card" style="padding: 20px 24px; margin-bottom: 24px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
               <h3 style="font-size: 1.15rem; margin: 0;">Skill Status Overview</h3>
-              <a href="skills.html" style="font-size: 0.85rem; font-weight: 600;">Full Skill Breakdown →</a>
+              <a href="skills.html" style="font-size: 0.85rem; font-weight: 600;">Full Skill Breakdown <i class="fa-solid fa-arrow-right"></i></a>
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
               <!-- Strong Skills -->
               <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px;">
-                <div style="font-weight: 700; font-size: 0.9rem; color: #166534; margin-bottom: 6px;">🟢 Strong Competencies</div>
+                <div style="font-weight: 700; font-size: 0.9rem; color: #166534; margin-bottom: 6px;"><i class="fa-solid fa-circle text-success status-indicator-dot"></i> Strong Competencies</div>
                 <div id="matrix-strong-list" style="display: flex; flex-wrap: wrap; gap: 4px; font-size: 0.8rem;">
                   <span class="badge" style="background: #dcfce7; color: #166534;">Core CS</span>
                 </div>
@@ -391,7 +392,7 @@
 
               <!-- Developing Skills -->
               <div style="background: #fefce8; border: 1px solid #fef08a; border-radius: 8px; padding: 14px;">
-                <div style="font-weight: 700; font-size: 0.9rem; color: #854d0e; margin-bottom: 6px;">🟡 Developing Skills</div>
+                <div style="font-weight: 700; font-size: 0.9rem; color: #854d0e; margin-bottom: 6px;"><i class="fa-solid fa-circle text-warning status-indicator-dot"></i> Developing Skills</div>
                 <div id="matrix-developing-list" style="display: flex; flex-wrap: wrap; gap: 4px; font-size: 0.8rem;">
                   <span class="badge" style="background: #fef9c3; color: #854d0e;">Data Structures</span>
                 </div>
@@ -399,7 +400,7 @@
 
               <!-- Needs Improvement -->
               <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px;">
-                <div style="font-weight: 700; font-size: 0.9rem; color: #991b1b; margin-bottom: 6px;">🔴 Priority Focus Areas</div>
+                <div style="font-weight: 700; font-size: 0.9rem; color: #991b1b; margin-bottom: 6px;"><i class="fa-solid fa-circle text-danger status-indicator-dot"></i> Priority Focus Areas</div>
                 <div id="matrix-weak-list" style="display: flex; flex-wrap: wrap; gap: 4px; font-size: 0.8rem;">
                   <span class="badge" style="background: #fee2e2; color: #991b1b;">Algorithm Execution</span>
                 </div>
@@ -413,7 +414,7 @@
             
             <div class="prep-card">
               <div>
-                <div class="prep-card-icon">🧮</div>
+                <div class="prep-card-icon"><i class="fa-solid fa-calculator"></i></div>
                 <h3 class="prep-card-title">1. Aptitude Test</h3>
                 <p class="prep-card-desc">Adaptive 15-question test with timer, anti-cheat security, and detailed review.</p>
               </div>
@@ -422,7 +423,7 @@
 
             <div class="prep-card">
               <div>
-                <div class="prep-card-icon">💻</div>
+                <div class="prep-card-icon"><i class="fa-solid fa-laptop-code"></i></div>
                 <h3 class="prep-card-title">2. Coding Practice</h3>
                 <p class="prep-card-desc">35+ coding challenges in Python, Java, JS, SQL with live execution simulator.</p>
               </div>
@@ -431,7 +432,7 @@
 
             <div class="prep-card">
               <div>
-                <div class="prep-card-icon">🎙️</div>
+                <div class="prep-card-icon"><i class="fa-solid fa-microphone"></i></div>
                 <h3 class="prep-card-title">3. AI Interview</h3>
                 <p class="prep-card-desc">Personalized mock interview tailored to your resume projects and target company.</p>
               </div>
@@ -440,7 +441,7 @@
 
             <div class="prep-card">
               <div>
-                <div class="prep-card-icon">🏢</div>
+                <div class="prep-card-icon"><i class="fa-solid fa-building"></i></div>
                 <h3 class="prep-card-title">4. Top 20 Companies</h3>
                 <p class="prep-card-desc">Preparation hubs and roadmaps for TCS, Google, Amazon, Deloitte, Red Hat, etc.</p>
               </div>
@@ -449,7 +450,7 @@
 
             <div class="prep-card">
               <div>
-                <div class="prep-card-icon">🗺️</div>
+                <div class="prep-card-icon"><i class="fa-solid fa-map-location-dot"></i></div>
                 <h3 class="prep-card-title">5. Learning Path</h3>
                 <p class="prep-card-desc">Adaptive curriculum that re-prioritizes milestones as your skills advance.</p>
               </div>
@@ -458,7 +459,7 @@
 
             <div class="prep-card">
               <div>
-                <div class="prep-card-icon">📄</div>
+                <div class="prep-card-icon"><i class="fa-solid fa-file-lines"></i></div>
                 <h3 class="prep-card-title">6. Resume Builder</h3>
                 <p class="prep-card-desc">Build customizable resumes with 17 sections and 5 professional templates.</p>
               </div>
@@ -477,8 +478,8 @@
   <div id="goal-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
     <div class="card" style="max-width: 480px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h2 style="font-size: 1.25rem; margin: 0;">🎯 Update Career Goal</h2>
-        <button id="btn-close-goal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;">✕</button>
+        <h2 style="font-size: 1.25rem; margin: 0;"><i class="fa-solid fa-bullseye"></i> Update Career Goal</h2>
+        <button id="btn-close-goal" class="btn btn-secondary btn-sm" style="padding: 2px 8px;"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
@@ -527,7 +528,7 @@
 
         <div style="display: flex; gap: 10px; justify-content: flex-end;">
           <button type="button" id="btn-cancel-goal" class="btn btn-secondary">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Career Goal 🚀</button>
+          <button type="submit" class="btn btn-primary">Save Career Goal <i class="fa-solid fa-rocket"></i></button>
         </div>
       </form>
     </div>

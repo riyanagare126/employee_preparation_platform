@@ -1,8 +1,12 @@
-from flask import Blueprint, request, jsonify
+import csv
+import io
+import json
+from flask import Blueprint, request, jsonify, Response
 from backend.models import (
     AdminModel, EmployeeModel, CompanyPrepModel,
     JobRoleModel, QuestionModel, TrendInsightModel,
-    TrendingTemplateModel, AIFluencyModel
+    TrendingTemplateModel, AIFluencyModel,
+    CompanyModel, CompanyQuestionModel
 )
 from backend.database import get_db_connection
 from backend.data.aptitude_bank import MASTER_APTITUDE_BANK
@@ -83,28 +87,39 @@ def delete_user(user_id: int):
 @admin_bp.route("/api/admin/companies", methods=["GET", "POST"])
 def admin_companies():
     """
-    GET: list all companies.
+    GET: list all companies (active and inactive).
     POST: add or update company blueprint.
     """
     try:
         if request.method == "GET":
-            companies = CompanyPrepModel.get_all()
+            companies = CompanyModel.get_all(active_only=False)
+            if not companies:
+                companies = CompanyPrepModel.get_all()
             return jsonify({"success": True, "total": len(companies), "companies": companies}), 200
 
         data = request.get_json() or {}
-        company_name = data.get("company_name", "").strip()
-        slug = data.get("slug", "").strip().lower() or company_name.lower().replace(" ", "-")
+        company_name = (data.get("name") or data.get("company_name") or "").strip()
+        slug = (data.get("slug") or company_name.lower().replace(" ", "-")).strip().lower()
 
         if not company_name:
-            return jsonify({"success": False, "message": "company_name is required."}), 400
+            return jsonify({"success": False, "message": "company name is required."}), 400
 
+        data["name"] = company_name
         data["slug"] = slug
-        CompanyPrepModel.save_or_update(data)
+
+        # Save to both CompanyModel (new table) and CompanyPrepModel (legacy compatibility)
+        saved = CompanyModel.create_or_update(data)
+        try:
+            CompanyPrepModel.save_or_update(data)
+        except Exception:
+            pass
+
         AdminModel.log_action("admin@prep.com", "SAVE_COMPANY", f"Saved company {company_name} ({slug})")
 
         return jsonify({
             "success": True,
             "message": f"Company '{company_name}' saved successfully.",
+            "company": saved,
             "slug": slug
         }), 200
 
@@ -112,27 +127,270 @@ def admin_companies():
         return jsonify({"success": False, "message": f"Error in admin companies: {str(e)}"}), 500
 
 
-@admin_bp.route("/api/admin/company/<slug>", methods=["DELETE", "GET"])
+@admin_bp.route("/api/admin/company/<slug>", methods=["DELETE", "GET", "PUT"])
 def admin_company_detail(slug: str):
     """
     GET: retrieve single company for editing.
+    PUT: update company details.
     DELETE: delete company by slug.
     """
     try:
         if request.method == "GET":
-            comp = CompanyPrepModel.get_by_slug(slug)
+            comp = CompanyModel.get_by_slug(slug) or CompanyPrepModel.get_by_slug(slug)
             if not comp:
                 return jsonify({"success": False, "message": "Company not found."}), 404
             return jsonify({"success": True, "company": comp}), 200
 
-        deleted = CompanyPrepModel.delete_by_slug(slug)
+        if request.method == "PUT":
+            data = request.get_json() or {}
+            data["slug"] = slug
+            updated = CompanyModel.create_or_update(data)
+            try: CompanyPrepModel.save_or_update(data)
+            except Exception: pass
+            return jsonify({"success": True, "message": f"Company '{slug}' updated.", "company": updated}), 200
+
+        deleted = CompanyModel.delete_by_slug(slug)
+        try: CompanyPrepModel.delete_by_slug(slug)
+        except Exception: pass
+
         if deleted:
             AdminModel.log_action("admin@prep.com", "DELETE_COMPANY", f"Deleted company slug: {slug}")
             return jsonify({"success": True, "message": f"Company '{slug}' deleted successfully."}), 200
         return jsonify({"success": False, "message": "Company not found."}), 404
 
     except Exception as e:
-        return jsonify({"success": False, "message": f"Error deleting company: {str(e)}"}), 500
+        return jsonify({"success": False, "message": f"Error modifying company: {str(e)}"}), 500
+
+
+@admin_bp.route("/api/admin/company/<slug>/toggle", methods=["POST"])
+def admin_company_toggle(slug: str):
+    """
+    Toggles is_active status of a company.
+    """
+    try:
+        comp = CompanyModel.get_by_slug(slug)
+        if not comp:
+            return jsonify({"success": False, "message": "Company not found."}), 404
+
+        new_status = 0 if comp.get("is_active", 1) == 1 else 1
+        comp["is_active"] = new_status
+        CompanyModel.create_or_update(comp)
+
+        AdminModel.log_action("admin@prep.com", "TOGGLE_COMPANY", f"Toggled company {slug} active={new_status}")
+        return jsonify({
+            "success": True,
+            "message": f"Company {slug} is now {'Active' if new_status else 'Disabled'}.",
+            "is_active": new_status
+        }), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ====================================================================
+# DYNAMIC COMPANY QUESTIONS CMS ENDPOINTS (Task 3)
+# ====================================================================
+
+@admin_bp.route("/api/admin/company-questions", methods=["GET", "POST"])
+def admin_company_questions():
+    """
+    GET: List questions with filters: company_slug, category, role, search, active_only.
+    POST: Create a new company question.
+    """
+    try:
+        if request.method == "GET":
+            company_slug = request.args.get("company_slug")
+            category = request.args.get("category")
+            role = request.args.get("role")
+            search = request.args.get("search")
+            active_only = request.args.get("active_only", "false").lower() == "true"
+            limit = int(request.args.get("limit", 200))
+            offset = int(request.args.get("offset", 0))
+
+            total = CompanyQuestionModel.count_questions(
+                company_slug=company_slug,
+                category=category,
+                role=role,
+                active_only=active_only,
+                search=search
+            )
+            questions = CompanyQuestionModel.get_questions(
+                company_slug=company_slug,
+                category=category,
+                role=role,
+                active_only=active_only,
+                search=search,
+                limit=limit,
+                offset=offset
+            )
+            return jsonify({
+                "success": True,
+                "total": total,
+                "questions": questions
+            }), 200
+
+        data = request.get_json() or {}
+        if not data.get("question"):
+            return jsonify({"success": False, "message": "question text is required."}), 400
+
+        new_id = CompanyQuestionModel.create(data)
+        AdminModel.log_action("admin@prep.com", "CREATE_COMPANY_QUESTION", f"Added question #{new_id}")
+
+        return jsonify({
+            "success": True,
+            "message": "Question created successfully.",
+            "question_id": new_id
+        }), 201
+
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error with company questions: {str(e)}"}), 500
+
+
+@admin_bp.route("/api/admin/company-questions/<int:qid>", methods=["GET", "PUT", "DELETE"])
+def admin_company_question_detail(qid: int):
+    """
+    GET: Retrieve question by ID.
+    PUT: Update question fields.
+    DELETE: Remove question by ID.
+    """
+    try:
+        if request.method == "GET":
+            q = CompanyQuestionModel.get_by_id(qid)
+            if not q:
+                return jsonify({"success": False, "message": "Question not found."}), 404
+            return jsonify({"success": True, "question": q}), 200
+
+        if request.method == "PUT":
+            data = request.get_json() or {}
+            updated = CompanyQuestionModel.update(qid, data)
+            if not updated:
+                return jsonify({"success": False, "message": "Question not found."}), 404
+            AdminModel.log_action("admin@prep.com", "UPDATE_COMPANY_QUESTION", f"Updated question #{qid}")
+            return jsonify({"success": True, "message": f"Question #{qid} updated successfully."}), 200
+
+        deleted = CompanyQuestionModel.delete(qid)
+        if not deleted:
+            return jsonify({"success": False, "message": "Question not found."}), 404
+        AdminModel.log_action("admin@prep.com", "DELETE_COMPANY_QUESTION", f"Deleted question #{qid}")
+        return jsonify({"success": True, "message": f"Question #{qid} deleted successfully."}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+@admin_bp.route("/api/admin/company-questions/<int:qid>/toggle", methods=["POST"])
+def admin_company_question_toggle(qid: int):
+    """
+    Toggles is_active on a company question.
+    """
+    try:
+        new_status = CompanyQuestionModel.toggle_active(qid)
+        if new_status is None:
+            return jsonify({"success": False, "message": "Question not found."}), 404
+        AdminModel.log_action("admin@prep.com", "TOGGLE_COMPANY_QUESTION", f"Toggled question #{qid} active={new_status}")
+        return jsonify({
+            "success": True,
+            "message": f"Question is now {'Active' if new_status else 'Disabled'}.",
+            "is_active": new_status
+        }), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+@admin_bp.route("/api/admin/company-questions/export", methods=["GET"])
+def admin_company_questions_export():
+    """
+    Bulk export questions for a company as JSON or CSV.
+    """
+    try:
+        slug = request.args.get("company_slug", "").strip()
+        fmt = request.args.get("format", "json").lower().strip()
+        cat = request.args.get("category")
+        role = request.args.get("role")
+
+        if not slug:
+            return jsonify({"success": False, "message": "company_slug parameter is required."}), 400
+
+        comp = CompanyModel.get_by_slug(slug) or CompanyPrepModel.get_by_slug(slug)
+        if not comp:
+            return jsonify({"success": False, "message": "Company not found."}), 404
+
+        comp_name = comp.get("name") or comp.get("company_name") or slug
+        questions = CompanyQuestionModel.get_questions(company_slug=slug, category=cat, role=role, active_only=False, limit=5000)
+
+        if fmt == "csv":
+            output = io.StringIO()
+            writer = csv.writer(output)
+            writer.writerow(["id", "category", "role", "difficulty", "question", "options", "correct_answer", "explanation", "is_active"])
+            for q in questions:
+                opts = q.get("options")
+                opts_str = "; ".join(opts) if isinstance(opts, list) else (opts or "")
+                writer.writerow([
+                    q["id"], q.get("category"), q.get("role"), q.get("difficulty"),
+                    q.get("question"), opts_str, q.get("correct_answer"),
+                    q.get("explanation"), q.get("is_active")
+                ])
+            return Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                headers={"Content-Disposition": f"attachment;filename={slug}_questions.csv"}
+            )
+
+        return jsonify({
+            "success": True,
+            "company_slug": slug,
+            "company_name": comp_name,
+            "total": len(questions),
+            "questions": questions
+        }), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error exporting questions: {str(e)}"}), 500
+
+
+@admin_bp.route("/api/admin/company-questions/import", methods=["POST"])
+def admin_company_questions_import():
+    """
+    Bulk import questions for a company from JSON payload or CSV/JSON file upload.
+    """
+    try:
+        if "file" in request.files:
+            file = request.files["file"]
+            slug = request.form.get("company_slug")
+            filename = file.filename.lower()
+            if filename.endswith(".json"):
+                file_content = json.load(file)
+                qs = file_content if isinstance(file_content, list) else file_content.get("questions", [])
+            else:  # CSV format
+                stream = io.StringIO(file.stream.read().decode("utf-8"), newline=None)
+                reader = csv.DictReader(stream)
+                qs = []
+                for row in reader:
+                    opts = [o.strip() for o in row.get("options", "").split(";") if o.strip()] if row.get("options") else None
+                    qs.append({
+                        "category": row.get("category", "aptitude"),
+                        "role": row.get("role", "All"),
+                        "difficulty": row.get("difficulty", "Medium"),
+                        "question": row.get("question", ""),
+                        "options": opts,
+                        "correct_answer": row.get("correct_answer", ""),
+                        "explanation": row.get("explanation", ""),
+                        "is_active": int(row.get("is_active", 1))
+                    })
+        else:
+            payload = request.get_json() or {}
+            slug = payload.get("company_slug")
+            qs = payload.get("questions", [])
+
+        if not slug:
+            return jsonify({"success": False, "message": "company_slug is required."}), 400
+
+        result = CompanyQuestionModel.bulk_import(slug, qs)
+        AdminModel.log_action("admin@prep.com", "BULK_IMPORT_QUESTIONS", f"Imported {result['imported']} questions for {slug}")
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error importing questions: {str(e)}"}), 500
+
 
 
 # ==========================================
@@ -368,7 +626,7 @@ def handle_admin_templates():
         new_id = TrendingTemplateModel.create(
             template_id=data.get("template_id", "custom-template"),
             name=data.get("name", "Custom Template"),
-            badge_text=data.get("badge_text", "🔥 Trending 2026"),
+            badge_text=data.get("badge_text", "Trending 2026"),
             description=data.get("description", ""),
             css_class=data.get("css_class", "template-modern-single"),
             is_trending=data.get("is_trending", 1)

@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       btnReEval.textContent = "Analyzing...";
       await loadSkillAssessment(employee.id);
       btnReEval.disabled = false;
-      btnReEval.textContent = "🔄 Re-Evaluate Skills";
+      btnReEval.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Re-Evaluate Skills';
       showToast("Skill competencies updated successfully!", "success");
     });
   }
@@ -50,11 +50,11 @@ function renderSkillAssessment(data) {
   if (weakCount) weakCount.textContent = (data.weak_skills || []).length;
 
   // Render Strong Skills
-  renderSkillCards("strong-skills-list", data.strong_skills, "🟢", "#166534", "#dcfce7");
+  renderSkillCards("strong-skills-list", data.strong_skills, '<i class="fa-solid fa-circle text-success status-indicator-dot"></i>', "#166534", "#dcfce7");
   // Render Average Skills
-  renderSkillCards("average-skills-list", data.average_skills, "🟡", "#854d0e", "#fef9c3");
+  renderSkillCards("average-skills-list", data.average_skills, '<i class="fa-solid fa-circle text-warning status-indicator-dot"></i>', "#854d0e", "#fef9c3");
   // Render Weak Skills
-  renderSkillCards("weak-skills-list", data.weak_skills, "🔴", "#991b1b", "#fee2e2");
+  renderSkillCards("weak-skills-list", data.weak_skills, '<i class="fa-solid fa-circle text-danger status-indicator-dot"></i>', "#991b1b", "#fee2e2");
 
   // Render Recommendations
   const recsContainer = document.getElementById("recommendations-list");
@@ -63,10 +63,10 @@ function renderSkillAssessment(data) {
       recsContainer.innerHTML = data.recommendations.map(rec => `
         <div style="background: var(--bg-subtle); border-left: 4px solid var(--primary-600); padding: 14px 18px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
           <div style="display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.95rem;">
-            <span>💡</span>
+            <span><i class="fa-solid fa-lightbulb text-warning"></i></span>
             <span>${rec}</span>
           </div>
-          <a href="preparation.html" class="btn btn-secondary btn-sm" style="font-size: 0.8rem;">Practice Now ➔</a>
+          <a href="preparation.html" class="btn btn-secondary btn-sm" style="font-size: 0.8rem;">Practice Now <i class="fa-solid fa-arrow-right"></i></a>
         </div>
       `).join("");
     } else {

@@ -62,31 +62,69 @@ function getAuthHeaders() {
 }
 
 /**
+ * Map company name or loose string to exact canonical slug
+ */
+function getCompanySlugFromName(name) {
+  if (!name) return "";
+  const n = name.toLowerCase().trim();
+  if (n.includes("tcs") || n.includes("tata consultancy")) return "tcs";
+  if (n.includes("infosys")) return "infosys";
+  if (n.includes("accenture")) return "accenture";
+  if (n.includes("wipro")) return "wipro";
+  if (n.includes("amazon")) return "amazon";
+  if (n.includes("microsoft")) return "microsoft";
+  if (n.includes("google")) return "google";
+  if (n.includes("deloitte")) return "deloitte";
+  if (n.includes("capgemini")) return "capgemini";
+  if (n.includes("cognizant")) return "cognizant";
+  if (n.includes("oracle")) return "oracle";
+  if (n.includes("ibm")) return "ibm";
+  if (n.includes("red hat") || n.includes("redhat")) return "redhat";
+  if (n.includes("hcl")) return "hcltech";
+  if (n.includes("mahindra")) return "techmahindra";
+  if (n.includes("mindtree") || n.includes("lti")) return "ltimindtree";
+  if (n.includes("persistent")) return "persistent";
+  if (n.includes("sap")) return "sap";
+  if (n.includes("ey") || n.includes("ernst")) return "ey";
+  if (n.includes("pwc") || n.includes("pricewaterhouse")) return "pwc";
+  return n.replace(/[^a-z0-9]/g, "") || "";
+}
+
+/**
  * Get active selected company from localStorage or employee profile
  */
 function getSelectedCompany() {
   try {
     const raw = localStorage.getItem("selectedCompany");
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.slug) return parsed;
+    }
   } catch (e) {}
 
   const emp = getLoggedInEmployee();
   if (emp && emp.target_company) {
-    const slug = emp.target_company_slug || (emp.target_company.toLowerCase().includes("tcs") ? "tcs" : "tcs");
-    return {
-      slug: slug,
-      name: emp.target_company,
-      role: emp.target_role || emp.job_role || "Software Engineer"
-    };
+    const slug = emp.target_company_slug || getCompanySlugFromName(emp.target_company);
+    if (slug) {
+      return {
+        slug: slug,
+        name: emp.target_company,
+        role: emp.target_role || emp.job_role || "Software Engineer"
+      };
+    }
   }
-  return { slug: "tcs", name: "Tata Consultancy Services (TCS)", role: "Software Engineer" };
+  return null;
 }
 
 /**
  * Set active target company & target role in localStorage and sync with server
  */
 async function setSelectedCompany(slug, name, role) {
-  const compData = { slug: slug.toLowerCase(), name: name || slug.toUpperCase(), role: role || "Software Engineer" };
+  const cleanSlug = (slug || getCompanySlugFromName(name) || "").toLowerCase().trim();
+  if (!cleanSlug) return;
+  const cleanName = name || cleanSlug.toUpperCase();
+  const cleanRole = role || "Software Engineer";
+  const compData = { slug: cleanSlug, name: cleanName, role: cleanRole };
   localStorage.setItem("selectedCompany", JSON.stringify(compData));
 
   const emp = getLoggedInEmployee();
@@ -97,7 +135,7 @@ async function setSelectedCompany(slug, name, role) {
     setLoggedInEmployee(emp);
 
     try {
-      await fetch(`${API_BASE}/api/companies/${slug}/select`, {
+      await fetch(`${API_BASE}/api/companies/${cleanSlug}/select`, {
         method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify({ employee_id: emp.id, role: compData.role })
@@ -157,7 +195,7 @@ function showToast(message, type = "info") {
   const toast = document.createElement("div");
   toast.className = `toast toast-${type}`;
 
-  const icon = type === "success" ? "✔" : (type === "error" ? "✖" : "ℹ");
+  const icon = type === "success" ? '<i class="fa-solid fa-check"></i>' : (type === "error" ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-circle-info"></i>');
   toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
   container.appendChild(toast);
 
@@ -195,9 +233,9 @@ async function setupGlobalNavbar() {
     pill.id = "nav-gamification-pill";
     pill.innerHTML = `
       <a href="achievements.html" class="badge badge-purple" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-weight: 700; text-decoration: none;">
-        <span>🔥 <span id="nav-streak-count">1</span>d</span>
+        <span><i class="fa-solid fa-fire text-warning"></i> <span id="nav-streak-count">1</span>d</span>
         <span>•</span>
-        <span>⚡ <span id="nav-points-count">50</span> XP</span>
+        <span><i class="fa-solid fa-bolt text-primary"></i> <span id="nav-points-count">50</span> XP</span>
       </a>
     `;
     navMenu.insertBefore(pill, navMenu.firstChild);
@@ -222,7 +260,7 @@ async function setupGlobalNavbar() {
     if (!document.getElementById("nav-admin-link")) {
       const adminLi = document.createElement("li");
       adminLi.id = "nav-admin-link";
-      adminLi.innerHTML = `<a href="admin.html" class="nav-link" style="color: #f43f5e; font-weight: 700;">🛡️ Admin</a>`;
+      adminLi.innerHTML = `<a href="admin.html" class="nav-link" style="color: #f43f5e; font-weight: 700;"><i class="fa-solid fa-shield-halved"></i> Admin</a>`;
       navMenu.appendChild(adminLi);
     }
   }
@@ -237,7 +275,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const isOpen = typeof forceState === "boolean" ? forceState : !navMenu.classList.contains("open");
       navMenu.classList.toggle("open", isOpen);
       navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-      navToggle.innerHTML = isOpen ? "✕" : "☰";
+      navToggle.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
     };
 
     navToggle.addEventListener("click", (e) => {

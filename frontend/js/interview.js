@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!employee) return;
 
   const urlParams = new URLSearchParams(window.location.search);
-  const compSlug = (urlParams.get("company") || (getSelectedCompany() ? getSelectedCompany().slug : "tcs")).toLowerCase();
+  const compSlug = (urlParams.get("company") || (getSelectedCompany() ? getSelectedCompany().slug : "")).toLowerCase();
   const interviewType = urlParams.get("type") || "mock";
   const roleParam = urlParams.get("role");
 
@@ -123,7 +123,7 @@ async function startInterview(forceNew = true) {
   const selectedDiff = diffSelect ? diffSelect.value : "all";
 
   const urlParams = new URLSearchParams(window.location.search);
-  const compSlug = (urlParams.get("company") || (getSelectedCompany() ? getSelectedCompany().slug : "tcs")).toLowerCase();
+  const compSlug = (urlParams.get("company") || (getSelectedCompany() ? getSelectedCompany().slug : "")).toLowerCase();
   const interviewType = urlParams.get("type") || "mock";
 
   const employee = getLoggedInEmployee();
@@ -136,16 +136,16 @@ async function startInterview(forceNew = true) {
   const diffBadge = document.getElementById("int-diff-badge");
   if (diffBadge) {
     if (selectedDiff === "low" || selectedDiff === "easy") {
-      diffBadge.textContent = "🟢 Low (Easy)";
+      diffBadge.innerHTML = '<i class="fa-solid fa-circle text-success status-indicator-dot"></i> Low (Easy)';
       diffBadge.className = "badge badge-success";
     } else if (selectedDiff === "high" || selectedDiff === "hard") {
-      diffBadge.textContent = "🔴 High (Hard)";
+      diffBadge.innerHTML = '<i class="fa-solid fa-circle text-danger status-indicator-dot"></i> High (Hard)';
       diffBadge.className = "badge badge-danger";
     } else if (selectedDiff === "medium") {
-      diffBadge.textContent = "🟡 Medium";
+      diffBadge.innerHTML = '<i class="fa-solid fa-circle text-warning status-indicator-dot"></i> Medium';
       diffBadge.className = "badge badge-warning";
     } else {
-      diffBadge.textContent = "⚡ Balanced";
+      diffBadge.innerHTML = '<i class="fa-solid fa-bolt text-primary"></i> Balanced';
       diffBadge.className = "badge badge-primary";
     }
   }
@@ -213,16 +213,16 @@ async function shuffleInterviewQuestions() {
 
   if (btnShuffle) {
     btnShuffle.disabled = true;
-    btnShuffle.textContent = "🔄 Generating...";
+    btnShuffle.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Generating...';
   }
 
   try {
     await startInterview(true);
-    showToast("Fresh AI interview questions generated! ✨", "success");
+    showToast("Fresh AI interview questions generated!", "success");
   } finally {
     if (btnShuffle) {
       btnShuffle.disabled = false;
-      btnShuffle.textContent = "🔄 New Questions";
+      btnShuffle.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> New Questions';
     }
   }
 }
@@ -237,7 +237,7 @@ async function changeSingleInterviewQuestion() {
 
   if (btnChangeSingle) {
     btnChangeSingle.disabled = true;
-    btnChangeSingle.innerHTML = "<span>🎲 Changing...</span>";
+    btnChangeSingle.innerHTML = '<span><i class="fa-solid fa-dice fa-spin"></i> Changing...</span>';
   }
 
   try {
@@ -254,7 +254,7 @@ async function changeSingleInterviewQuestion() {
           ...data.question
         };
         renderCurrentQuestion();
-        showToast("Interview question changed! 🎲", "success");
+        showToast("Interview question changed!", "success");
       }
     }
   } catch (err) {
@@ -263,7 +263,7 @@ async function changeSingleInterviewQuestion() {
   } finally {
     if (btnChangeSingle) {
       btnChangeSingle.disabled = false;
-      btnChangeSingle.innerHTML = "<span>🎲 Change Question</span>";
+      btnChangeSingle.innerHTML = '<span><i class="fa-solid fa-dice"></i> Change Question</span>';
     }
   }
 }
@@ -302,7 +302,7 @@ function renderCurrentQuestion() {
   // Guidance / Tip
   const guidanceText = document.getElementById("ai-guidance-text") || document.getElementById("interview-q-guidance");
   if (guidanceText) {
-    guidanceText.textContent = q.guidance ? `💡 Tip: ${q.guidance}` : "💡 Tip: Structure your answer clearly with concrete examples and technical depth.";
+    guidanceText.innerHTML = q.guidance ? `<i class="fa-solid fa-lightbulb text-warning"></i> Tip: ${escapeHtml(q.guidance)}` : '<i class="fa-solid fa-lightbulb text-warning"></i> Tip: Structure your answer clearly with concrete examples and technical depth.';
   }
 
   // Candidate Answer Input & Counter
@@ -340,7 +340,7 @@ async function handleAnswerSubmit() {
   const currentQ = interviewQuestions[currentQIndex];
   if (submitBtn) {
     submitBtn.disabled = true;
-    submitBtn.textContent = "Analyzing Response with AI... 🤖";
+    submitBtn.innerHTML = 'Analyzing Response with AI... <i class="fa-solid fa-robot"></i>';
   }
 
   // Evaluate candidate answer with AI
@@ -392,8 +392,8 @@ async function handleAnswerSubmit() {
     if (scoreBadge) scoreBadge.textContent = `Score: ${evalScore}/100`;
     if (feedbackText) {
       feedbackText.innerHTML = `
-        <div style="margin-bottom: 4px;"><strong>✔ Strengths:</strong> ${strengths.join(", ")}</div>
-        <div><strong>💡 Growth Tip:</strong> ${improvements.join(", ")}</div>
+        <div style="margin-bottom: 4px;"><strong><i class="fa-solid fa-check text-success"></i> Strengths:</strong> ${strengths.join(", ")}</div>
+        <div><strong><i class="fa-solid fa-lightbulb text-warning"></i> Growth Tip:</strong> ${improvements.join(", ")}</div>
       `;
     }
   }
@@ -404,7 +404,7 @@ async function handleAnswerSubmit() {
   setTimeout(() => {
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Response & Next →";
+      submitBtn.innerHTML = 'Submit Response & Next <i class="fa-solid fa-arrow-right"></i>';
     }
 
     if (currentQIndex + 1 < interviewQuestions.length) {
@@ -467,7 +467,7 @@ async function finishInterview() {
           <strong>Your Answer:</strong> "${rec.answer}"
         </div>
         <div style="font-size: 0.82rem; color: #166534;">
-          ✔ ${rec.strengths.join(", ")} | 💡 ${rec.improvements.join(", ")}
+          <i class="fa-solid fa-check text-success"></i> ${rec.strengths.join(", ")} | <i class="fa-solid fa-lightbulb text-warning"></i> ${rec.improvements.join(", ")}
         </div>
       `;
       breakdownList.appendChild(row);
@@ -502,7 +502,7 @@ async function finishInterview() {
     }
   }
 
-  showToast("Interview scorecard generated successfully! 🎉", "success");
+  showToast("Interview scorecard generated successfully!", "success");
 }
 
 /**

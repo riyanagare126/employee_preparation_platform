@@ -28,13 +28,13 @@ def get_preparation_timeline():
             t_type = a.get("test_type", "test").lower()
 
             type_labels = {
-                "aptitude": ("🧮", "Aptitude Assessment"),
-                "coding": ("💻", "Coding Assessment"),
-                "technical": ("⚙️", "Technical Assessment"),
-                "interview": ("🎙️", "AI Mock Interview"),
-                "hr": ("🤝", "HR Interview")
+                "aptitude": ("fa-solid fa-calculator", "Aptitude Assessment"),
+                "coding": ("fa-solid fa-laptop-code", "Coding Assessment"),
+                "technical": ("fa-solid fa-gears", "Technical Assessment"),
+                "interview": ("fa-solid fa-microphone", "AI Mock Interview"),
+                "hr": ("fa-solid fa-handshake", "HR Interview")
             }
-            icon, label = type_labels.get(t_type, ("📝", f"{t_type.capitalize()} Test"))
+            icon, label = type_labels.get(t_type, ("fa-solid fa-pen-to-square", f"{t_type.capitalize()} Test"))
 
             timeline.append({
                 "type": t_type,
@@ -52,7 +52,7 @@ def get_preparation_timeline():
         for c in coding_items:
             timeline.append({
                 "type": "coding",
-                "icon": "💻",
+                "icon": "fa-solid fa-laptop-code",
                 "company": "PRACTICE",
                 "role": c.get("language", "Code"),
                 "title": f"Solved: {c.get('problem_title')} ({c.get('language')})",
@@ -66,7 +66,7 @@ def get_preparation_timeline():
         for i in interviews:
             timeline.append({
                 "type": "interview",
-                "icon": "🎙️",
+                "icon": "fa-solid fa-microphone",
                 "company": "SIMULATION",
                 "role": i.get("job_role", "Software Engineer"),
                 "title": f"AI Mock Interview ({i.get('job_role')})",
@@ -80,7 +80,7 @@ def get_preparation_timeline():
         if resume_rep:
             timeline.append({
                 "type": "resume",
-                "icon": "📄",
+                "icon": "fa-solid fa-file-lines",
                 "company": "RESUME",
                 "role": resume_rep.get("target_role", "Software Engineer"),
                 "title": f"Resume ATS Audit ({resume_rep.get('target_role', 'General')})",

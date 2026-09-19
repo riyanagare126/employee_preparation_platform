@@ -388,6 +388,46 @@ CREATE TABLE IF NOT EXISTS preparation_questions (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 25. Companies Table (Dynamic Company Platform)
+CREATE TABLE IF NOT EXISTS companies (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    industry VARCHAR(150) DEFAULT 'IT Services',
+    difficulty VARCHAR(50) DEFAULT 'Medium',
+    logo VARCHAR(100) DEFAULT 'fas fa-building',
+    is_active INTEGER DEFAULT 1,
+    description TEXT,
+    common_roles TEXT,
+    hiring_rounds TEXT,
+    aptitude_pattern TEXT,
+    coding_pattern TEXT,
+    technical_focus TEXT,
+    hr_tips TEXT,
+    recommended_skills TEXT,
+    roadmap_json TEXT,
+    intel_json TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 26. Company Questions Table (Dynamic Question Bank per Company & Role)
+CREATE TABLE IF NOT EXISTS company_questions (
+    id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(id) ON DELETE CASCADE,
+    category VARCHAR(50) NOT NULL,
+    role VARCHAR(100) DEFAULT 'All',
+    difficulty VARCHAR(50) DEFAULT 'Medium',
+    question TEXT NOT NULL,
+    options TEXT,
+    correct_answer TEXT,
+    explanation TEXT,
+    extra TEXT,
+    is_active INTEGER DEFAULT 1,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create Essential Performance Indexes
 CREATE INDEX IF NOT EXISTS idx_emp_email ON employees(email);
 CREATE INDEX IF NOT EXISTS idx_tasks_roadmap ON roadmap_tasks(roadmap_id);
@@ -397,6 +437,11 @@ CREATE INDEX IF NOT EXISTS idx_fluency_employee ON ai_fluency_attempts(employee_
 CREATE INDEX IF NOT EXISTS idx_pitch_employee ON structured_answers(employee_id);
 CREATE INDEX IF NOT EXISTS idx_comp_slug ON company_prep(slug);
 CREATE INDEX IF NOT EXISTS idx_user_prep ON user_preparation(user_id, company_slug);
+CREATE INDEX IF NOT EXISTS idx_companies_slug ON companies(slug);
+CREATE INDEX IF NOT EXISTS idx_cq_company_id ON company_questions(company_id);
+CREATE INDEX IF NOT EXISTS idx_cq_category ON company_questions(category);
+CREATE INDEX IF NOT EXISTS idx_cq_role ON company_questions(role);
+CREATE INDEX IF NOT EXISTS idx_cq_comp_cat ON company_questions(company_id, category);
 
 -- =========================================================================
 -- INITIAL SEEDS: Demo Accounts, Companies & 2026 Trending Content

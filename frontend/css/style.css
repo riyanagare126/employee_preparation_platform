@@ -4,6 +4,7 @@
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
 
 :root {
   /* Primary & Accent Color Palette */
@@ -792,7 +793,9 @@ a:hover {
 }
 
 .ai-assistant-card::after {
-  content: "🤖";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: "\f544";
   position: absolute;
   right: 20px;
   bottom: -20px;
@@ -2433,6 +2436,38 @@ a:hover {
   }
   .comp-header-banner {
     padding: 20px 16px;
-  }
+}
 }
 
+/* ==========================================================================
+   ICON UTILITIES (FONT AWESOME INTEGRATION)
+   ========================================================================== */
+.brand-icon i {
+  color: var(--primary-500);
+}
+.text-success {
+  color: #10b981 !important;
+}
+.text-warning {
+  color: #f59e0b !important;
+}
+.text-danger {
+  color: #ef4444 !important;
+}
+.text-info {
+  color: #06b6d4 !important;
+}
+.text-primary {
+  color: var(--primary-600) !important;
+}
+.status-indicator-dot {
+  font-size: 0.65rem;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+.btn i, .badge i, .nav-link i {
+  margin-right: 6px;
+}
+.btn i.fa-only, .badge i.fa-only {
+  margin-right: 0;
+}

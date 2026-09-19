@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnRetake.style.display = "inline-block";
     btnRetake.addEventListener("click", async () => {
       await initOrResumeSecureTest(true);
-      showToast("Starting a fresh assessment with new questions! 🚀", "success");
+      showToast("Starting a fresh assessment with new questions!", "success");
     });
   }
 
@@ -112,11 +112,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
       btnNewTest.disabled = true;
-      btnNewTest.textContent = "🔄 Loading...";
+      btnNewTest.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Loading...';
       await initOrResumeSecureTest(true);
       btnNewTest.disabled = false;
-      btnNewTest.textContent = "🔄 New Questions";
-      showToast("Fresh randomized aptitude test loaded! ⏱️", "success");
+      btnNewTest.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> New Questions';
+      showToast("Fresh randomized aptitude test loaded!", "success");
     });
   }
 
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
       await initOrResumeSecureTest(true);
-      showToast(`Questions loaded for ${selectDiff.options[selectDiff.selectedIndex].text}! 🚀`, "info");
+      showToast(`Questions loaded for ${selectDiff.options[selectDiff.selectedIndex].text}!`, "info");
     });
   }
 
@@ -148,7 +148,7 @@ async function handleChangeCurrentQuestion() {
 
   if (btnChangeQ) {
     btnChangeQ.disabled = true;
-    btnChangeQ.innerHTML = "<span>🎲 Swapping...</span>";
+    btnChangeQ.innerHTML = '<span><i class="fa-solid fa-dice fa-spin"></i> Swapping...</span>';
   }
 
   try {
@@ -171,7 +171,7 @@ async function handleChangeCurrentQuestion() {
         questions[currentIndex] = data.question;
         userAnswers[currentIndex] = null; // reset answer for changed question
         renderQuestion(currentIndex);
-        showToast("Question changed! Fresh challenge loaded 🎲", "success");
+        showToast("Question changed! Fresh challenge loaded", "success");
       }
     } else {
       showToast("Could not change question right now.", "warning");
@@ -182,7 +182,7 @@ async function handleChangeCurrentQuestion() {
   } finally {
     if (btnChangeQ) {
       btnChangeQ.disabled = false;
-      btnChangeQ.innerHTML = "<span>🎲 Change Question</span>";
+      btnChangeQ.innerHTML = '<span><i class="fa-solid fa-dice"></i> Change Question</span>';
     }
   }
 }
@@ -204,7 +204,7 @@ async function initOrResumeSecureTest(forceNew = false) {
 
   if (viewScreen) viewScreen.style.display = "block";
   if (resultScreen) resultScreen.style.display = "none";
-  if (questionTextEl) questionTextEl.textContent = "⚙️ Connecting to test server & generating questions...";
+  if (questionTextEl) questionTextEl.innerHTML = '<i class="fa-solid fa-gear fa-spin"></i> Connecting to test server & generating questions...';
 
   try {
     const activeCompany = getActiveCompanySlug();
@@ -251,7 +251,7 @@ async function initOrResumeSecureTest(forceNew = false) {
       if (viewScreen) {
         viewScreen.innerHTML = `
           <div class="card" style="text-align: center; padding: 40px; border: 2px solid var(--danger-color);">
-            <span style="font-size: 3rem;">⚠️</span>
+            <span style="font-size: 3rem; color: #f59e0b;"><i class="fa-solid fa-triangle-exclamation"></i></span>
             <h2 style="color: var(--danger-color); margin: 12px 0;">Multi-Tab Session Detected</h2>
             <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 20px;">
               This test is already active in another browser tab/session. To maintain test security, duplicate tabs are disabled.
@@ -280,7 +280,7 @@ async function initOrResumeSecureTest(forceNew = false) {
           }
         }
         if (data.restored) {
-          showToast("Active test session resumed seamlessly ⏱️", "info");
+          showToast("Active test session resumed seamlessly", "info");
         }
       }
 
@@ -313,11 +313,11 @@ function showCompletedLockScreen(resultData) {
 
   if (scoreText) scoreText.textContent = `${resultData.score || 0} / ${resultData.total || 15}`;
   if (percentText) percentText.textContent = `${resultData.percentage || 0}%`;
-  if (badgeEl) badgeEl.textContent = "Attempt Verified ✓";
+  if (badgeEl) badgeEl.innerHTML = 'Attempt Verified <i class="fa-solid fa-check"></i>';
   if (msgEl) {
     msgEl.innerHTML = `
       <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 12px 16px; border-radius: 8px; margin-top: 10px;">
-        <strong>🔒 Single-Attempt Security Policy:</strong><br>
+        <strong><i class="fa-solid fa-lock"></i> Single-Attempt Security Policy:</strong><br>
         You have already completed this test. A second attempt is not allowed. Your verified score has been permanently recorded to your employee profile.
       </div>
     `;
@@ -385,13 +385,13 @@ function renderQuestion(index) {
   if (diffEl) {
     const d = (q.difficulty || "Medium").toLowerCase();
     if (d === "easy" || d === "low") {
-      diffEl.textContent = "🟢 Low (Easy)";
+      diffEl.innerHTML = '<i class="fa-solid fa-circle text-success status-indicator-dot"></i> Low (Easy)';
       diffEl.className = "badge badge-success";
     } else if (d === "hard" || d === "high") {
-      diffEl.textContent = "🔴 High (Hard)";
+      diffEl.innerHTML = '<i class="fa-solid fa-circle text-danger status-indicator-dot"></i> High (Hard)';
       diffEl.className = "badge badge-danger";
     } else {
-      diffEl.textContent = "🟡 Medium";
+      diffEl.innerHTML = '<i class="fa-solid fa-circle text-warning status-indicator-dot"></i> Medium';
       diffEl.className = "badge badge-warning";
     }
   }
@@ -613,7 +613,7 @@ async function submitTest() {
         });
       } catch (e) {}
 
-      showToast("Aptitude test evaluated and permanently recorded! 🎉", "success");
+      showToast("Aptitude test evaluated and permanently recorded!", "success");
     } else {
       throw new Error(data.message || "Failed to grade assessment.");
     }
@@ -725,11 +725,11 @@ function renderDetailedReview() {
 
       if (oIdx === correctChoice) {
         optClass = "correct-choice";
-        optTag = " ✔ (Correct Answer)";
+        optTag = ' <i class="fa-solid fa-check text-success"></i> (Correct Answer)';
       }
       if (oIdx === userChoice && !isCorrect) {
         optClass = "user-wrong-choice";
-        optTag = " ✖ (Your Choice)";
+        optTag = ' <i class="fa-solid fa-xmark text-danger"></i> (Your Choice)';
       }
 
       optionsHtml += `
@@ -759,7 +759,7 @@ function renderDetailedReview() {
       </div>
 
       <div class="review-explanation" style="background: #f8fafc; border-left: 3px solid var(--primary-500); padding: 10px 14px; border-radius: 4px; font-size: 0.85rem; color: var(--text-main);">
-        <strong style="color: var(--primary-700);">💡 Detailed Solution & Explanation:</strong><br>
+        <strong style="color: var(--primary-700);"><i class="fa-solid fa-lightbulb text-warning"></i> Detailed Solution & Explanation:</strong><br>
         ${escapeHtml(item.explanation || "Standard problem solving logic applied.")}
       </div>
     `;

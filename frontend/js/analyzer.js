@@ -110,7 +110,7 @@ async function runAnalysis(employeeId) {
       const data = await res.json();
       if (data.success && data.report) {
         renderAnalysisReport(data.report);
-        showToast("Resume scan complete! 🚀", "success");
+        showToast("Resume scan complete!", "success");
       }
     } else {
       showToast("Analysis failed. Please try again.", "error");
@@ -121,7 +121,7 @@ async function runAnalysis(employeeId) {
   } finally {
     if (btnRun) {
       btnRun.disabled = false;
-      btnRun.textContent = "🔍 Analyze Resume & ATS Match";
+      btnRun.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Analyze Resume & ATS Match';
     }
   }
 }
@@ -192,7 +192,7 @@ function renderAnalysisReport(report) {
   const suggList = document.getElementById("res-suggestions-list");
   if (suggList) {
     suggList.innerHTML = (report.suggestions || []).map(sg => `
-      <div style="background: var(--bg-subtle); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border-color);">💡 ${sg}</div>
+      <div style="background: var(--bg-subtle); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border-color);"><i class="fa-solid fa-lightbulb text-warning"></i> ${sg}</div>
     `).join("");
   }
 }

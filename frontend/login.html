@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Login to AI Employee Preparation Platform">
   <title>Employee Login | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,7 +14,7 @@
   <nav class="navbar">
     <div class="container nav-container">
       <a href="index.html" class="nav-brand">
-        <span class="brand-icon">🤖</span>
+        <span class="brand-icon"><i class="fa-solid fa-robot"></i></span>
         <span>AI Employee <span class="brand-highlight">Prep</span></span>
       </a>
       <div>
@@ -27,7 +28,7 @@
       <div class="auth-wrapper">
         <div class="auth-box">
           <div class="auth-header">
-            <div class="auth-icon">🔐</div>
+            <div class="auth-icon"><i class="fa-solid fa-lock"></i></div>
             <h1 class="auth-title">Welcome Back</h1>
             <p class="auth-subtitle">Sign in to continue your placement preparation</p>
           </div>
@@ -49,21 +50,21 @@
             </div>
 
             <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-login-submit" style="margin-top: 12px;">
-              Login to Dashboard 🚀
+              Login to Dashboard <i class="fa-solid fa-rocket"></i>
             </button>
           </form>
 
           <!-- 1-Click Quick Demo Access for College Presentation -->
           <div style="margin-top: 20px; padding: 16px; background: var(--bg-subtle); border-radius: var(--radius-md); border: 1px dashed var(--border-color); text-align: center;">
             <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
-              🎓 College Demo / 1-Click Login
+              <i class="fa-solid fa-graduation-cap"></i> College Demo / 1-Click Login
             </div>
             <div style="display: flex; gap: 8px; flex-direction: column;">
               <button type="button" class="btn btn-secondary btn-sm" id="btn-demo-student" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; cursor: pointer;">
-                <span>⚡</span> <span>Demo Student Login (Rahul Sharma)</span>
+                <span><i class="fa-solid fa-bolt text-warning"></i></span> <span>Demo Student Login (Rahul Sharma)</span>
               </button>
               <button type="button" class="btn btn-secondary btn-sm" id="btn-demo-admin" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; cursor: pointer;">
-                <span>🛡️</span> <span>Platform Admin Login</span>
+                <span><i class="fa-solid fa-shield-halved text-danger"></i></span> <span>Platform Admin Login</span>
               </button>
             </div>
           </div>
@@ -162,13 +163,13 @@
           } else {
             showAlert(data.message || "Incorrect email or password.");
             submitBtn.disabled = false;
-            submitBtn.textContent = "Login to Dashboard 🚀";
+            submitBtn.innerHTML = 'Login to Dashboard <i class="fa-solid fa-rocket"></i>';
           }
         } catch (err) {
           console.error("Login request error:", err);
           showAlert("Could not connect to backend server. Please ensure the backend is running at " + API_BASE);
           submitBtn.disabled = false;
-          submitBtn.textContent = "Login to Dashboard 🚀";
+          submitBtn.innerHTML = 'Login to Dashboard <i class="fa-solid fa-rocket"></i>';
         }
       });
     });

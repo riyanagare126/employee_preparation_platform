@@ -596,14 +596,14 @@ class ResumeAnalyzerModel:
 
 class GamificationModel:
     BADGES_CATALOG = {
-        "badge_aptitude_starter": {"name": "Aptitude Starter", "emoji": "🎯", "desc": "Completed your first Aptitude Assessment."},
-        "badge_aptitude_master": {"name": "Aptitude Master", "emoji": "🧠", "desc": "Scored 80%+ in Placement Aptitude Assessment."},
-        "badge_coding_beginner": {"name": "Coding Beginner", "emoji": "💻", "desc": "Solved your first coding problem."},
-        "badge_coding_master": {"name": "Coding Master", "emoji": "🚀", "desc": "Solved 5+ algorithmic coding challenges."},
-        "badge_interview_ready": {"name": "Interview Ready", "emoji": "🎙️", "desc": "Completed an AI Mock Interview with evaluation."},
-        "badge_resume_ready": {"name": "Resume Ready", "emoji": "📄", "desc": "Built and customized your professional resume."},
-        "badge_streak_3": {"name": "3-Day Streak", "emoji": "🔥", "desc": "Maintained a 3-day active preparation streak."},
-        "badge_streak_7": {"name": "7-Day Streak", "emoji": "⚡", "desc": "Maintained an unbroken 7-day preparation streak."}
+        "badge_aptitude_starter": {"name": "Aptitude Starter", "icon": "fa-solid fa-bullseye", "desc": "Completed your first Aptitude Assessment."},
+        "badge_aptitude_master": {"name": "Aptitude Master", "icon": "fa-solid fa-brain", "desc": "Scored 80%+ in Placement Aptitude Assessment."},
+        "badge_coding_beginner": {"name": "Coding Beginner", "icon": "fa-solid fa-laptop-code", "desc": "Solved your first coding problem."},
+        "badge_coding_master": {"name": "Coding Master", "icon": "fa-solid fa-rocket", "desc": "Solved 5+ algorithmic coding challenges."},
+        "badge_interview_ready": {"name": "Interview Ready", "icon": "fa-solid fa-microphone", "desc": "Completed an AI Mock Interview with evaluation."},
+        "badge_resume_ready": {"name": "Resume Ready", "icon": "fa-solid fa-file-lines", "desc": "Built and customized your professional resume."},
+        "badge_streak_3": {"name": "3-Day Streak", "icon": "fa-solid fa-fire", "desc": "Maintained a 3-day active preparation streak."},
+        "badge_streak_7": {"name": "7-Day Streak", "icon": "fa-solid fa-bolt", "desc": "Maintained an unbroken 7-day preparation streak."}
     }
 
     @staticmethod
@@ -889,11 +889,11 @@ class DailyPlanModel:
         comp = emp.get("target_company", "TCS")
 
         tasks = [
-            {"id": 1, "module": "aptitude", "title": "Solve 10 Quantitative Aptitude & Data Interpretation questions", "duration": "15 mins", "icon": "🧮"},
-            {"id": 2, "module": "coding", "title": f"Complete 2 {role} Coding Challenges (Arrays / Hash Maps)", "duration": "25 mins", "icon": "💻"},
-            {"id": 3, "module": "technical", "title": "Revise Core Concepts (SQL Joins, ACID, & OOP Polymorphism)", "duration": "15 mins", "icon": "⚙️"},
-            {"id": 4, "module": "interview", "title": f"Practice 3 STAR Behavioral & Technical questions for {comp}", "duration": "15 mins", "icon": "🎙️"},
-            {"id": 5, "module": "resume", "title": "Audit ATS Resume keyword density against target role", "duration": "10 mins", "icon": "📄"}
+            {"id": 1, "module": "aptitude", "title": "Solve 10 Quantitative Aptitude & Data Interpretation questions", "duration": "15 mins", "icon": "fa-solid fa-calculator"},
+            {"id": 2, "module": "coding", "title": f"Complete 2 {role} Coding Challenges (Arrays / Hash Maps)", "duration": "25 mins", "icon": "fa-solid fa-laptop-code"},
+            {"id": 3, "module": "technical", "title": "Revise Core Concepts (SQL Joins, ACID, & OOP Polymorphism)", "duration": "15 mins", "icon": "fa-solid fa-gears"},
+            {"id": 4, "module": "interview", "title": f"Practice 3 STAR Behavioral & Technical questions for {comp}", "duration": "15 mins", "icon": "fa-solid fa-microphone"},
+            {"id": 5, "module": "resume", "title": "Audit ATS Resume keyword density against target role", "duration": "10 mins", "icon": "fa-solid fa-file-lines"}
         ]
 
         cursor.execute("""
@@ -2212,14 +2212,14 @@ class SmartRoadmapModel:
 
         recommendations = []
         if apt_pct < 70:
-            recommendations.append("⚠️ Aptitude baseline is below 70%. Day 1 & Day 4 Quantitative questions prioritized.")
+            recommendations.append("Aptitude baseline is below 70%. Day 1 & Day 4 Quantitative questions prioritized.")
         else:
-            recommendations.append("✅ Aptitude score is solid. Fast-track through foundational math drills.")
+            recommendations.append("Aptitude score is solid. Fast-track through foundational math drills.")
 
         if intv_score < 75:
-            recommendations.append("⚠️ Technical interview score needs refinement. Added 60-Second Pitch practice before mock round.")
+            recommendations.append("Technical interview score needs refinement. Added 60-Second Pitch practice before mock round.")
         else:
-            recommendations.append("✅ Communication delivery is strong. Maintain structured STAR answers.")
+            recommendations.append("Communication delivery is strong. Maintain structured STAR answers.")
 
         adj_note = f"Performance Calibration: {'; '.join(recommendations)}"
         cursor.execute("UPDATE smart_roadmaps SET ai_notes = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", (adj_note, roadmap_id))
@@ -2438,19 +2438,19 @@ class AIFluencyModel:
         # Feedback & Natural Rewrite
         feedback_points = []
         if tool_hits > 0:
-            feedback_points.append("✅ Great natural reference to developer tooling.")
+            feedback_points.append("Great natural reference to developer tooling.")
         else:
-            feedback_points.append("⚠️ Missed mentioning assistive AI tools (e.g. GitHub Copilot, Cursor, LLM test mock generators).")
+            feedback_points.append("Missed mentioning assistive AI tools (e.g. GitHub Copilot, Cursor, LLM test mock generators).")
 
         if ver_hits > 0:
-            feedback_points.append("✅ Strong verification mindset—emphasizing tests, validations, or code reviews.")
+            feedback_points.append("Strong verification mindset—emphasizing tests, validations, or code reviews.")
         else:
-            feedback_points.append("⚠️ Make sure to state that you rigorously verify, test, and sanitize all AI-assisted outputs.")
+            feedback_points.append("Make sure to state that you rigorously verify, test, and sanitize all AI-assisted outputs.")
 
         if vel_hits > 0:
-            feedback_points.append("✅ Good focus on tangible velocity gains and sprint outcomes.")
+            feedback_points.append("Good focus on tangible velocity gains and sprint outcomes.")
         else:
-            feedback_points.append("💡 Include a concrete metric (e.g. 'saved ~2 hours per sprint on boilerplate creation').")
+            feedback_points.append("Include a concrete metric (e.g. 'saved ~2 hours per sprint on boilerplate creation').")
 
         # Generate tailored Natural AI Weaver rewrite
         rewrite_sample = (
@@ -2548,7 +2548,7 @@ class StructuredAnswerModel:
             length_critique = f"Estimated speaking time is ~{est_seconds}s ({word_count} words). Recruiters lose focus beyond 75 seconds. Trim narrative details to hit the crisp 60-second sweet spot."
             score_len = 70
         else:
-            length_status = "Perfect (Sweet Spot 🎯)"
+            length_status = "Perfect (Sweet Spot)"
             length_critique = f"Estimated speaking time is ~{est_seconds}s ({word_count} words). Perfectly aligned with recruiter-approved 60-second elevator pitch standards."
             score_len = 95
 
@@ -2770,5 +2770,440 @@ class DashboardSummaryModel:
             "roadmap": roadmap_summary,
             "session_trend": session_trend,
             "trend_insights": trend_tips
+        }
+
+
+# ====================================================================
+# DYNAMIC COMPANY & QUESTION CMS MODELS (Task 3)
+# ====================================================================
+
+class CompanyModel:
+    """Handles companies table CRUD for the dynamic preparation platform."""
+
+    @staticmethod
+    def get_all(active_only: bool = False) -> List[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        query = "SELECT * FROM companies"
+        if active_only:
+            query += " WHERE is_active = 1"
+        query += " ORDER BY name ASC"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        conn.close()
+        return [dict(r) for r in rows]
+
+    @staticmethod
+    def get_by_slug(slug: str) -> Optional[Dict[str, Any]]:
+        if not slug:
+            return None
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM companies WHERE LOWER(slug) = LOWER(?)", (slug.strip(),))
+        row = cursor.fetchone()
+        conn.close()
+        return dict(row) if row else None
+
+    @staticmethod
+    def get_by_id(comp_id: int) -> Optional[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM companies WHERE id = ?", (comp_id,))
+        row = cursor.fetchone()
+        conn.close()
+        return dict(row) if row else None
+
+    @staticmethod
+    def create_or_update(data: Dict[str, Any]) -> Dict[str, Any]:
+        slug = (data.get("slug") or data.get("name", "")).strip().lower().replace(" ", "-")
+        name = data.get("name", "").strip()
+        industry = data.get("industry", "IT Services")
+        difficulty = data.get("difficulty", "Medium")
+        logo = data.get("logo", "fas fa-building")
+        is_active = int(data.get("is_active", 1))
+        desc = data.get("description", "")
+        roles = data.get("common_roles", "")
+        rounds = data.get("hiring_rounds", "")
+        apt_pat = data.get("aptitude_pattern", "")
+        code_pat = data.get("coding_pattern", "")
+        tech_foc = data.get("technical_focus", "")
+        hr_tips = data.get("hr_tips", "")
+        skills = data.get("recommended_skills", "")
+        roadmap_json = json.dumps(data["roadmap"]) if isinstance(data.get("roadmap"), (list, dict)) else data.get("roadmap_json", "")
+        intel_json = json.dumps(data["intel"]) if isinstance(data.get("intel"), dict) else data.get("intel_json", "")
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM companies WHERE LOWER(slug) = LOWER(?)", (slug,))
+        existing = cursor.fetchone()
+
+        if existing:
+            comp_id = existing["id"] if isinstance(existing, dict) else existing[0]
+            cursor.execute("""
+                UPDATE companies SET
+                    name = ?, industry = ?, difficulty = ?, logo = ?, is_active = ?,
+                    description = COALESCE(NULLIF(?, ''), description),
+                    common_roles = COALESCE(NULLIF(?, ''), common_roles),
+                    hiring_rounds = COALESCE(NULLIF(?, ''), hiring_rounds),
+                    aptitude_pattern = COALESCE(NULLIF(?, ''), aptitude_pattern),
+                    coding_pattern = COALESCE(NULLIF(?, ''), coding_pattern),
+                    technical_focus = COALESCE(NULLIF(?, ''), technical_focus),
+                    hr_tips = COALESCE(NULLIF(?, ''), hr_tips),
+                    recommended_skills = COALESCE(NULLIF(?, ''), recommended_skills),
+                    roadmap_json = COALESCE(NULLIF(?, ''), roadmap_json),
+                    intel_json = COALESCE(NULLIF(?, ''), intel_json),
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            """, (name, industry, difficulty, logo, is_active, desc, roles, rounds, apt_pat, code_pat, tech_foc, hr_tips, skills, roadmap_json, intel_json, comp_id))
+        else:
+            cursor.execute("""
+                INSERT INTO companies (
+                    name, slug, industry, difficulty, logo, is_active,
+                    description, common_roles, hiring_rounds, aptitude_pattern,
+                    coding_pattern, technical_focus, hr_tips, recommended_skills,
+                    roadmap_json, intel_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (name, slug, industry, difficulty, logo, is_active, desc, roles, rounds, apt_pat, code_pat, tech_foc, hr_tips, skills, roadmap_json, intel_json))
+            comp_id = cursor.lastrowid
+
+        conn.commit()
+        conn.close()
+        return CompanyModel.get_by_slug(slug)
+
+    @staticmethod
+    def delete_by_slug(slug: str) -> bool:
+        comp = CompanyModel.get_by_slug(slug)
+        if not comp:
+            return False
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM companies WHERE id = ?", (comp["id"],))
+        conn.commit()
+        conn.close()
+        return True
+
+    @staticmethod
+    def toggle_active(slug: str) -> Optional[int]:
+        comp = CompanyModel.get_by_slug(slug)
+        if not comp:
+            return None
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        new_val = 0 if comp.get("is_active", 1) == 1 else 1
+        cursor.execute("UPDATE companies SET is_active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", (new_val, comp["id"]))
+        conn.commit()
+        conn.close()
+        return new_val
+
+
+class CompanyQuestionModel:
+    """Handles company_questions table CRUD, filtering, and bulk operations."""
+
+    @staticmethod
+    def count_questions(
+        company_slug: str = None,
+        company_id: int = None,
+        category: str = None,
+        role: str = None,
+        active_only: bool = False,
+        search: str = None
+    ) -> int:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        resolved_cid = company_id
+        if not resolved_cid and company_slug and company_slug.lower() != "all":
+            comp = CompanyModel.get_by_slug(company_slug)
+            if comp:
+                resolved_cid = comp["id"]
+            else:
+                conn.close()
+                return 0
+
+        query = """
+            SELECT COUNT(*) as total
+            FROM company_questions q
+            JOIN companies c ON q.company_id = c.id
+            WHERE 1=1
+        """
+        params = []
+
+        if resolved_cid:
+            query += " AND q.company_id = ?"
+            params.append(resolved_cid)
+
+        if category and category.lower() != "all":
+            query += " AND LOWER(q.category) = LOWER(?)"
+            params.append(category.strip())
+
+        if role and role.lower() != "all":
+            query += " AND (LOWER(q.role) = LOWER(?) OR LOWER(q.role) = 'all')"
+            params.append(role.strip())
+
+        if active_only:
+            query += " AND q.is_active = 1"
+
+        if search:
+            query += " AND (q.question LIKE ? OR q.explanation LIKE ?)"
+            params.extend([f"%{search}%", f"%{search}%"])
+
+        cursor.execute(query, params)
+        row = cursor.fetchone()
+        conn.close()
+        return row["total"] if row and isinstance(row, dict) else (row[0] if row else 0)
+
+    @staticmethod
+    def get_questions(
+        company_slug: str = None,
+        company_id: int = None,
+        category: str = None,
+        role: str = None,
+        active_only: bool = True,
+        search: str = None,
+        limit: int = 500,
+        offset: int = 0
+    ) -> List[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        resolved_cid = company_id
+        if not resolved_cid and company_slug and company_slug.lower() != "all":
+            comp = CompanyModel.get_by_slug(company_slug)
+            if comp:
+                resolved_cid = comp["id"]
+            else:
+                conn.close()
+                return []
+
+        query = """
+            SELECT q.*, c.name as company_name, c.slug as company_slug
+            FROM company_questions q
+            JOIN companies c ON q.company_id = c.id
+            WHERE 1=1
+        """
+        params = []
+
+        if resolved_cid:
+            query += " AND q.company_id = ?"
+            params.append(resolved_cid)
+
+        if category and category.lower() != "all":
+            query += " AND LOWER(q.category) = LOWER(?)"
+            params.append(category.strip())
+
+        if role and role.lower() != "all":
+            query += " AND (LOWER(q.role) = LOWER(?) OR LOWER(q.role) = 'all')"
+            params.append(role.strip())
+
+        if active_only:
+            query += " AND q.is_active = 1"
+
+        if search:
+            query += " AND (q.question LIKE ? OR q.explanation LIKE ?)"
+            params.extend([f"%{search}%", f"%{search}%"])
+
+        query += " ORDER BY q.id ASC LIMIT ? OFFSET ?"
+        params.extend([limit, offset])
+
+        cursor.execute(query, tuple(params))
+        rows = cursor.fetchall()
+        conn.close()
+
+        result = []
+        for r in rows:
+            d = dict(r)
+            if d.get("options") and isinstance(d["options"], str):
+                try:
+                    d["options"] = json.loads(d["options"])
+                except Exception:
+                    pass
+            if d.get("extra") and isinstance(d["extra"], str):
+                try:
+                    d["extra"] = json.loads(d["extra"])
+                except Exception:
+                    pass
+            result.append(d)
+        return result
+
+    @staticmethod
+    def get_by_id(qid: int) -> Optional[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT q.*, c.name as company_name, c.slug as company_slug
+            FROM company_questions q
+            JOIN companies c ON q.company_id = c.id
+            WHERE q.id = ?
+        """, (qid,))
+        row = cursor.fetchone()
+        conn.close()
+        if not row:
+            return None
+        d = dict(row)
+        if d.get("options") and isinstance(d["options"], str):
+            try: d["options"] = json.loads(d["options"])
+            except Exception: pass
+        if d.get("extra") and isinstance(d["extra"], str):
+            try: d["extra"] = json.loads(d["extra"])
+            except Exception: pass
+        return d
+
+    @staticmethod
+    def create(data: Dict[str, Any]) -> int:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        company_id = data.get("company_id")
+        if not company_id and data.get("company_slug"):
+            comp = CompanyModel.get_by_slug(data["company_slug"])
+            if comp:
+                company_id = comp["id"]
+
+        if not company_id:
+            conn.close()
+            raise ValueError("Valid company_id or company_slug is required.")
+
+        category = (data.get("category") or "aptitude").strip().lower()
+        role = (data.get("role") or "All").strip()
+        difficulty = (data.get("difficulty") or "Medium").strip()
+        question = data.get("question", "").strip()
+        options = json.dumps(data["options"]) if isinstance(data.get("options"), list) else data.get("options")
+        correct_answer = data.get("correct_answer", "").strip()
+        explanation = data.get("explanation", "").strip()
+        extra = json.dumps(data["extra"]) if isinstance(data.get("extra"), dict) else data.get("extra")
+        is_active = int(data.get("is_active", 1))
+
+        cursor.execute("""
+            INSERT INTO company_questions (
+                company_id, category, role, difficulty, question,
+                options, correct_answer, explanation, extra, is_active
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (company_id, category, role, difficulty, question, options, correct_answer, explanation, extra, is_active))
+
+        new_id = cursor.lastrowid
+        conn.commit()
+        conn.close()
+        return new_id
+
+    @staticmethod
+    def update(qid: int, data: Dict[str, Any]) -> bool:
+        existing = CompanyQuestionModel.get_by_id(qid)
+        if not existing:
+            return False
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        category = (data.get("category") or existing["category"]).strip().lower()
+        role = (data.get("role") or existing["role"]).strip()
+        difficulty = (data.get("difficulty") or existing["difficulty"]).strip()
+        question = (data.get("question") or existing["question"]).strip()
+
+        if "options" in data:
+            options = json.dumps(data["options"]) if isinstance(data["options"], list) else data["options"]
+        else:
+            options = json.dumps(existing["options"]) if isinstance(existing["options"], list) else existing["options"]
+
+        correct_answer = data.get("correct_answer", existing["correct_answer"])
+        explanation = data.get("explanation", existing["explanation"])
+
+        if "extra" in data:
+            extra = json.dumps(data["extra"]) if isinstance(data["extra"], dict) else data["extra"]
+        else:
+            extra = json.dumps(existing["extra"]) if isinstance(existing["extra"], dict) else existing["extra"]
+
+        is_active = int(data.get("is_active", existing["is_active"]))
+
+        cursor.execute("""
+            UPDATE company_questions SET
+                category = ?, role = ?, difficulty = ?, question = ?,
+                options = ?, correct_answer = ?, explanation = ?,
+                extra = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+        """, (category, role, difficulty, question, options, correct_answer, explanation, extra, is_active, qid))
+
+        conn.commit()
+        conn.close()
+        return True
+
+    @staticmethod
+    def delete(qid: int) -> bool:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM company_questions WHERE id = ?", (qid,))
+        deleted = cursor.rowcount > 0
+        conn.commit()
+        conn.close()
+        return deleted
+
+    @staticmethod
+    def toggle_active(qid: int, is_active: Optional[int] = None) -> Optional[int]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT is_active FROM company_questions WHERE id = ?", (qid,))
+        row = cursor.fetchone()
+        if not row:
+            conn.close()
+            return None
+
+        current = row["is_active"] if isinstance(row, dict) else row[0]
+        new_val = (1 - current) if is_active is None else int(is_active)
+
+        cursor.execute("UPDATE company_questions SET is_active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", (new_val, qid))
+        conn.commit()
+        conn.close()
+        return new_val
+
+    @staticmethod
+    def bulk_import(company_slug: str, questions: List[Dict[str, Any]]) -> Dict[str, Any]:
+        comp = CompanyModel.get_by_slug(company_slug)
+        if not comp:
+            raise ValueError(f"Company '{company_slug}' not found.")
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        imported = 0
+        skipped = 0
+
+        for q in questions:
+            q_text = (q.get("question") or "").strip()
+            if not q_text:
+                skipped += 1
+                continue
+
+            # Idempotence: check by normalized question statement and company_id
+            cursor.execute("""
+                SELECT id FROM company_questions
+                WHERE company_id = ? AND LOWER(TRIM(question)) = LOWER(TRIM(?))
+            """, (comp["id"], q_text))
+            if cursor.fetchone():
+                skipped += 1
+                continue
+
+            cat = (q.get("category") or "aptitude").strip().lower()
+            role = (q.get("role") or "All").strip()
+            diff = (q.get("difficulty") or "Medium").strip()
+            opts = json.dumps(q["options"]) if isinstance(q.get("options"), list) else q.get("options")
+            ans = (q.get("correct_answer") or "").strip()
+            exp = (q.get("explanation") or "").strip()
+            ext = json.dumps(q["extra"]) if isinstance(q.get("extra"), dict) else q.get("extra")
+            act = int(q.get("is_active", 1))
+
+            cursor.execute("""
+                INSERT INTO company_questions (
+                    company_id, category, role, difficulty, question,
+                    options, correct_answer, explanation, extra, is_active
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (comp["id"], cat, role, diff, q_text, opts, ans, exp, ext, act))
+            imported += 1
+
+        conn.commit()
+        conn.close()
+        return {
+            "success": True,
+            "company_slug": company_slug,
+            "imported": imported,
+            "skipped": skipped,
+            "total": len(questions)
         }
 

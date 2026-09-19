@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Professional Resume Builder - AI Employee Preparation Platform">
   <title>Resume Builder & Customization | AI Employee Preparation Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,11 +14,11 @@
   <nav class="navbar" id="navbar">
     <div class="container nav-container">
       <a href="dashboard.html" class="nav-brand">
-        <span class="brand-icon">🤖</span>
+        <span class="brand-icon"><i class="fa-solid fa-robot"></i></span>
         <span>AI Employee <span class="brand-highlight">Prep</span></span>
       </a>
 
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
@@ -30,7 +31,7 @@
         <li><a href="aptitude.html" class="nav-link">Aptitude</a></li>
         <li><a href="analyzer.html" class="nav-link">Resume Analyzer</a></li>
         <li><a href="companies.html" class="nav-link">Companies</a></li>
-        <li><a href="achievements.html" class="nav-link">Badges 🏆</a></li>
+        <li><a href="achievements.html" class="nav-link">Badges <i class="fa-solid fa-trophy"></i></a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -50,16 +51,16 @@
         </div>
 
         <div style="display: flex; gap: 10px; flex-wrap: wrap;" class="no-print">
-          <button id="btn-save-resume" class="btn btn-secondary btn-sm">💾 Quick Save</button>
-          <button id="btn-save-version-modal" class="btn btn-outline-primary btn-sm">📁 Save as Named Version</button>
-          <button id="btn-print-resume" class="btn btn-primary btn-sm">🖨️ Print / Download PDF</button>
+          <button id="btn-save-resume" class="btn btn-secondary btn-sm"><i class="fa-solid fa-floppy-disk"></i> Quick Save</button>
+          <button id="btn-save-version-modal" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-folder-open"></i> Save as Named Version</button>
+          <button id="btn-print-resume" class="btn btn-primary btn-sm"><i class="fa-solid fa-print"></i> Print / Download PDF</button>
         </div>
       </div>
 
       <!-- Version Manager Bar (no-print) -->
       <div class="card no-print" style="padding: 14px 20px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; background: var(--bg-subtle);">
         <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-          <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">📁 Saved Versions:</span>
+          <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);"><i class="fa-solid fa-folder-open"></i> Saved Versions:</span>
           <select id="select-resume-version" class="form-select" style="max-width: 280px; padding: 6px 12px; font-size: 0.85rem;">
             <option value="">-- Select Saved Version to Load --</option>
           </select>
@@ -75,27 +76,27 @@
       <div class="card no-print" style="padding: 18px 20px; margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
           <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);">
-            🎨 Choose 2026 Trending Template:
+            <i class="fa-solid fa-palette"></i> Choose 2026 Trending Template:
           </div>
-          <span class="badge badge-purple" style="font-size: 0.72rem;">🔥 2026 Industry Standards</span>
+          <span class="badge badge-purple" style="font-size: 0.72rem;"><i class="fa-solid fa-fire text-warning"></i> 2026 Industry Standards</span>
         </div>
 
         <div class="template-selector-bar" id="template-buttons" style="display: flex; gap: 10px; flex-wrap: wrap;">
           <button class="template-btn active" data-template="modern-single">
-            🔥 Modern Single-Column <span class="badge" style="background: #e0e7ff; color: #3730a3; margin-left: 4px; font-size: 0.7rem;">ATS Favorite</span>
+            <i class="fa-solid fa-fire text-warning"></i> Modern Single-Column <span class="badge" style="background: #e0e7ff; color: #3730a3; margin-left: 4px; font-size: 0.7rem;">ATS Favorite</span>
           </button>
           <button class="template-btn" data-template="minimalist-accent">
-            ✨ Minimalist Accent <span class="badge" style="background: #cffafe; color: #0e7490; margin-left: 4px; font-size: 0.7rem;">Top Pick</span>
+            <i class="fa-solid fa-wand-magic-sparkles text-info"></i> Minimalist Accent <span class="badge" style="background: #cffafe; color: #0e7490; margin-left: 4px; font-size: 0.7rem;">Top Pick</span>
           </button>
           <button class="template-btn" data-template="classic-chrono">
-            💼 Classic Reverse-Chronological <span class="badge" style="background: #f1f5f9; color: #334155; margin-left: 4px; font-size: 0.7rem;">Corporate</span>
+            <i class="fa-solid fa-briefcase"></i> Classic Reverse-Chronological <span class="badge" style="background: #f1f5f9; color: #334155; margin-left: 4px; font-size: 0.7rem;">Corporate</span>
           </button>
           <button class="template-btn" data-template="modern">Modern Gradient</button>
           <button class="template-btn" data-template="developer">Developer Tech</button>
         </div>
 
         <div style="font-weight: 700; font-size: 0.95rem; margin-top: 16px; margin-bottom: 8px; color: var(--text-main);">
-          ⚙️ Toggle Resume Sections:
+          <i class="fa-solid fa-gear"></i> Toggle Resume Sections:
         </div>
         <div class="resume-section-toggles-grid" id="section-toggles-container">
           <label class="section-toggle-label"><input type="checkbox" id="chk-objective" checked> Career Objective</label>
@@ -124,7 +125,7 @@
         <div class="card" style="padding: 18px; border: 1px solid var(--border-color);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);">
-              ✨ AI Bullet-Point Rewriter (Metric-Driven)
+              <i class="fa-solid fa-wand-magic-sparkles text-primary"></i> AI Bullet-Point Rewriter (Metric-Driven)
             </div>
             <span class="badge badge-success" style="font-size: 0.72rem;">STAR Impact</span>
           </div>
@@ -134,14 +135,14 @@
           <div style="display: flex; gap: 8px; margin-bottom: 8px;">
             <input type="text" id="input-raw-bullet" class="form-control" placeholder="e.g. Worked on login and authentication system..." style="font-size: 0.85rem;">
             <button type="button" id="btn-ai-rewrite-bullet" class="btn btn-primary btn-sm" style="white-space: nowrap;">
-              Rewrite ✨
+              Rewrite <i class="fa-solid fa-wand-magic-sparkles"></i>
             </button>
           </div>
           <div id="ai-bullet-result" style="display: none; padding: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-sm); font-size: 0.85rem;">
             <div style="font-weight: 700; color: #166534; margin-bottom: 4px;" id="ai-rewritten-text"></div>
             <div style="font-size: 0.78rem; color: #15803d;" id="ai-rewritten-expl"></div>
             <button type="button" id="btn-apply-bullet" class="btn btn-success btn-sm" style="margin-top: 8px; font-size: 0.78rem; padding: 4px 10px;">
-              Apply to Experience ➕
+              Apply to Experience <i class="fa-solid fa-plus"></i>
             </button>
           </div>
         </div>
@@ -150,7 +151,7 @@
         <div class="card" style="padding: 18px; border: 1px solid var(--border-color);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);">
-              🎯 AI Resume Score (ATS & JD Match)
+              <i class="fa-solid fa-bullseye text-primary"></i> AI Resume Score (ATS & JD Match)
             </div>
             <span class="badge badge-primary" style="font-size: 0.72rem;">Live Scanner</span>
           </div>
@@ -160,7 +161,7 @@
           <div style="display: flex; gap: 8px; margin-bottom: 8px;">
             <input type="text" id="input-jd-keywords" class="form-control" placeholder="Paste target Job Description snippet or keywords..." style="font-size: 0.85rem;">
             <button type="button" id="btn-calculate-ats" class="btn btn-primary btn-sm" style="white-space: nowrap;">
-              Analyze 🤖
+              Analyze <i class="fa-solid fa-robot"></i>
             </button>
           </div>
           <div id="ats-score-result" style="display: none; padding: 12px; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: var(--radius-sm); font-size: 0.85rem;">
@@ -179,7 +180,7 @@
         <!-- Left Column: Form Editor (no-print) -->
         <div class="card no-print" style="padding: 24px; max-height: 960px; overflow-y: auto;">
           <h2 style="font-size: 1.15rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-            <span>✏️</span> Edit Section Details
+            <span><i class="fa-solid fa-pencil"></i></span> Edit Section Details
           </h2>
 
           <form id="resume-form">
@@ -316,11 +317,11 @@
               
               <!-- Contact Bar -->
               <div class="res-contact-bar" id="preview-contact-bar" style="font-size: 0.85rem; color: #475569; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px;">
-                <span id="preview-email">📧 john@example.com</span>
-                <span id="preview-phone">📱 +91 98765 43210</span>
-                <span id="preview-github">🔗 github.com/johndoe</span>
-                <span id="preview-linkedin">💼 linkedin.com/in/johndoe</span>
-                <span id="preview-portfolio">🌐 johndoe.dev</span>
+                <span id="preview-email"><i class="fa-solid fa-envelope"></i> john@example.com</span>
+                <span id="preview-phone"><i class="fa-solid fa-phone"></i> +91 98765 43210</span>
+                <span id="preview-github"><i class="fa-solid fa-link"></i> github.com/johndoe</span>
+                <span id="preview-linkedin"><i class="fa-brands fa-linkedin"></i> linkedin.com/in/johndoe</span>
+                <span id="preview-portfolio"><i class="fa-solid fa-globe"></i> johndoe.dev</span>
               </div>
             </div>
 

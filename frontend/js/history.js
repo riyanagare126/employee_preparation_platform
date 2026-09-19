@@ -37,7 +37,7 @@ function renderCompanyProgress(companies) {
   container.innerHTML = companies.map(c => `
     <div style="background: var(--bg-subtle); padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-        <strong style="color: var(--text-main); font-size: 1rem;">🏢 ${escapeHtml(c.company_name || c.company_slug.toUpperCase())}</strong>
+        <strong style="color: var(--text-main); font-size: 1rem;"><i class="fa-solid fa-building"></i> ${escapeHtml(c.company_name || c.company_slug.toUpperCase())}</strong>
         <span class="badge badge-primary">${Math.round(c.progress || 0)}%</span>
       </div>
       <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">Target Role: ${escapeHtml(c.role_name || 'Software Engineer')}</div>
@@ -63,20 +63,20 @@ function renderHistory(timeline) {
   }
 
   container.innerHTML = timeline.map(item => {
-    let icon = item.icon || "📝";
+    let icon = '<i class="fa-solid fa-pen-to-square"></i>';
     let badgeClass = "badge-info";
 
     if (item.type === "aptitude") {
-      icon = "🧮";
+      icon = '<i class="fa-solid fa-calculator"></i>';
       badgeClass = "badge-primary";
     } else if (item.type === "coding") {
-      icon = "💻";
+      icon = '<i class="fa-solid fa-laptop-code"></i>';
       badgeClass = "badge-success";
     } else if (item.type === "interview") {
-      icon = "🎙️";
+      icon = '<i class="fa-solid fa-microphone"></i>';
       badgeClass = "badge-purple";
     } else if (item.type === "resume") {
-      icon = "📄";
+      icon = '<i class="fa-solid fa-file-lines"></i>';
       badgeClass = "badge-warning";
     }
 

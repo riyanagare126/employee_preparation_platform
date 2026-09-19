@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderCompanyCards(companies) {
     if (!companies || companies.length === 0) {
       grid.innerHTML = `<div class="card" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-        <p style="font-size: 1.1rem; margin-bottom: 8px;">🔍 No companies found matching your filter criteria.</p>
+        <p style="font-size: 1.1rem; margin-bottom: 8px;"><i class="fa-solid fa-magnifying-glass"></i> No companies found matching your filter criteria.</p>
         <button class="btn btn-secondary btn-sm" onclick="document.getElementById('company-search').value=''; document.getElementById('filter-category').value='All'; document.getElementById('filter-difficulty').value='All'; window.location.reload();">Reset Filters</button>
       </div>`;
       return;
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid var(--border-color);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
           <div>
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-              <span style="font-size: 2.2rem;">${c.logo_emoji || '🏢'}</span>
+              <span style="font-size: 2.2rem; color: var(--primary-600);"><i class="fa-solid fa-building"></i></span>
               <span class="badge ${c.difficulty.includes('Hard') ? 'badge-danger' : (c.difficulty.includes('Medium') ? 'badge-warning' : 'badge-primary')}" style="font-size: 0.75rem;">
                 ${escapeHtml(c.difficulty)}
               </span>
@@ -135,12 +135,12 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div style="display: flex; gap: 8px;">
-            <button class="btn btn-secondary btn-sm" onclick="window.previewCompany('${c.slug}')" style="flex: 1;">
-              Overview ℹ
+            <button class="btn btn-secondary btn-sm" onclick="window.previewCompany('${c.slug}')" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+              <i class="fa-solid fa-circle-info"></i> Overview
             </button>
-            <button class="btn btn-primary" onclick="window.startCompanyPrep('${c.slug}', '${escapeHtml(c.company_name)}')" style="flex: 2; display: flex; justify-content: center; align-items: center; gap: 6px;">
+            <button class="btn btn-primary" onclick="window.startCompanyPrep('${c.slug}')" style="flex: 2; display: flex; justify-content: center; align-items: center; gap: 6px;">
               <span>Start Preparation</span>
-              <span>→</span>
+              <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
         </div>
@@ -148,8 +148,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }).join("");
   }
 
-  window.startCompanyPrep = async function(slug, name) {
-    await setSelectedCompany(slug, name, employee.target_role || employee.job_role || "Java Developer");
+  window.startCompanyPrep = async function(slug) {
+    const comp = allCompanies.find(c => c.slug === slug);
+    const compName = (comp && (comp.company_name || comp.name)) ? (comp.company_name || comp.name) : (slug ? slug.toUpperCase() : "Company");
+    await setSelectedCompany(slug, compName, employee.target_role || employee.job_role || "Java Developer");
     window.location.href = `company-prep.html?company=${encodeURIComponent(slug)}`;
   };
 
@@ -159,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     currentSelectedCompany = comp;
 
-    document.getElementById("modal-company-emoji").innerText = comp.logo_emoji || "🏢";
+    document.getElementById("modal-company-emoji").innerHTML = '<i class="fa-solid fa-building"></i>';
     document.getElementById("modal-company-name").innerText = comp.company_name;
     document.getElementById("modal-company-diff").innerText = comp.difficulty;
     document.getElementById("modal-company-cat").innerText = comp.category || "IT Services";
@@ -197,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Link modal start prep button to full hub
     const modalPrepBtn = document.getElementById("modal-btn-start-hub");
     if (modalPrepBtn) {
-      modalPrepBtn.onclick = () => window.startCompanyPrep(slug, comp.company_name);
+      modalPrepBtn.onclick = () => window.startCompanyPrep(slug);
     }
 
     // Fetch AI recommendations
@@ -221,8 +223,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(`${API_BASE}/api/companies/${slug}/recommendations?employee_id=${employee.id}&role=${encodeURIComponent(role)}`);
       const data = await res.json();
       if (data.success) {
-        strongCont.innerHTML = (data.strong_skills || ["Core Programming"]).map(s => `<span class="badge" style="background: #dcfce7; color: #166534; margin: 2px;">✔ ${escapeHtml(s)}</span>`).join(" ");
-        missingCont.innerHTML = (data.needs_improvement || ["Advanced Algorithms"]).map(s => `<span class="badge" style="background: #fee2e2; color: #991b1b; margin: 2px;">▲ ${escapeHtml(s)}</span>`).join(" ");
+        strongCont.innerHTML = (data.strong_skills || ["Core Programming"]).map(s => `<span class="badge" style="background: #dcfce7; color: #166534; margin: 2px;"><i class="fa-solid fa-check"></i> ${escapeHtml(s)}</span>`).join(" ");
+        missingCont.innerHTML = (data.needs_improvement || ["Advanced Algorithms"]).map(s => `<span class="badge" style="background: #fee2e2; color: #991b1b; margin: 2px;"><i class="fa-solid fa-triangle-exclamation"></i> ${escapeHtml(s)}</span>`).join(" ");
 
         if (actionsCont && data.recommendations && data.recommendations.length) {
           actionsCont.innerHTML = `
@@ -244,8 +246,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function openCompareModal() {
     if (!allCompanies || allCompanies.length < 2) return;
 
-    compareSelect1.innerHTML = allCompanies.map(c => `<option value="${c.slug}">${c.logo_emoji || '🏢'} ${escapeHtml(c.company_name)}</option>`).join("");
-    compareSelect2.innerHTML = allCompanies.map(c => `<option value="${c.slug}">${c.logo_emoji || '🏢'} ${escapeHtml(c.company_name)}</option>`).join("");
+    compareSelect1.innerHTML = allCompanies.map(c => `<option value="${c.slug}">${escapeHtml(c.company_name)}</option>`).join("");
+    compareSelect2.innerHTML = allCompanies.map(c => `<option value="${c.slug}">${escapeHtml(c.company_name)}</option>`).join("");
 
     compareSelect1.value = allCompanies[0].slug;
     compareSelect2.value = allCompanies[1].slug;
@@ -278,8 +280,8 @@ document.addEventListener("DOMContentLoaded", () => {
             <thead>
               <tr style="background: var(--bg-subtle); border-bottom: 2px solid var(--border-color); text-align: left;">
                 <th style="padding: 10px; width: 22%;">Benchmark Metric</th>
-                <th style="padding: 10px; width: 39%; color: var(--primary-700);">${c1.logo_emoji || '🏢'} ${escapeHtml(c1.company_name)}</th>
-                <th style="padding: 10px; width: 39%; color: #0369a1;">${c2.logo_emoji || '🏢'} ${escapeHtml(c2.company_name)}</th>
+                <th style="padding: 10px; width: 39%; color: var(--primary-700);">${escapeHtml(c1.company_name)}</th>
+                <th style="padding: 10px; width: 39%; color: #0369a1;">${escapeHtml(c2.company_name)}</th>
               </tr>
             </thead>
             <tbody>

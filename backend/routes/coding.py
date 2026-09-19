@@ -213,7 +213,7 @@ def run_code_simulation():
             "passed": True,
             "execution_time": "0.03s",
             "memory": "14.2 MB",
-            "output": f"=== Standard Output ===\n{output_result}\n\n=== Test Case Summary ===\n✔ Test Case 1: PASSED\n✔ Test Case 2: PASSED\nAll test cases passed successfully!",
+            "output": f"=== Standard Output ===\n{output_result}\n\n=== Test Case Summary ===\n[PASS] Test Case 1: PASSED\n[PASS] Test Case 2: PASSED\nAll test cases passed successfully!",
             "message": "Solution verified against test suite."
         }), 200
 
