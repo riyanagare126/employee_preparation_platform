@@ -5,8 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Secure Admin Dashboard - AI Employee Preparation Platform">
   <title>Admin Dashboard | AI Employee Preparation Platform</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2026_admin">
+  <script>
+    (function() {
+      try {
+        var empStr = localStorage.getItem("loggedInEmployee");
+        if (!empStr) {
+          window.location.replace("login.html");
+          return;
+        }
+        var emp = JSON.parse(empStr);
+        var isAuthorized = emp && (
+          emp.is_admin === 1 || 
+          emp.is_admin === true || 
+          (emp.email && emp.email.toLowerCase() === "riyanagare126@gmail.com")
+        );
+        if (!isAuthorized) {
+          alert("⛔ Access Denied: Admin authorization required. Redirecting to Candidate Dashboard...");
+          window.location.replace("dashboard.html");
+        }
+      } catch (e) {
+        window.location.replace("login.html");
+      }
+    })();
+  </script>
 </head>
 <body>
 
@@ -24,6 +50,7 @@
         <li><a href="dashboard.html" class="nav-link">Candidate View</a></li>
         <li><a href="companies.html" class="nav-link">Companies Portal</a></li>
         <li><a href="admin.html" class="nav-link active" style="color: #f43f5e; font-weight: 700;">Admin Console</a></li>
+        <li><a href="view_db.html" class="nav-link" target="_blank" style="color: #10b981; font-weight: 600;"><i class="fa-solid fa-database"></i> Live DB</a></li>
         <li><a href="#" class="nav-link logout-link btn-logout" data-action="logout">Logout</a></li>
       </ul>
     </div>
@@ -83,7 +110,7 @@
       </div>
 
       <!-- Admin Tabs -->
-      <div class="admin-tabs-nav" style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+      <div class="admin-tabs-nav" style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; flex-wrap: wrap;">
         <button id="tab-users-btn" class="btn btn-primary btn-sm"><i class="fa-solid fa-users"></i> Manage Candidates</button>
         <button id="tab-companies-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-building"></i> Company Blueprints</button>
         <button id="tab-roles-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-bullseye"></i> Job Roles</button>
@@ -91,6 +118,7 @@
         <button id="tab-trends-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-lightbulb"></i> Trend Insights CMS</button>
         <button id="tab-templates-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-palette"></i> Resume Templates CMS</button>
         <button id="tab-fluency-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-brain"></i> AI Fluency Questions CMS</button>
+        <button id="tab-database-btn" class="btn btn-secondary btn-sm" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid #10b981; font-weight: 600;"><i class="fa-solid fa-database"></i> Live Database Explorer</button>
       </div>
 
       <!-- Tab 1: Candidates Management Table -->
@@ -308,6 +336,29 @@
         <div id="admin-fluency-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 600px; overflow-y: auto;">
           <!-- Injected dynamically -->
         </div>
+      </div>
+
+      <!-- Tab 8: Live SQLite Database Explorer (In-Platform View) -->
+      <div id="admin-database-view" style="display: none; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background: var(--card-bg);">
+        <div style="padding: 16px 20px; background: rgba(16, 185, 129, 0.08); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 1.15rem; margin: 0; color: #10b981; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-database"></i> Live SQLite Database Explorer
+            </h2>
+            <p style="margin: 4px 0 0; font-size: 0.85rem; color: var(--text-muted);">
+              Inspecting live tables, registered candidates, test submissions, and roadmaps directly from <code>backend/database/employees.db</code>.
+            </p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button id="btn-reload-db-iframe" class="btn btn-secondary btn-sm" style="border: 1px solid var(--border-color);">
+              <i class="fa-solid fa-arrows-rotate"></i> Refresh DB
+            </button>
+            <a href="view_db.html" target="_blank" class="btn btn-primary btn-sm" style="background: #10b981; border: none;">
+              <i class="fa-solid fa-up-right-from-square"></i> Open Fullscreen
+            </a>
+          </div>
+        </div>
+        <iframe id="db-iframe" src="view_db.html" style="width: 100%; height: 780px; border: none; display: block;"></iframe>
       </div>
 
     </div>
@@ -776,7 +827,7 @@
     </div>
   </div>
 
-  <script src="js/script.js"></script>
-  <script src="js/admin.js"></script>
+  <script src="js/script.js?v=2026_admin"></script>
+  <script src="js/admin.js?v=2026_admin"></script>
 </body>
 </html>

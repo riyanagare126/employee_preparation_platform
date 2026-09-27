@@ -40,6 +40,16 @@
   <main class="main-content">
     <div class="container">
 
+      <!-- TOP TAB SELECTOR: SIMULATOR VS ACHIEVEMENT VAULT -->
+      <div class="interview-tabs-nav" style="display: flex; justify-content: center; gap: 12px; margin: 0 auto 28px auto; max-width: 620px;">
+        <button id="tab-btn-simulator" class="btn btn-primary" type="button" style="flex: 1; border-radius: 9999px; padding: 10px 20px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fa-solid fa-robot"></i> AI STAR Simulator
+        </button>
+        <button id="tab-btn-vault" class="btn btn-secondary" type="button" style="flex: 1; border-radius: 9999px; padding: 10px 20px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fa-solid fa-vault"></i> Achievement Vault (<span id="vault-count-badge">0</span>)
+        </button>
+      </div>
+
       <!-- STEP 1: INTERVIEW SETUP SCREEN -->
       <div id="interview-setup-screen">
         <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
@@ -87,6 +97,93 @@
             Start AI Interview <i class="fa-solid fa-microphone"></i>
           </button>
         </div>
+      </div>
+
+      <!-- STEP 1B: ACHIEVEMENT VAULT TAB / SECTION -->
+      <div id="achievement-vault-screen" style="display: none; max-width: 900px; margin: 0 auto;">
+        
+        <!-- Vault Header & Actions -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span class="badge badge-purple"><i class="fa-solid fa-vault"></i> Career Bank</span>
+              <span class="badge badge-success"><i class="fa-solid fa-wand-magic-sparkles"></i> AI STAR Formatter</span>
+            </div>
+            <h1 style="font-size: 1.8rem; margin: 0;">Achievement Vault</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin: 4px 0 0 0;">
+              Save real achievements once. The AI converts them into STAR format (Situation, Task, Action, Result) and maps common behavioral questions.
+            </p>
+          </div>
+          <button id="btn-toggle-add-achievement" class="btn btn-primary" type="button" style="font-weight: 600;">
+            <i class="fa-solid fa-plus"></i> Add Achievement
+          </button>
+        </div>
+
+        <!-- Add / Edit Achievement Form Card -->
+        <div id="vault-form-card" class="card" style="display: none; padding: 28px; margin-bottom: 28px; border: 1px solid var(--primary-300); background: var(--bg-card); box-shadow: var(--shadow-md);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+            <h2 style="font-size: 1.25rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-medal text-warning"></i>
+              <span id="vault-form-title-label">Add Career Achievement</span>
+            </h2>
+            <button id="btn-close-vault-form" type="button" class="btn btn-secondary btn-sm" style="padding: 4px 10px;">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <form id="vault-achievement-form">
+            <input type="hidden" id="vault-form-id" value="">
+
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label for="vault-input-title" class="form-label">Achievement Title <span style="color: var(--rose-500);">*</span></label>
+              <input type="text" id="vault-input-title" class="form-input" placeholder="e.g. Migrated payment gateway monolith to asynchronous microservices" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label for="vault-input-desc" class="form-label">What You Did / Free Text Description <span style="color: var(--rose-500);">*</span></label>
+              <textarea id="vault-input-desc" class="form-textarea" rows="4" placeholder="Describe the problem context, challenges faced, your specific engineering decisions, and execution steps..." required></textarea>
+              <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 4px;">Explain what you did. The AI automatically structures this into Situation, Task, and Action sections.</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="vault-input-metrics" class="form-label">Result / Quantifiable Impact</label>
+                <input type="text" id="vault-input-metrics" class="form-input" placeholder="e.g. 42% latency reduction, 99.99% uptime, $85k saved/yr">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="vault-input-skills" class="form-label">Skills & Tools Used</label>
+                <input type="text" id="vault-input-skills" class="form-input" placeholder="e.g. Python, FastAPI, Redis, Docker, AWS">
+              </div>
+            </div>
+
+            <div id="vault-form-error" style="display: none; padding: 10px 14px; background: #fee2e2; border: 1px solid #fca5a5; border-radius: var(--radius-md); color: #991b1b; font-size: 0.85rem; margin-bottom: 16px;"></div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+              <button type="button" id="btn-cancel-vault-form" class="btn btn-secondary">Cancel</button>
+              <button type="submit" id="btn-save-vault-item" class="btn btn-primary" style="font-weight: 600;">
+                <span id="vault-save-spinner" style="display: none;"><i class="fa-solid fa-spinner fa-spin"></i> </span>
+                <span id="vault-save-label"><i class="fa-solid fa-wand-magic-sparkles"></i> Convert to STAR & Save</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Filter / Search & Counter Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="position: relative; width: 280px;">
+              <input type="text" id="vault-search-input" class="form-input" placeholder="Search achievements & skills..." style="padding-left: 32px; font-size: 0.85rem;">
+              <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;"></i>
+            </div>
+          </div>
+          <span style="font-size: 0.85rem; color: var(--text-muted);" id="vault-items-status">Loading vault achievements...</span>
+        </div>
+
+        <!-- Saved Achievements List Container -->
+        <div id="vault-achievements-list" style="display: flex; flex-direction: column; gap: 20px;">
+          <!-- Populated dynamically via JS -->
+        </div>
+
       </div>
 
       <!-- STEP 2: ACTIVE INTERVIEW CHAT SESSION -->
@@ -150,7 +247,12 @@
 
           <!-- Answer Input Area -->
           <div style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 16px;">
-            <label for="candidate-answer-input" class="form-label">Your Response / Answer:</label>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <label for="candidate-answer-input" class="form-label" style="margin-bottom: 0;">Your Response / Answer:</label>
+              <button type="button" id="btn-open-vault-picker" class="btn btn-secondary btn-sm" style="font-size: 0.78rem; padding: 4px 12px; cursor: pointer; color: var(--primary-700); background: #f5f3ff; border: 1px solid #ddd6fe; font-weight: 600;">
+                <i class="fa-solid fa-vault text-primary"></i> ✨ Use from my Vault
+              </button>
+            </div>
             <textarea id="candidate-answer-input" class="form-textarea" placeholder="Type your response thoroughly here... Explain your thought process, syntax, architecture, or experience." rows="4"></textarea>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
@@ -213,6 +315,34 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- VAULT PICKER MODAL (Use from my Vault) -->
+    <div id="vault-picker-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);">
+      <div class="card" style="max-width: 760px; width: 100%; padding: 26px; max-height: 88vh; display: flex; flex-direction: column; box-shadow: var(--shadow-xl); border-radius: var(--radius-lg); background: var(--bg-card);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+          <div>
+            <h2 style="font-size: 1.25rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-vault text-primary"></i> Select Achievement from Vault
+            </h2>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin: 2px 0 0 0;">
+              Pick an achievement to insert its structured STAR narrative directly as your interview answer base.
+            </p>
+          </div>
+          <button type="button" id="btn-close-vault-picker" class="btn btn-secondary btn-sm" style="padding: 4px 10px;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div id="vault-picker-list" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 6px;">
+          <!-- Loaded dynamically -->
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Tip: You can edit or refine the inserted answer before submitting to the AI interviewer.</span>
+          <button type="button" id="btn-close-vault-picker-bottom" class="btn btn-secondary btn-sm">Close</button>
+        </div>
+      </div>
     </div>
   </main>
 

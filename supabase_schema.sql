@@ -428,6 +428,72 @@ CREATE TABLE IF NOT EXISTS company_questions (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 27. Notice Period Countdown Plans Table
+CREATE TABLE IF NOT EXISTS notice_plans (
+    id SERIAL PRIMARY KEY,
+    employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+    target_role VARCHAR(150) NOT NULL,
+    experience_years VARCHAR(50) NOT NULL,
+    notice_period_days INTEGER NOT NULL,
+    last_working_date VARCHAR(50) NOT NULL,
+    interview_dates_json TEXT DEFAULT '[]',
+    weak_areas_json TEXT DEFAULT '[]',
+    daily_study_time VARCHAR(50) DEFAULT '1 hr',
+    inputs_json TEXT,
+    generated_plan_json TEXT NOT NULL,
+    is_active INTEGER DEFAULT 1,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 28. Notice Period Daily Plan Tasks Table
+CREATE TABLE IF NOT EXISTS notice_plan_tasks (
+    id SERIAL PRIMARY KEY,
+    notice_plan_id INTEGER NOT NULL REFERENCES notice_plans(id) ON DELETE CASCADE,
+    employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+    day_number INTEGER NOT NULL,
+    task_key VARCHAR(100) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    category VARCHAR(80) NOT NULL,
+    estimated_minutes INTEGER DEFAULT 30,
+    link_url VARCHAR(255),
+    is_completed INTEGER DEFAULT 0,
+    completed_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 29. Achievements Vault Table
+CREATE TABLE IF NOT EXISTS achievements (
+    id SERIAL PRIMARY KEY,
+    employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    raw_description TEXT NOT NULL,
+    metrics_result TEXT NOT NULL,
+    skills_used TEXT NOT NULL,
+    star_situation TEXT NOT NULL,
+    star_task TEXT NOT NULL,
+    star_action TEXT NOT NULL,
+    star_result TEXT NOT NULL,
+    mapped_questions_json TEXT DEFAULT '[]',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 30. Converted Answers (Honest-to-Professional Answer Converter) Table
+CREATE TABLE IF NOT EXISTS converted_answers (
+    id SERIAL PRIMARY KEY,
+    employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+    question_type VARCHAR(150) NOT NULL,
+    raw_answer TEXT NOT NULL,
+    professional_answer TEXT NOT NULL,
+    short_answer TEXT NOT NULL,
+    red_flags_json TEXT DEFAULT '[]',
+    follow_up_questions_json TEXT DEFAULT '[]',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create Essential Performance Indexes
 CREATE INDEX IF NOT EXISTS idx_emp_email ON employees(email);
 CREATE INDEX IF NOT EXISTS idx_tasks_roadmap ON roadmap_tasks(roadmap_id);
@@ -435,6 +501,11 @@ CREATE INDEX IF NOT EXISTS idx_tasks_employee ON roadmap_tasks(employee_id);
 CREATE INDEX IF NOT EXISTS idx_versions_employee ON resume_versions(employee_id);
 CREATE INDEX IF NOT EXISTS idx_fluency_employee ON ai_fluency_attempts(employee_id);
 CREATE INDEX IF NOT EXISTS idx_pitch_employee ON structured_answers(employee_id);
+CREATE INDEX IF NOT EXISTS idx_notice_plans_emp ON notice_plans(employee_id, is_active);
+CREATE INDEX IF NOT EXISTS idx_notice_tasks_plan ON notice_plan_tasks(notice_plan_id, day_number);
+CREATE INDEX IF NOT EXISTS idx_notice_tasks_emp ON notice_plan_tasks(employee_id, is_completed);
+CREATE INDEX IF NOT EXISTS idx_achievements_emp ON achievements(employee_id);
+CREATE INDEX IF NOT EXISTS idx_converted_answers_emp ON converted_answers(employee_id);
 CREATE INDEX IF NOT EXISTS idx_comp_slug ON company_prep(slug);
 CREATE INDEX IF NOT EXISTS idx_user_prep ON user_preparation(user_id, company_slug);
 CREATE INDEX IF NOT EXISTS idx_companies_slug ON companies(slug);
@@ -495,3 +566,61 @@ VALUES
 ('First 60-Seconds Decision Window', 'Behavioral Rounds', 'All', 'All', 'Recruiters form their initial hiring verdict during the first 60 seconds. Eliminate rambling by using the Present-Past-Future framework.', 'Use our 60s Pitch Builder to calibrate your intro to 120-165 words.', 3, 1),
 ('Agentic Coding & Tool Integration', 'System Design', 'Software Engineer', 'All', 'Modern engineering teams expect engineers to understand agentic loops, IDE tool calling, and automated git diff scrutiny.', 'Highlight how you write property-based tests to guard against regressions.', 4, 1)
 ON CONFLICT DO NOTHING;
+
+-- =========================================================================
+-- Questions & User Question History (Level-Wise Company Question Bank)
+-- =========================================================================
+CREATE TABLE IF NOT EXISTS questions (
+    id SERIAL PRIMARY KEY,
+    company VARCHAR(100) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    role VARCHAR(100) DEFAULT '',
+    difficulty VARCHAR(50) DEFAULT 'medium',
+    experience_level VARCHAR(80) NOT NULL,
+    question_type VARCHAR(80) NOT NULL,
+    question_text TEXT NOT NULL,
+    sample_answer TEXT,
+    question_hash VARCHAR(64) NOT NULL,
+    source VARCHAR(50) DEFAULT 'seed',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_company_question_hash UNIQUE (company, question_hash)
+);
+CREATE INDEX IF NOT EXISTS idx_questions_company ON questions(company);
+CREATE INDEX IF NOT EXISTS idx_questions_exp_level ON questions(experience_level);
+CREATE INDEX IF NOT EXISTS idx_questions_type ON questions(question_type);
+
+CREATE TABLE IF NOT EXISTS user_question_history (
+    id SERIAL PRIMARY KEY,
+    employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+    question_id INTEGER NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
+    seen_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_user_question UNIQUE (employee_id, question_id)
+);
+CREATE INDEX IF NOT EXISTS idx_uqh_employee_id ON user_question_history(employee_id);
+
+-- =========================================================================
+-- Test Security / Anti-Cheating Logs Table
+-- =========================================================================
+CREATE TABLE IF NOT EXISTS test_security_logs (
+    id SERIAL PRIMARY KEY,
+    employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+    test_attempt_id VARCHAR(100) NOT NULL,
+    event_type VARCHAR(50) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    duration_away_seconds REAL
+);
+CREATE INDEX IF NOT EXISTS idx_test_sec_logs_attempt ON test_security_logs(test_attempt_id);
+CREATE INDEX IF NOT EXISTS idx_test_sec_logs_emp ON test_security_logs(employee_id);
+
+-- Add violation and mode columns to existing test session/attempt tables
+ALTER TABLE secure_test_sessions ADD COLUMN IF NOT EXISTS violation_count INTEGER DEFAULT 0;
+ALTER TABLE secure_test_sessions ADD COLUMN IF NOT EXISTS auto_submitted BOOLEAN DEFAULT FALSE;
+ALTER TABLE secure_test_sessions ADD COLUMN IF NOT EXISTS mode VARCHAR(20) DEFAULT 'mock';
+ALTER TABLE secure_test_sessions ADD COLUMN IF NOT EXISTS started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE test_attempts ADD COLUMN IF NOT EXISTS violation_count INTEGER DEFAULT 0;
+ALTER TABLE test_attempts ADD COLUMN IF NOT EXISTS auto_submitted BOOLEAN DEFAULT FALSE;
+ALTER TABLE test_attempts ADD COLUMN IF NOT EXISTS mode VARCHAR(20) DEFAULT 'mock';
+ALTER TABLE test_attempts ADD COLUMN IF NOT EXISTS started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+

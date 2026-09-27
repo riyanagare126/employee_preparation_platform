@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Database Explorer - AI Employee Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --amber: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 25px 20px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    
+    header { margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 18px; }
+    h1 { font-size: 1.8rem; margin-bottom: 6px; color: #fff; display: flex; align-items: center; gap: 10px; }
+    
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; }
+    .badge-admin { background: rgba(244, 63, 94, 0.2); color: #fda4af; border: 1px solid #f43f5e; }
+    .badge-student { background: rgba(79, 70, 229, 0.2); color: #a5b4fc; border: 1px solid #6366f1; }
+    .badge-success { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid #10b981; }
+    .badge-riya { background: rgba(16, 185, 129, 0.25); color: #10b981; border: 1px solid #10b981; font-weight: bold; }
+    
+    /* Toggle Control Bar */
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; background: #162032; padding: 12px 18px; border-radius: 10px; border: 1px solid var(--border); }
+    .filter-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+    .filter-btn.active { background: #10b981; color: #fff; border-color: #10b981; box-shadow: 0 0 12px rgba(16,185,129,0.3); }
+    .filter-btn:not(.active) { background: var(--card-bg); color: var(--text-muted); }
+    .filter-btn:not(.active):hover { background: #26354a; color: #fff; }
+    
+    /* Highlight Admin banner */
+    .admin-banner { background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(79,70,229,0.12)); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 16px 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 25px; }
+    .stat-card { background: var(--card-bg); border: 1px solid var(--border); padding: 16px; border-radius: 10px; }
+    .stat-title { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+    .stat-value { font-size: 1.5rem; font-weight: 700; color: #fff; }
+    
+    .section-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 25px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .section-title { font-size: 1.15rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+    th { background: rgba(15, 23, 42, 0.6); padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-muted); font-weight: 600; }
+    td { padding: 12px; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    
+    .row-riya { background: rgba(16, 185, 129, 0.08) !important; }
+    .row-riya td { border-bottom-color: rgba(16, 185, 129, 0.25); }
+    
+    .db-location { background: #0b1120; border: 1px solid #1e293b; padding: 10px 14px; border-radius: 8px; font-family: monospace; font-size: 0.82rem; color: #38bdf8; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fa-solid fa-database" style="color: #10b981;"></i> AI Employee Platform — Live Database Explorer</h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Direct connection to local SQLite database: <code>backend/database/employees.db</code></p>
+      <div class="db-location">
+        <strong>📂 Database File:</strong> C:\Users\JOHN\Desktop\employee_preparation_platform\backend\database\employees.db (4.23 MB)
+      </div>
+    </header>
+
+    <!-- Admin Personal Profile Banner -->
+    <div class="admin-banner">
+      <div>
+        <div style="font-size: 0.8rem; color: #10b981; font-weight: 700; text-transform: uppercase;">
+          <i class="fa-solid fa-shield-halved"></i> Active Platform Administrator
+        </div>
+        <h2 style="font-size: 1.3rem; margin-top: 4px;">Riya Nagare (riyanagare126@gmail.com)</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 2px;">
+          Candidate ID: <strong>#2</strong> | Status: <strong>Super Admin & Candidate Profile Active</strong>
+        </p>
+      </div>
+      <div style="display: flex; gap: 16px; font-size: 0.88rem;">
+        <div><strong style="color: #10b981; font-size: 1.1rem;">1</strong> <span style="color: var(--text-muted);">Aptitude Tests</span></div>
+        <div><strong style="color: #38bdf8; font-size: 1.1rem;">1</strong> <span style="color: var(--text-muted);">Coding Solved</span></div>
+        <div><strong style="color: #a855f7; font-size: 1.1rem;">0</strong> <span style="color: var(--text-muted);">Roadmaps</span></div>
+      </div>
+    </div>
+
+    <!-- Toggle Buttons -->
+    <div class="filter-bar">
+      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">FILTER DATA VIEW:</span>
+      <button id="btn-filter-riya" class="filter-btn active" onclick="setFilter('riya')">
+        <i class="fa-solid fa-crown" style="color: #f59e0b;"></i> Show ONLY My Admin Data (Riya Nagare)
+      </button>
+      <button id="btn-filter-all" class="filter-btn" onclick="setFilter('all')">
+        <i class="fa-solid fa-users"></i> Show All Platform Users (23)
+      </button>
+    </div>
+
+    <!-- Overview Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-title">Database Engine</div>
+        <div class="stat-value" style="color: #38bdf8;">SQLite 3</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Total Relational Tables</div>
+        <div class="stat-value">38 Tables</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Your Admin ID</div>
+        <div class="stat-value" style="color: #10b981;">#2 (Riya Nagare)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Platform Records</div>
+        <div class="stat-value">23 Users | 8 Tests</div>
+      </div>
+    </div>
+
+    <!-- USERS TABLE -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><i class="fa-solid fa-user-shield text-primary"></i> Table: `employees` (User Profile & Credentials)</div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Target Company</th>
+              <th>Target Role</th>
+              <th>Role Status</th>
+              <th>Registered At</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-users">
+    
+            <tr class="row-other" data-is-riya="false">
+              <td>#24</td>
+              <td>Mode Test Employee</td>
+              <td>test_modes@example.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-09-24 14:48</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#23</td>
+              <td>Clean Candidate</td>
+              <td>clean_candidate@enterprise.com</td>
+              <td>TCS</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-09-24 12:41</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#22</td>
+              <td>Security Test Employee</td>
+              <td>security_test@enterprise.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-09-24 12:37</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#21</td>
+              <td>Candidate Two</td>
+              <td>candidate_two_prep@test.com</td>
+              <td>TCS</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-09-24 12:19</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#20</td>
+              <td>Candidate One</td>
+              <td>candidate_one_prep@test.com</td>
+              <td>TCS</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-09-24 12:19</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#19</td>
+              <td>Rahul Sharma</td>
+              <td>student@prep.com</td>
+              <td>Infosys</td>
+              <td>Java Developer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-09-08 14:22</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#18</td>
+              <td>john doe</td>
+              <td>johndoe126@gmail.com</td>
+              <td>Infosys</td>
+              <td>Java Developer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-09-07 12:39</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#17</td>
+              <td>Alex Placement</td>
+              <td>candidate.placement@testcorp.com</td>
+              <td>Infosys</td>
+              <td>Java Developer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-29 04:15</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#16</td>
+              <td>Live Candidate</td>
+              <td>live.candidate@enterprise.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Java Developer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-29 03:57</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#14</td>
+              <td>Single Attempt Candidate</td>
+              <td>one_attempt_1787937619@example.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:20</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#13</td>
+              <td>Security Test User</td>
+              <td>sec_user_1787937618@example.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:20</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#12</td>
+              <td>Project Lead Candidate</td>
+              <td>int_lead_1787937594@example.com</td>
+              <td>Microsoft</td>
+              <td>Full Stack Architect</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:19</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#11</td>
+              <td>Goal Test User</td>
+              <td>goal_user_1787937594@example.com</td>
+              <td>Google</td>
+              <td>Cloud Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:19</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#10</td>
+              <td>Goal Test User</td>
+              <td>goal_user_1787937529@example.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:18</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#9</td>
+              <td>Single Attempt Candidate</td>
+              <td>one_attempt_1787937075@example.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:11</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#8</td>
+              <td>Security Test User</td>
+              <td>sec_user_1787937075@example.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:11</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#7</td>
+              <td>Single Attempt Candidate</td>
+              <td>one_attempt_1787937046@example.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:10</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#6</td>
+              <td>Security Test User</td>
+              <td>sec_user_1787937046@example.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:10</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#5</td>
+              <td>Single Attempt Candidate</td>
+              <td>one_attempt_1787937028@example.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:10</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#4</td>
+              <td>Security Test User</td>
+              <td>sec_user_1787937028@example.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:10</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#3</td>
+              <td>Platform Administrator</td>
+              <td>admin@prep.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-admin">Admin</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 16:53</td>
+            </tr>
+        
+            <tr class="row-riya" data-is-riya="true">
+              <td>#2</td>
+              <td><strong>Riya Nagare (YOU)</strong></td>
+              <td><strong style='color:#10b981;'>riyanagare126@gmail.com</strong></td>
+              <td>Red Hat</td>
+              <td>Java Developer</td>
+              <td><span class="badge badge-riya"><i class="fa-solid fa-crown"></i> Platform Admin</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 13:14</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#1</td>
+              <td>john doe</td>
+              <td>test126@gmail.com</td>
+              <td>Tata Consultancy Services (TCS)</td>
+              <td>Software Engineer</td>
+              <td><span class="badge badge-student">Candidate</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 12:37</td>
+            </tr>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- APTITUDE TESTS TABLE -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><i class="fa-solid fa-clipboard-check text-emerald"></i> Table: `aptitude_results` (Test Submissions & Marks)</div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Test ID</th>
+              <th>Candidate Name</th>
+              <th>Score</th>
+              <th>Percentage</th>
+              <th>Performance Message</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-tests">
+    
+            <tr class="row-other" data-is-riya="false">
+              <td>#10</td>
+              <td>Mode Test Employee</td>
+              <td><strong>1</strong> / 15</td>
+              <td><span class="badge badge-success">6.67%</span></td>
+              <td style="color: var(--text-muted);">Needs Improvement</td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-09-24 14:50</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#9</td>
+              <td>Clean Candidate</td>
+              <td><strong>0</strong> / 15</td>
+              <td><span class="badge badge-success">0.0%</span></td>
+              <td style="color: var(--text-muted);">Needs Improvement</td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-09-24 14:50</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#8</td>
+              <td>Security Test Employee</td>
+              <td><strong>1</strong> / 15</td>
+              <td><span class="badge badge-success">6.67%</span></td>
+              <td style="color: var(--text-muted);">Needs Improvement</td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-09-24 14:50</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#7</td>
+              <td>Rahul Sharma</td>
+              <td><strong>12</strong> / 15</td>
+              <td><span class="badge badge-success">80.0%</span></td>
+              <td style="color: var(--text-muted);">Excellent performance across Quantitative and Technical sections. Well-prepared for technical assessments.</td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-09-08 14:22</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#6</td>
+              <td>Single Attempt Candidate</td>
+              <td><strong>9</strong> / 15</td>
+              <td><span class="badge badge-success">60.0%</span></td>
+              <td style="color: var(--text-muted);">Good</td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:20</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#5</td>
+              <td>Single Attempt Candidate</td>
+              <td><strong>1</strong> / 15</td>
+              <td><span class="badge badge-success">6.67%</span></td>
+              <td style="color: var(--text-muted);">Needs Improvement</td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:11</td>
+            </tr>
+        
+            <tr class="row-riya" data-is-riya="true">
+              <td>#4</td>
+              <td><strong>Riya Nagare (YOU)</strong></td>
+              <td><strong>10</strong> / 10</td>
+              <td><span class="badge badge-success">100.0%</span></td>
+              <td style="color: var(--text-muted);">Outstanding</td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:22</td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#3</td>
+              <td>john doe</td>
+              <td><strong>7</strong> / 10</td>
+              <td><span class="badge badge-success">70.0%</span></td>
+              <td style="color: var(--text-muted);">Good</td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">2026-08-28 17:22</td>
+            </tr>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CODING SUBMISSIONS TABLE -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><i class="fa-solid fa-code text-cyan"></i> Table: `coding_progress` (Code Submissions)</div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Candidate</th>
+              <th>Problem Title</th>
+              <th>Language</th>
+              <th>Difficulty</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-codes">
+    
+            <tr class="row-other" data-is-riya="false">
+              <td>#8</td>
+              <td>Rahul Sharma</td>
+              <td><strong>Maximum Subarray (Kadane&#x27;s Algorithm)</strong></td>
+              <td><code>python</code></td>
+              <td>Medium</td>
+              <td><span class="badge badge-success">Solved</span></td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#7</td>
+              <td>Rahul Sharma</td>
+              <td><strong>Valid Parentheses</strong></td>
+              <td><code>python</code></td>
+              <td>Easy</td>
+              <td><span class="badge badge-success">Solved</span></td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#6</td>
+              <td>Rahul Sharma</td>
+              <td><strong>Two Sum (Hash Map Lookup)</strong></td>
+              <td><code>python</code></td>
+              <td>Easy</td>
+              <td><span class="badge badge-success">Solved</span></td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#5</td>
+              <td>john doe</td>
+              <td><strong>Lowest Common Ancestor in Binary Tree</strong></td>
+              <td><code>python</code></td>
+              <td>Easy</td>
+              <td><span class="badge badge-success">Solved</span></td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#4</td>
+              <td>john doe</td>
+              <td><strong>Trapping Rain Water</strong></td>
+              <td><code>python</code></td>
+              <td>Easy</td>
+              <td><span class="badge badge-success">Solved</span></td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#3</td>
+              <td>john doe</td>
+              <td><strong>Maximum Subarray (Kadane&#x27;s Algorithm)</strong></td>
+              <td><code>python</code></td>
+              <td>Easy</td>
+              <td><span class="badge badge-success">Solved</span></td>
+            </tr>
+        
+            <tr class="row-riya" data-is-riya="true">
+              <td>#2</td>
+              <td><strong>Riya Nagare (YOU)</strong></td>
+              <td><strong>Find Maximum Element in Array</strong></td>
+              <td><code>java</code></td>
+              <td>Easy</td>
+              <td><span class="badge badge-success">Solved</span></td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#1</td>
+              <td>john doe</td>
+              <td><strong>Reverse a String</strong></td>
+              <td><code>python</code></td>
+              <td>Easy</td>
+              <td><span class="badge badge-success">Solved</span></td>
+            </tr>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ROADMAPS TABLE -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><i class="fa-solid fa-map-location-dot text-violet"></i> Table: `smart_roadmaps` (Candidate Prep Roadmaps)</div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Candidate</th>
+              <th>Target Company</th>
+              <th>Duration</th>
+              <th>Tasks Progress</th>
+              <th>Progress</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-roadmaps">
+    
+            <tr class="row-other" data-is-riya="false">
+              <td>#2</td>
+              <td>Rahul Sharma</td>
+              <td><strong>Microsoft</strong></td>
+              <td>14 Days</td>
+              <td>1 / 14 Tasks</td>
+              <td><span class="badge badge-success">7.1%</span></td>
+            </tr>
+        
+            <tr class="row-other" data-is-riya="false">
+              <td>#1</td>
+              <td>Rahul Sharma</td>
+              <td><strong>Tata Consultancy Services (TCS)</strong></td>
+              <td>14 Days</td>
+              <td>5 / 14 Tasks</td>
+              <td><span class="badge badge-success">35.7%</span></td>
+            </tr>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function setFilter(mode) {
+      const btnRiya = document.getElementById('btn-filter-riya');
+      const btnAll = document.getElementById('btn-filter-all');
+      const rows = document.querySelectorAll('tr[data-is-riya]');
+
+      if (mode === 'riya') {
+        btnRiya.classList.add('active');
+        btnAll.classList.remove('active');
+        rows.forEach(r => {
+          if (r.getAttribute('data-is-riya') === 'true') {
+            r.style.display = '';
+          } else {
+            r.style.display = 'none';
+          }
+        });
+      } else {
+        btnAll.classList.add('active');
+        btnRiya.classList.remove('active');
+        rows.forEach(r => {
+          r.style.display = '';
+        });
+      }
+    }
+
+    // Default to showing only Riya Nagare's data on initial load
+    document.addEventListener('DOMContentLoaded', () => {
+      setFilter('riya');
+    });
+  </script>
+</body>
+</html>
+    

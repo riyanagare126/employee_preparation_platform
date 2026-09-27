@@ -8,7 +8,7 @@ from backend.data.aptitude_bank import MASTER_APTITUDE_BANK
 from backend.data.company_questions_bank import get_company_aptitude_questions
 from backend.models import (
     AptitudeModel, AptitudeSessionModel, EmployeeModel,
-    SecureTestSessionModel
+    SecureTestSessionModel, TestSecurityModel, TestAttemptModel
 )
 
 aptitude_bp = Blueprint("aptitude", __name__)
@@ -182,7 +182,10 @@ def get_active_session():
             "job_role": session.get("job_role", ""),
             "tab_token": session.get("tab_token", ""),
             "questions": session.get("questions", []),
-            "draft_answers": session.get("answers", {})
+            "draft_answers": session.get("answers", {}),
+            "violation_count": int(session.get("violation_count", 0) or 0),
+            "auto_submitted": bool(session.get("auto_submitted", 0)),
+            "mode": session.get("mode", "mock")
         }), 200
 
     except Exception as e:
@@ -192,8 +195,9 @@ def get_active_session():
 @aptitude_bp.route("/api/aptitude/start", methods=["POST"])
 def start_aptitude_test():
     """
-    Initializes a new dynamic aptitude test session with strict 1-attempt policy:
-    - Rejects if candidate has already completed an attempt
+    Initializes a new dynamic aptitude test session with Practice or Mock Assessment Mode:
+    - Mode can be 'practice' (self-paced, explanations available) or 'mock' (proctored, timed, security active)
+    - Rejects if candidate has already completed an attempt (if strict_lock)
     - Returns existing active session if one is currently in progress
     - Freezes server-generated question set and starts authoritative server timer
     """
@@ -204,6 +208,10 @@ def start_aptitude_test():
         job_role = data.get("job_role", "Software Engineer")
         qualification = data.get("qualification", "")
         skills = data.get("skills", "")
+        
+        mode = (request.args.get("mode", "") or (data.get("mode") if isinstance(data, dict) else "") or "mock").strip().lower()
+        if mode not in ["practice", "mock"]:
+            mode = "mock"
 
         if not employee_id:
             return jsonify({
@@ -244,7 +252,10 @@ def start_aptitude_test():
                     "job_role": existing_session.get("job_role", job_role),
                     "tab_token": existing_session.get("tab_token", tab_token),
                     "questions": existing_session.get("questions", []),
-                    "draft_answers": existing_session.get("answers", {})
+                    "draft_answers": existing_session.get("answers", {}),
+                    "violation_count": int(existing_session.get("violation_count", 0) or 0),
+                    "auto_submitted": bool(existing_session.get("auto_submitted", 0)),
+                    "mode": existing_session.get("mode", "mock")
                 }), 200
 
         # 3. Create fresh secure session
@@ -280,6 +291,14 @@ def start_aptitude_test():
             difficulty=difficulty
         )
 
+        # In Practice Mode, attach practice_correct_index and explanation so candidate can check answers immediately
+        if mode == "practice":
+            for q_idx, cq in enumerate(client_questions):
+                omap = options_map[q_idx]
+                q_lookup = QUESTION_LOOKUP.get(cq["id"], {})
+                cq["practice_correct_index"] = omap["correct_index"]
+                cq["explanation"] = q_lookup.get("explanation", "Standard problem solving formula applied.")
+
         session_id = f"apt_{uuid.uuid4().hex[:12]}"
 
         # Save in secure_test_sessions
@@ -291,7 +310,8 @@ def start_aptitude_test():
             options_map=options_map,
             duration_seconds=duration_seconds,
             tab_token=tab_token,
-            job_role=job_role
+            job_role=job_role,
+            mode=mode
         )
 
         # Also store in legacy AptitudeSessionModel for backwards compatibility
@@ -314,6 +334,7 @@ def start_aptitude_test():
             "remaining_seconds": duration_seconds,
             "tab_token": tab_token,
             "job_role": job_role,
+            "mode": mode,
             "questions": client_questions
         }), 201
 
@@ -410,6 +431,9 @@ def change_aptitude_question():
             "question": new_q["question"],
             "options": shuffled_options
         }
+        if session.get("mode") == "practice":
+            new_client_q["practice_correct_index"] = shuffled_correct
+            new_client_q["explanation"] = new_q.get("explanation", "Standard problem solving formula applied.")
 
         new_opt_map = {
             "question_id": new_q["id"],
@@ -479,8 +503,8 @@ def submit_aptitude_test():
 
         emp_id = int(employee_id)
 
-        # Check if already completed
-        if SecureTestSessionModel.check_already_completed(emp_id, "aptitude"):
+        # Check if already completed (enforced only if strict_lock is requested)
+        if request.args.get("strict_lock", "").lower() == "true" and SecureTestSessionModel.check_already_completed(emp_id, "aptitude"):
             completed_result = SecureTestSessionModel.get_completed_result(emp_id, "aptitude")
             return jsonify({
                 "success": False,
@@ -491,14 +515,17 @@ def submit_aptitude_test():
 
         # Retrieve session
         session = SecureTestSessionModel.get_active_session(emp_id, "aptitude")
-        if not session or session["session_id"] != session_id:
+        if not session or session.get("session_id") != session_id:
             # Fallback check on legacy session model
-            session = AptitudeSessionModel.get_session(session_id)
-            if not session:
+            session_row = AptitudeSessionModel.get_session(session_id)
+            if not session_row:
                 return jsonify({
                     "success": False,
                     "message": "This test session has ended. You cannot restart this attempt."
                 }), 404
+            session = dict(session_row)
+        else:
+            session = dict(session)
 
         options_map = session.get("options_map", [])
         total = len(options_map)
@@ -546,13 +573,46 @@ def submit_aptitude_test():
         else:
             performance_message = "Needs Improvement"
 
+        session_mode = (session.get("mode") or data.get("mode") or "mock").lower()
+        if session_mode not in ["practice", "mock"]:
+            session_mode = "mock"
+
+        # Security & anti-cheating audit
+        if session_mode == "mock":
+            # Server-side timer check
+            started_at = session.get("started_at")
+            dur = session.get("duration_seconds") or 900
+            auto_by_timer = False
+            if started_at:
+                try:
+                    if isinstance(started_at, str):
+                        clean_time = started_at.replace("T", " ").split(".")[0]
+                        start_dt = datetime.strptime(clean_time, "%Y-%m-%d %H:%M:%S")
+                        elapsed = (datetime.now() - start_dt).total_seconds()
+                        if elapsed > (dur + 20):  # 20s latency margin
+                            auto_by_timer = True
+                except Exception:
+                    pass
+
+            sec_report = TestSecurityModel.get_security_report(session_id, emp_id)
+            violation_count = int(sec_report.get("total_violations", 0))
+            auto_submitted = bool(data.get("auto_submitted", False)) or (violation_count >= 3) or auto_by_timer
+        else:
+            sec_report = None
+            violation_count = 0
+            auto_submitted = False
+
         result_payload = {
             "score": score,
             "total": total,
             "percentage": percentage,
             "performance_message": performance_message,
             "category_breakdown": category_stats,
-            "review": review
+            "review": review,
+            "mode": session_mode,
+            "auto_submitted": auto_submitted,
+            "violation_count": violation_count,
+            "security_report": sec_report
         }
 
         # Mark secure session completed
@@ -564,7 +624,8 @@ def submit_aptitude_test():
             percentage=percentage,
             performance_message=performance_message,
             answers=user_answers,
-            result_payload=result_payload
+            result_payload=result_payload,
+            auto_submitted=auto_submitted
         )
 
         # Complete legacy session record
@@ -587,6 +648,29 @@ def submit_aptitude_test():
             category_breakdown=category_stats
         )
 
+        # Record in test_attempts for history timeline, audit trail, and gamification
+        comp_slug = (session.get("company_slug") or session.get("company") or "all").lower()
+        role_name = session.get("job_role", "Software Engineer")
+        TestAttemptModel.record_attempt(
+            user_id=emp_id,
+            company_slug=comp_slug,
+            test_type="aptitude",
+            score=score,
+            total=total,
+            percentage=percentage,
+            role_name=role_name,
+            mode=session_mode,
+            details_json={
+                "performance_message": performance_message,
+                "category_breakdown": category_stats,
+                "session_id": session_id,
+                "security_report": sec_report,
+                "mode": session_mode
+            },
+            violation_count=violation_count,
+            auto_submitted=auto_submitted
+        )
+
         return jsonify({
             "success": True,
             "session_id": session_id,
@@ -595,7 +679,11 @@ def submit_aptitude_test():
             "percentage": percentage,
             "performance_message": performance_message,
             "category_breakdown": category_stats,
-            "review": review
+            "review": review,
+            "mode": session_mode,
+            "auto_submitted": auto_submitted,
+            "violation_count": violation_count,
+            "security_report": sec_report
         }), 200
 
     except Exception as e:

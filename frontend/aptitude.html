@@ -43,7 +43,10 @@
       <!-- Test Header Bar -->
       <div class="aptitude-header-bar">
         <div>
-          <span class="badge badge-purple" id="test-category-badge">Placement Aptitude</span>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <span class="badge badge-purple" id="test-category-badge">Placement Aptitude</span>
+            <span class="badge badge-info" id="active-mode-badge" style="display: none;">Mock Assessment</span>
+          </div>
           <h1 style="font-size: 1.5rem; margin-top: 4px;" id="test-title">Placement Assessment Simulation</h1>
         </div>
 
@@ -60,7 +63,14 @@
           <button id="btn-new-aptitude" class="btn btn-secondary btn-sm" style="cursor: pointer;" title="Generate a fresh set of questions">
             <i class="fa-solid fa-arrows-rotate"></i> New Questions
           </button>
-          <!-- 15 Minute Countdown Timer -->
+          
+          <!-- Per-Question Countdown Timer (Mock Mode Only) -->
+          <div class="question-timer-box" id="q-timer-box" style="display: none;" title="Time limit for current question">
+            <i class="fa-solid fa-hourglass-half"></i>
+            <span id="q-timer-display">60s</span>
+          </div>
+
+          <!-- Total Test Countdown Timer -->
           <div class="timer-box" id="timer-box">
             <span><i class="fa-solid fa-stopwatch"></i></span>
             <span id="timer-display">15:00</span>
@@ -68,8 +78,74 @@
         </div>
       </div>
 
-      <!-- Test Container -->
-      <div id="test-view-screen" class="card" style="padding: 32px;">
+      <!-- Mode Selection Screen (Shown before a test begins) -->
+      <div id="mode-selection-screen" class="mode-selection-container">
+        <div style="text-align: center; margin-bottom: 28px;">
+          <h2 style="font-size: 1.85rem; margin-bottom: 8px; color: #0f172a;">Choose Assessment Mode</h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 620px; margin: 0 auto;">
+            Select how you would like to take this placement assessment. You can practice freely or test your skills under real-world company proctoring conditions.
+          </p>
+        </div>
+
+        <div class="mode-cards-grid">
+          <!-- Mode 1: Practice Mode -->
+          <div class="mode-card practice-card">
+            <div>
+              <div class="mode-card-header">
+                <div class="mode-icon-circle mode-icon-practice">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                  <div class="mode-card-subtitle" style="color: #16a34a;">Self-Paced Learning</div>
+                  <h3 class="mode-card-title">Practice Mode</h3>
+                </div>
+              </div>
+              <p class="mode-card-desc">
+                Learn without timer pressure or restrictions. Check answers immediately after choosing, read detailed explanations, and master concepts comfortably.
+              </p>
+              <ul class="mode-features-list">
+                <li><i class="fa-solid fa-check"></i> <strong>No Timer Pressure:</strong> Take your time to solve each problem.</li>
+                <li><i class="fa-solid fa-check"></i> <strong>Instant Explanations:</strong> Verify your answer immediately.</li>
+                <li><i class="fa-solid fa-check"></i> <strong>Zero Restrictions:</strong> No fullscreen requirement or tab monitoring.</li>
+                <li><i class="fa-solid fa-check"></i> <strong>Stress-Free:</strong> Focus purely on learning and understanding.</li>
+              </ul>
+            </div>
+            <button id="btn-select-practice" class="btn btn-outline-primary btn-block" style="width: 100%; border-color: #16a34a; color: #16a34a; font-weight: 700; padding: 12px;">
+              <i class="fa-solid fa-graduation-cap"></i> Start Practice Mode
+            </button>
+          </div>
+
+          <!-- Mode 2: Mock Assessment Mode -->
+          <div class="mode-card mock-card">
+            <div>
+              <div class="mode-card-header">
+                <div class="mode-icon-circle mode-icon-mock">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                  <div class="mode-card-subtitle" style="color: #4f46e5;">Proctored Company Simulation</div>
+                  <h3 class="mode-card-title">Mock Assessment Mode</h3>
+                </div>
+              </div>
+              <p class="mode-card-desc">
+                Simulate a real corporate placement exam. Timed overall and per-question, fullscreen enforced, tab-switching monitored with 3-strike auto-submit.
+              </p>
+              <ul class="mode-features-list">
+                <li><i class="fa-solid fa-shield-halved"></i> <strong>Strict Timer:</strong> 15-min total limit + 60s per-question timer.</li>
+                <li><i class="fa-solid fa-shield-halved"></i> <strong>Fullscreen Proctored:</strong> Anti-cheating and tab switch detection.</li>
+                <li><i class="fa-solid fa-shield-halved"></i> <strong>Copy/Paste Blocked:</strong> Text selection & right-click disabled.</li>
+                <li><i class="fa-solid fa-shield-halved"></i> <strong>Security Report:</strong> Server-verified audit trail on results.</li>
+              </ul>
+            </div>
+            <button id="btn-select-mock" class="btn btn-primary btn-block" style="width: 100%; padding: 12px; font-weight: 700;">
+              <i class="fa-solid fa-shield-halved"></i> Select Mock Assessment
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Test Container (Hidden until mode is chosen) -->
+      <div id="test-view-screen" class="card" style="display: none; padding: 32px;">
         
         <!-- Question Meta & Progress -->
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
@@ -163,12 +239,73 @@
           <h3 style="font-size: 1.3rem; margin-bottom: 16px;">Detailed Solution & Explanations</h3>
           <div id="review-questions-list"></div>
         </div>
+
+        <!-- Security Report Section -->
+        <div id="security-report-card" class="security-report-card" style="display: none;">
+          <div class="security-report-header">
+            <h3><i class="fa-solid fa-shield-halved text-primary"></i> Anti-Cheating & Security Report</h3>
+            <span id="security-badge-status" class="badge badge-success">Clean Attempt (0 Violations)</span>
+          </div>
+          <div id="security-summary-text" style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 14px;">
+            Integrity check complete. All anti-cheating events were audited server-side.
+          </div>
+          <div id="security-events-container" class="security-timeline-list" style="display: none;"></div>
+        </div>
       </div>
 
     </div>
   </main>
 
+  <!-- Pre-Test Security Agreement Modal (for Mock Mode) -->
+  <div id="modal-test-instructions" class="security-modal-overlay" style="display: none;">
+    <div class="security-modal-dialog pre-test-card">
+      <div class="modal-header-icon" style="background: #e0e7ff; color: #4f46e5;">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h3 style="text-align: center; margin-bottom: 6px;">Mock Assessment Guidelines</h3>
+      <p class="modal-message" style="text-align: center; font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;">
+        Please review the proctoring security rules carefully before beginning:
+      </p>
+
+      <ul class="instruction-list" style="margin-bottom: 20px;">
+        <li>
+          <i class="fa-solid fa-table-columns" style="color: #4f46e5;"></i>
+          <div><strong>Do not switch tabs or apps:</strong> Any backgrounding, window blur, or tab-switching is tracked as a violation.</div>
+        </li>
+        <li>
+          <i class="fa-solid fa-expand" style="color: #4f46e5;"></i>
+          <div><strong>The test runs in fullscreen:</strong> Exiting fullscreen triggers a security warning.</div>
+        </li>
+        <li>
+          <i class="fa-solid fa-ban" style="color: #ef4444;"></i>
+          <div><strong>Copy/paste and right-click are disabled:</strong> Context menus and clipboard actions are blocked and recorded.</div>
+        </li>
+        <li>
+          <i class="fa-solid fa-triangle-exclamation" style="color: #dc2626;"></i>
+          <div><strong>3 violations will auto-submit your test:</strong> On the 3rd infraction, your answers given so far are auto-submitted and flagged.</div>
+        </li>
+      </ul>
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px 16px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+        <input type="checkbox" id="check-agree-security" style="width: 20px; height: 20px; cursor: pointer;">
+        <label for="check-agree-security" style="font-size: 0.92rem; font-weight: 600; color: #1e293b; cursor: pointer; user-select: none;">
+          I agree: I understand the security rules and the 3-violation auto-submit policy.
+        </label>
+      </div>
+
+      <div style="display: flex; gap: 12px;">
+        <button id="btn-cancel-mock" class="btn btn-secondary" style="flex: 1; padding: 12px;">
+          Back
+        </button>
+        <button id="btn-start-secure-test" class="btn btn-primary" disabled style="flex: 2; opacity: 0.5; cursor: not-allowed; padding: 12px; font-weight: 700;">
+          <i class="fa-solid fa-play"></i> Start Test
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="js/script.js"></script>
+  <script src="js/test-security.js"></script>
   <script src="js/aptitude.js"></script>
 </body>
 </html>

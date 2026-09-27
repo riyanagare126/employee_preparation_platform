@@ -92,7 +92,17 @@ function renderHistory(timeline) {
           </div>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          ${item.mode_badge ? `
+            <span class="badge ${item.mode_badge.type === 'info' ? 'badge-info' : 'badge-primary'}" style="font-size: 0.78rem;">
+              <i class="${item.mode_badge.icon}"></i> ${escapeHtml(item.mode_badge.label)}
+            </span>
+          ` : ''}
+          ${item.security_badge ? `
+            <span class="badge ${item.security_badge.type === 'danger' ? 'badge-danger' : (item.security_badge.type === 'warning' ? 'badge-warning' : 'badge-success')}" style="font-size: 0.78rem;">
+              <i class="${item.security_badge.icon}"></i> ${escapeHtml(item.security_badge.label)}
+            </span>
+          ` : ''}
           <span style="font-weight: 600; font-size: 0.9rem; color: var(--primary-700);">${escapeHtml(item.score)}</span>
           <span class="badge ${badgeClass}">${escapeHtml(item.rating)}</span>
         </div>

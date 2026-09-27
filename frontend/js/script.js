@@ -255,13 +255,25 @@ async function setupGlobalNavbar() {
     }
   } catch (e) {}
 
-  // Check admin status
-  if (employee.is_admin) {
+  // Check admin status (strictly authorized platform admin only)
+  const isPlatformAdmin = Boolean(
+    employee && (
+      employee.is_admin === 1 || 
+      employee.is_admin === true || 
+      (employee.email && employee.email.toLowerCase() === "riyanagare126@gmail.com")
+    )
+  );
+
+  if (isPlatformAdmin) {
     if (!document.getElementById("nav-admin-link")) {
       const adminLi = document.createElement("li");
       adminLi.id = "nav-admin-link";
       adminLi.innerHTML = `<a href="admin.html" class="nav-link" style="color: #f43f5e; font-weight: 700;"><i class="fa-solid fa-shield-halved"></i> Admin</a>`;
       navMenu.appendChild(adminLi);
+    }
+    const adminShortcut = document.getElementById("shortcut-admin-card");
+    if (adminShortcut) {
+      adminShortcut.style.display = "flex";
     }
   }
 }

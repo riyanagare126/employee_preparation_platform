@@ -10,7 +10,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Initialize UI
   setupDashboardProfile(employee);
   setupGoalModal(employee);
+  setupNoticePlan(employee);
   await loadCompanyPreparationBanner(employee);
+  await loadNoticePlan(employee.id);
   await loadDashboardAnalytics(employee.id);
 
   // Quick AI Assistant button
@@ -199,12 +201,14 @@ async function loadDashboardAnalytics(employeeId) {
       }
     }
 
-    // 3. Fetch Daily Preparation Plan
-    const resPlan = await fetch(`${API_BASE}/api/skills/daily-plan?employee_id=${employeeId}`);
-    if (resPlan.ok) {
-      const data = await resPlan.json();
-      if (data.success && data.data) {
-        renderDailyPlan(data.data, employeeId);
+    // 3. Fetch Daily Preparation Plan (Fallback if no Notice Period Plan active)
+    if (!window._hasActiveNoticePlan) {
+      const resPlan = await fetch(`${API_BASE}/api/skills/daily-plan?employee_id=${employeeId}`);
+      if (resPlan.ok) {
+        const data = await resPlan.json();
+        if (data.success && data.data) {
+          renderDailyPlan(data.data, employeeId);
+        }
       }
     }
 
@@ -471,3 +475,410 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
+/* =========================================================================
+   NOTICE PERIOD PLANNER CONTROLLER
+   ========================================================================= */
+
+let currentSavedNoticePlan = null;
+
+function setupNoticePlan(employee) {
+  const form = document.getElementById("form-notice-planner");
+  const btnRegenerate = document.getElementById("btn-notice-regenerate");
+  const btnEdit = document.getElementById("btn-edit-notice-plan");
+  const btnCopy = document.getElementById("btn-copy-notice-plan");
+  const formSection = document.getElementById("notice-planner-form-section");
+  const resultSection = document.getElementById("notice-planner-result-section");
+  const errorBox = document.getElementById("notice-form-error");
+  const errorText = document.getElementById("notice-form-error-text");
+
+  // Pre-fill target role and experience from employee profile if available
+  const roleInput = document.getElementById("notice-target-role");
+  const expSelect = document.getElementById("notice-experience-years");
+  const daysInput = document.getElementById("notice-period-days");
+
+  if (roleInput && !roleInput.value) {
+    roleInput.value = employee.target_role || employee.job_role || "Software Engineer";
+  }
+  if (expSelect && !expSelect.value) {
+    expSelect.value = employee.experience || "1-3";
+  }
+
+  // Switch to edit/regenerate view
+  function switchToFormView() {
+    if (formSection) formSection.style.display = "block";
+    if (resultSection) resultSection.style.display = "none";
+    if (errorBox) errorBox.style.display = "none";
+    if (btnRegenerate) btnRegenerate.style.display = "none";
+  }
+
+  if (btnRegenerate) btnRegenerate.addEventListener("click", switchToFormView);
+  if (btnEdit) btnEdit.addEventListener("click", switchToFormView);
+
+  // Copy plan to clipboard
+  if (btnCopy) {
+    btnCopy.addEventListener("click", () => {
+      if (currentSavedNoticePlan && currentSavedNoticePlan.plan_text) {
+        navigator.clipboard.writeText(currentSavedNoticePlan.plan_text)
+          .then(() => showToast("Preparation plan copied to clipboard!", "success"))
+          .catch(() => showToast("Could not copy to clipboard.", "warning"));
+      }
+    });
+  }
+
+  // Form submission with validation and loading state
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (errorBox) errorBox.style.display = "none";
+
+      const targetRole = roleInput ? roleInput.value.trim() : "";
+      const experience = expSelect ? expSelect.value : "1-3";
+      const noticeDaysVal = daysInput ? parseInt(daysInput.value, 10) : 30;
+
+      // Basic form validation
+      if (!targetRole) {
+        if (errorBox && errorText) {
+          errorText.textContent = "Please enter your target job role.";
+          errorBox.style.display = "block";
+        }
+        if (roleInput) roleInput.focus();
+        return;
+      }
+
+      if (isNaN(noticeDaysVal) || noticeDaysVal < 1 || noticeDaysVal > 365) {
+        if (errorBox && errorText) {
+          errorText.textContent = "Please enter a valid notice period (1 to 365 days).";
+          errorBox.style.display = "block";
+        }
+        if (daysInput) daysInput.focus();
+        return;
+      }
+
+      // Collect checked weak areas
+      const weakAreas = [];
+      document.querySelectorAll("input[name='notice_weak_areas']:checked").forEach(cb => {
+        weakAreas.push(cb.value);
+      });
+
+      // Loading state
+      const submitBtn = document.getElementById("btn-submit-notice-plan");
+      const spinner = document.getElementById("notice-submit-spinner");
+      const label = document.getElementById("notice-submit-label");
+
+      if (submitBtn) submitBtn.disabled = true;
+      if (spinner) spinner.style.display = "inline-block";
+      if (label) label.textContent = "Generating your personalized plan...";
+
+      try {
+        const payload = {
+          employee_id: employee.id,
+          target_role: targetRole,
+          experience: experience,
+          notice_days: noticeDaysVal,
+          weak_areas: weakAreas
+        };
+
+        const res = await fetch(`${API_BASE}/api/notice-plan/generate`, {
+          method: "POST",
+          headers: getAuthHeaders(),
+          body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+        if (res.ok && result.success && result.data) {
+          currentSavedNoticePlan = result.data;
+          renderNoticePlanResult(result.data);
+          showToast("🎉 Notice Period Preparation Plan generated successfully!", "success");
+        } else {
+          if (errorBox && errorText) {
+            errorText.textContent = result.message || "Failed to generate plan. Please try again.";
+            errorBox.style.display = "block";
+          }
+        }
+      } catch (err) {
+        console.error("Error generating notice plan:", err);
+        if (errorBox && errorText) {
+          errorText.textContent = "Service temporarily unavailable. Please try again.";
+          errorBox.style.display = "block";
+        }
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (spinner) spinner.style.display = "none";
+        if (label) label.innerHTML = `Generate Preparation Plan <i class="fa-solid fa-wand-magic-sparkles"></i>`;
+      }
+    });
+  }
+}
+
+async function loadNoticePlan(employeeId) {
+  try {
+    const res = await fetch(`${API_BASE}/api/notice-plan/latest?employee_id=${employeeId}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.data && data.data.plan_text) {
+        currentSavedNoticePlan = data.data;
+        renderNoticePlanResult(data.data);
+        return;
+      }
+    }
+    // No saved plan: show empty form state
+    renderNoticePlanFormState();
+  } catch (err) {
+    console.warn("Could not load latest notice plan:", err);
+    renderNoticePlanFormState();
+  }
+}
+
+function renderNoticePlanFormState() {
+  const formSection = document.getElementById("notice-planner-form-section");
+  const resultSection = document.getElementById("notice-planner-result-section");
+  const daysBadge = document.getElementById("notice-days-left-badge");
+  const btnRegenerate = document.getElementById("btn-notice-regenerate");
+
+  if (formSection) formSection.style.display = "block";
+  if (resultSection) resultSection.style.display = "none";
+  if (daysBadge) daysBadge.style.display = "none";
+  if (btnRegenerate) btnRegenerate.style.display = "none";
+}
+
+function renderNoticePlanResult(plan) {
+  const formSection = document.getElementById("notice-planner-form-section");
+  const resultSection = document.getElementById("notice-planner-result-section");
+  const daysBadge = document.getElementById("notice-days-left-badge");
+  const daysCount = document.getElementById("notice-days-left-count");
+  const btnRegenerate = document.getElementById("btn-notice-regenerate");
+
+  // Metadata pills
+  const resRole = document.getElementById("notice-res-role");
+  const resExp = document.getElementById("notice-res-exp");
+  const resDays = document.getElementById("notice-res-days");
+  const resWeak = document.getElementById("notice-res-weak");
+  const contentBox = document.getElementById("notice-plan-content");
+  const savedAt = document.getElementById("notice-plan-saved-at");
+
+  // Pre-fill inputs in form for easy adjustment
+  const roleInput = document.getElementById("notice-target-role");
+  const expSelect = document.getElementById("notice-experience-years");
+  const daysInput = document.getElementById("notice-period-days");
+  if (roleInput && plan.target_role) roleInput.value = plan.target_role;
+  if (expSelect && plan.experience) expSelect.value = plan.experience;
+  if (daysInput && plan.notice_days) daysInput.value = plan.notice_days;
+
+  // Weak area checkboxes
+  const weakList = Array.isArray(plan.weak_areas)
+    ? plan.weak_areas
+    : (typeof plan.weak_areas === "string" ? plan.weak_areas.split(",").map(s => s.trim()) : []);
+  const weakSet = new Set(weakList);
+  document.querySelectorAll("input[name='notice_weak_areas']").forEach(cb => {
+    cb.checked = weakSet.has(cb.value);
+  });
+
+  // Days left badge
+  const daysLeft = (plan.days_left !== undefined && plan.days_left !== null) ? plan.days_left : (plan.notice_days || 30);
+  if (daysCount) daysCount.textContent = daysLeft;
+  if (daysBadge) daysBadge.style.display = "inline-flex";
+
+  // Metadata labels
+  if (resRole) resRole.textContent = plan.target_role || "Software Engineer";
+  if (resExp) resExp.textContent = `${plan.experience || '1-3'} yrs`;
+  if (resDays) resDays.textContent = `${plan.notice_days || 30} Days`;
+  if (resWeak) resWeak.textContent = weakList.length > 0 ? weakList.join(", ") : "General Technical";
+
+  if (savedAt && plan.created_at) {
+    savedAt.innerHTML = `<i class="fa-solid fa-check-double text-success"></i> Plan active • Saved on: ${escapeHtml(String(plan.created_at).split('.')[0])}`;
+  }
+
+  // Format and render plan content
+  if (contentBox) {
+    contentBox.innerHTML = formatMarkdownToPlanHtml(plan.plan_text || "");
+  }
+
+  // Show result, hide form
+  if (formSection) formSection.style.display = "none";
+  if (resultSection) resultSection.style.display = "block";
+  if (btnRegenerate) btnRegenerate.style.display = "inline-flex";
+}
+
+function formatMarkdownToPlanHtml(text) {
+  if (!text) return "<p>No plan content available.</p>";
+
+  // Clean and convert markdown
+  let html = escapeHtml(text);
+
+  // Headers: ##, ###, ####
+  html = html.replace(/^##\s+(.*$)/gim, '<h4 style="color:var(--text-main); font-size:1.15rem; margin-top:14px; margin-bottom:8px; font-weight:700;">$1</h4>');
+  html = html.replace(/^###\s+(.*$)/gim, '<h5 style="color:var(--primary-700); font-size:1.02rem; margin-top:16px; margin-bottom:6px; font-weight:600; border-bottom:1px solid var(--border-color); padding-bottom:4px;">$1</h5>');
+  html = html.replace(/^####\s+(.*$)/gim, '<h6 style="color:var(--emerald-600); font-size:0.92rem; margin-top:12px; margin-bottom:4px; font-weight:600;">$1</h6>');
+
+  // Bold text: **text**
+  html = html.replace(/\*\*(.*?)\*\*/gim, '<strong style="color:var(--text-main);">$1</strong>');
+
+  // Inline code: `code`
+  html = html.replace(/`([^`]+)`/gim, '<code style="background:var(--bg-subtle); padding:2px 6px; border-radius:4px; font-size:0.85rem;">$1</code>');
+
+  // Bullet items: - or *
+  html = html.replace(/^\s*[-*]\s+(.*$)/gim, '<li style="margin-bottom:4px; color:var(--text-main);">$1</li>');
+
+  // Wrap lists
+  html = html.replace(/(<li.*<\/li>)/gms, '<ul style="margin:6px 0 10px 20px; padding:0; line-height:1.6;">$1</ul>');
+
+  // Replace double newlines with spacing
+  html = html.replace(/\n\n/g, '<div style="height:8px;"></div>');
+
+  return html;
+}
+
+async function toggleNoticePlanTask(taskId, employeeId) {
+  try {
+    const res = await fetch(`${API_BASE}/api/notice-plan/task/toggle`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ employee_id: employeeId, task_id: taskId })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast(data.is_completed ? "Task completed! +15 XP" : "Task marked pending.", "success");
+      await loadNoticePlan(employeeId);
+      // Sync full modal if open
+      const fullModal = document.getElementById("notice-plan-full-modal");
+      if (fullModal && fullModal.style.display === "flex") {
+        const activeFilter = document.querySelector(".filter-plan-btn.active")?.dataset?.filter || "all";
+        renderFullNoticePlanTimeline(currentActiveNoticePlan, activeFilter, employeeId);
+      }
+    } else {
+      showToast(data.message || "Could not update task.", "error");
+    }
+  } catch (err) {
+    showToast("Error updating notice task status.", "error");
+  }
+}
+
+function openNoticeFullModal(employeeId) {
+  const modal = document.getElementById("notice-plan-full-modal");
+  if (!modal || !currentActiveNoticePlan) return;
+
+  const titleEl = document.getElementById("full-modal-title");
+  const subtitleEl = document.getElementById("full-modal-subtitle");
+  const daysBadge = document.getElementById("full-modal-days-left-badge");
+  const footerProg = document.getElementById("full-modal-footer-progress");
+
+  if (titleEl) titleEl.textContent = `${currentActiveNoticePlan.target_role} Countdown Schedule`;
+  if (subtitleEl) subtitleEl.textContent = `Last Working Date: ${currentActiveNoticePlan.last_working_date} • Daily ${currentActiveNoticePlan.daily_study_time}`;
+  if (daysBadge) daysBadge.textContent = `${currentActiveNoticePlan.days_left} Days Left`;
+  if (footerProg) footerProg.textContent = `${currentActiveNoticePlan.completed_tasks} of ${currentActiveNoticePlan.total_tasks} tasks completed (${currentActiveNoticePlan.progress_percent}%)`;
+
+  // Update filter count badge
+  const countAll = document.getElementById("count-filter-all");
+  if (countAll && currentActiveNoticePlan.days) {
+    countAll.textContent = currentActiveNoticePlan.days.length;
+  }
+
+  // Reset to 'all' filter
+  document.querySelectorAll(".filter-plan-btn").forEach(b => {
+    b.classList.remove("active", "btn-primary");
+    if (b.dataset.filter === "all") b.classList.add("active", "btn-primary");
+  });
+
+  renderFullNoticePlanTimeline(currentActiveNoticePlan, "all", employeeId);
+  modal.style.display = "flex";
+}
+
+function closeNoticeFullModal() {
+  const modal = document.getElementById("notice-plan-full-modal");
+  if (modal) modal.style.display = "none";
+}
+
+function renderFullNoticePlanTimeline(plan, filter = "all", employeeId) {
+  const container = document.getElementById("full-plan-timeline-container");
+  if (!container || !plan || !plan.days) return;
+
+  let filteredDays = plan.days;
+  if (filter === "today") {
+    filteredDays = plan.days.filter(d => d.day_number === plan.current_day);
+  } else if (filter === "interviews") {
+    filteredDays = plan.days.filter(d => d.is_interview_prep);
+  } else if (filter === "pending") {
+    filteredDays = plan.days.filter(d => (d.tasks || []).some(t => !t.is_completed));
+  }
+
+  if (filteredDays.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 30px; color: var(--text-muted); font-size: 0.9rem;">
+        <i class="fa-solid fa-list-check" style="font-size: 2rem; margin-bottom: 8px; display: block; opacity: 0.5;"></i>
+        No schedule items match the selected filter.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filteredDays.map(day => {
+    const isToday = (day.day_number === plan.current_day);
+    const isInterview = Boolean(day.is_interview_prep);
+    const allDone = Boolean(day.all_completed);
+
+    let headerBg = "var(--bg-subtle)";
+    let borderCol = "var(--border-color)";
+    if (isToday) {
+      headerBg = "rgba(79, 70, 229, 0.08)";
+      borderCol = "var(--primary-600)";
+    } else if (isInterview) {
+      headerBg = "#fff1f2";
+      borderCol = "#fecdd3";
+    }
+
+    return `
+      <div class="card" style="padding: 16px; border: 1px solid ${borderCol}; border-radius: 8px; background: var(--bg-card); box-shadow: var(--shadow-xs);">
+        
+        <!-- Day Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color);">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <span style="font-weight: 800; font-size: 0.98rem; color: var(--text-main);">
+              ${escapeHtml(day.date_label || `Day ${day.day_number}`)}
+            </span>
+            ${isToday ? `<span class="badge badge-primary" style="font-size: 0.72rem;"><i class="fa-solid fa-star"></i> TODAY</span>` : ''}
+            ${isInterview ? `<span class="badge" style="background: #fee2e2; color: #991b1b; font-size: 0.72rem;"><i class="fa-solid fa-bullseye"></i> REVISION & MOCK</span>` : ''}
+            ${allDone ? `<span class="badge badge-success" style="font-size: 0.72rem;"><i class="fa-solid fa-check"></i> ALL DONE</span>` : ''}
+          </div>
+          <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">${escapeHtml(day.theme || '')}</span>
+        </div>
+
+        ${day.interview_alert ? `
+          <div style="background: #fff1f2; border: 1px solid #fecdd3; border-radius: 6px; padding: 6px 12px; margin-bottom: 10px; font-size: 0.8rem; color: #9f1239; font-weight: 600;">
+            <i class="fa-solid fa-bell"></i> ${escapeHtml(day.interview_alert)}
+          </div>
+        ` : ''}
+
+        <!-- Day Tasks List -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          ${(day.tasks || []).map(t => {
+            const isDone = Boolean(t.is_completed);
+            return `
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: ${isDone ? '#f0fdf4' : 'var(--bg-subtle)'}; border: 1px solid ${isDone ? '#bbf7d0' : 'var(--border-color)'}; border-radius: 6px; font-size: 0.85rem; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 220px;">
+                  <input type="checkbox" id="full-task-${t.id}" ${isDone ? 'checked' : ''} style="width: 17px; height: 17px; accent-color: var(--emerald-600); cursor: pointer;" onchange="toggleNoticePlanTask(${t.id}, ${employeeId})">
+                  <div>
+                    <span style="font-weight: 600; text-decoration: ${isDone ? 'line-through' : 'none'}; color: ${isDone ? '#15803d' : 'var(--text-main)'};">
+                      ${escapeHtml(t.title)}
+                    </span>
+                    <div style="font-size: 0.78rem; color: var(--text-muted);">${escapeHtml(t.description)}</div>
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="badge" style="font-size: 0.7rem; background: rgba(99,102,241,0.08); color: var(--primary-700);">${escapeHtml(t.category)}</span>
+                  <span style="font-size: 0.74rem; color: var(--text-muted);"><i class="fa-solid fa-stopwatch"></i> ${t.estimated_minutes}m</span>
+                  ${t.link_url ? `
+                    <a href="${t.link_url}" class="btn btn-sm btn-outline-primary" style="padding: 2px 8px; font-size: 0.74rem;">
+                      Go <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `;
+  }).join("");
+}

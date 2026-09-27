@@ -1,6 +1,8 @@
 /**
- * AI Employee Preparation Platform - Coding Practice & Technical Concepts Engine
- * Dynamic coding question switching: Next, Prev, Random Change, and New Question on Reload.
+ * AI Employee Preparation Platform - Company Preparation & Technical Practice Engine
+ * 1. Company-specific, level-wise non-repeating questions with anti-cache headers.
+ * 2. Dynamic header matching selected company.
+ * 3. Coding challenge workspace & Language concepts exploration.
  */
 
 let allProblems = [];
@@ -8,33 +10,34 @@ let filteredProblems = [];
 let currentProblem = null;
 let currentLanguage = "python";
 let conceptsData = {};
+let currentCompany = "TCS";
+let currentEmployee = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const employee = requireAuth();
-  if (!employee) return;
+  currentEmployee = requireAuth();
+  if (!currentEmployee) return;
 
   setupTabs();
+  initCompanyPreparation(currentEmployee);
   setupEditorWorkspace();
 
-  // Load problems with dynamic reload detection
+  // Load coding problems and concepts in background
   await loadProblems(true, true);
   await loadConcepts();
 
-  // Handle direct tab or role/company routing via URL query parameters
+  // Check URL query parameters for mode routing
   const urlParams = new URLSearchParams(window.location.search);
   const mode = urlParams.get("mode");
-  if (mode === "technical" || mode === "concepts" || window.location.hash === "#concepts") {
+  if (mode === "coding") {
+    const tabCoding = document.getElementById("tab-coding");
+    if (tabCoding) tabCoding.click();
+  } else if (mode === "technical" || mode === "concepts" || window.location.hash === "#concepts") {
     const tabConcepts = document.getElementById("tab-concepts");
     if (tabConcepts) tabConcepts.click();
-  }
-
-  const compSlug = urlParams.get("company");
-  const roleName = urlParams.get("role");
-  if (compSlug) {
-    const banner = document.getElementById("workspace-header-text");
-    if (banner) {
-      banner.textContent = `${compSlug.toUpperCase()} • ${roleName || 'Software Engineer'} Coding & Technical Workspace`;
-    }
+  } else {
+    // Default: Company Interview Questions tab
+    const tabCompany = document.getElementById("tab-company-questions");
+    if (tabCompany) tabCompany.click();
   }
 
   // If specific problem requested in URL
@@ -45,33 +48,528 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /**
- * Setup Tab Switching (Coding Practice vs Concepts)
+ * Setup Tab Switching (Company Prep vs Coding vs Concepts)
  */
 function setupTabs() {
+  const tabCompany = document.getElementById("tab-company-questions");
   const tabCoding = document.getElementById("tab-coding");
   const tabConcepts = document.getElementById("tab-concepts");
+
+  const companySec = document.getElementById("company-questions-section");
   const codingSec = document.getElementById("coding-workspace-section");
   const conceptsSec = document.getElementById("concepts-section");
 
-  if (tabCoding && tabConcepts) {
-    tabCoding.addEventListener("click", () => {
-      tabCoding.className = "btn btn-primary btn-sm";
-      tabConcepts.className = "btn btn-secondary btn-sm";
-      tabConcepts.style.border = "none";
-      codingSec.style.display = "block";
-      conceptsSec.style.display = "none";
+  function resetTabs() {
+    [tabCompany, tabCoding, tabConcepts].forEach(t => {
+      if (t) {
+        t.className = "btn btn-secondary btn-sm";
+        t.style.border = "none";
+      }
     });
+    if (companySec) companySec.style.display = "none";
+    if (codingSec) codingSec.style.display = "none";
+    if (conceptsSec) conceptsSec.style.display = "none";
+  }
 
+  if (tabCompany) {
+    tabCompany.addEventListener("click", () => {
+      resetTabs();
+      tabCompany.className = "btn btn-primary btn-sm";
+      if (companySec) companySec.style.display = "block";
+    });
+  }
+
+  if (tabCoding) {
+    tabCoding.addEventListener("click", () => {
+      resetTabs();
+      tabCoding.className = "btn btn-primary btn-sm";
+      if (codingSec) codingSec.style.display = "block";
+    });
+  }
+
+  if (tabConcepts) {
     tabConcepts.addEventListener("click", () => {
+      resetTabs();
       tabConcepts.className = "btn btn-primary btn-sm";
-      tabCoding.className = "btn btn-secondary btn-sm";
-      tabCoding.style.border = "none";
-      codingSec.style.display = "none";
-      conceptsSec.style.display = "block";
+      if (conceptsSec) conceptsSec.style.display = "block";
       renderConcepts();
     });
   }
 }
+
+/**
+ * =========================================================================
+ * COMPANY INTERVIEW PREPARATION MODULE
+ * =========================================================================
+ */
+function initCompanyPreparation(employee) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const companySelect = document.getElementById("company-select");
+  const levelSelect = document.getElementById("prep-level-select");
+  const typeSelect = document.getElementById("prep-type-select");
+  const categorySelect = document.getElementById("prep-category-select");
+  const roleInput = document.getElementById("prep-role-input");
+  const btnGetNew = document.getElementById("btn-get-new-questions");
+  const btnReset = document.getElementById("btn-reset-company-history");
+
+  // Determine initial company from URL or profile or fallback
+  const urlCompany = urlParams.get("company");
+  if (urlCompany) {
+    currentCompany = normalizeCompanyName(urlCompany);
+  } else if (employee && employee.target_company) {
+    currentCompany = normalizeCompanyName(employee.target_company);
+  } else {
+    currentCompany = "TCS";
+  }
+
+  // Update company dropdown
+  if (companySelect) {
+    companySelect.value = currentCompany;
+    // Fallback if value isn't an exact match
+    if (!companySelect.value) {
+      for (let i = 0; i < companySelect.options.length; i++) {
+        if (companySelect.options[i].value.toLowerCase() === currentCompany.toLowerCase()) {
+          companySelect.selectedIndex = i;
+          currentCompany = companySelect.options[i].value;
+          break;
+        }
+      }
+    }
+  }
+
+  // Check if candidate has experience set in profile. If not, trigger setup modal
+  checkAndPromptExperience(employee);
+
+  // Update header to match selected company immediately
+  updateCompanyHeader(currentCompany);
+
+  // Event Listeners
+  if (companySelect) {
+    companySelect.addEventListener("change", (e) => {
+      currentCompany = e.target.value;
+      updateCompanyHeader(currentCompany);
+      loadCompanyQuestions(true);
+    });
+  }
+
+  if (levelSelect) levelSelect.addEventListener("change", () => loadCompanyQuestions(true));
+  if (typeSelect) typeSelect.addEventListener("change", () => loadCompanyQuestions(true));
+  if (categorySelect) categorySelect.addEventListener("change", () => loadCompanyQuestions(true));
+
+  if (roleInput) {
+    roleInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") loadCompanyQuestions(true);
+    });
+    roleInput.addEventListener("blur", () => loadCompanyQuestions(true));
+  }
+
+  if (btnGetNew) {
+    btnGetNew.addEventListener("click", () => {
+      loadCompanyQuestions(true);
+    });
+  }
+
+  if (btnReset) {
+    btnReset.addEventListener("click", handleResetHistory);
+  }
+
+  // Initial questions load
+  loadCompanyQuestions(true);
+}
+
+/**
+ * Update Header and document title dynamically based on selected company
+ * Page header always follows selected company (NEVER hardcoded to TCS).
+ */
+function updateCompanyHeader(company) {
+  const titleSpan = document.getElementById("company-title-text");
+  const boldName = document.getElementById("company-name-bold");
+  const headTitle = document.getElementById("html-head-title");
+
+  if (titleSpan) titleSpan.textContent = company;
+  if (boldName) boldName.textContent = company;
+  if (headTitle) headTitle.textContent = `${company} Interview Preparation | AI Employee Preparation Platform`;
+}
+
+/**
+ * Normalize raw company string or slug to standard brand name
+ */
+function normalizeCompanyName(raw) {
+  if (!raw) return "TCS";
+  const s = raw.toLowerCase().trim();
+  if (s.includes("tcs") || s.includes("tata")) return "TCS";
+  if (s.includes("infosys")) return "Infosys";
+  if (s.includes("wipro")) return "Wipro";
+  if (s.includes("accenture")) return "Accenture";
+  if (s.includes("cognizant")) return "Cognizant";
+  if (s.includes("capgemini")) return "Capgemini";
+  if (s.includes("hcl")) return "HCL";
+  if (s.includes("tech mahindra") || s.includes("techmahindra")) return "Tech Mahindra";
+  if (s.includes("amazon")) return "Amazon";
+  if (s.includes("google")) return "Google";
+  if (s.includes("microsoft")) return "Microsoft";
+  if (s.includes("deloitte")) return "Deloitte";
+  if (s.includes("ibm")) return "IBM";
+  return raw;
+}
+
+/**
+ * Check if candidate has experience in profile; prompt via modal if missing
+ */
+function checkAndPromptExperience(employee) {
+  if (!employee) return;
+  const modal = document.getElementById("modal-experience-setup");
+  const btnSaveExp = document.getElementById("btn-save-modal-exp");
+
+  // If user already has experience, update level dropdown label and return
+  if (employee.experience && employee.experience.trim()) {
+    const levelSelect = document.getElementById("prep-level-select");
+    if (levelSelect && levelSelect.options[0]) {
+      levelSelect.options[0].text = `Auto (My Profile: ${employee.experience})`;
+    }
+    return;
+  }
+
+  // Otherwise, show experience setup modal on first visit
+  if (modal) {
+    modal.style.display = "flex";
+  }
+
+  if (btnSaveExp) {
+    btnSaveExp.addEventListener("click", async () => {
+      const selectedRadio = document.querySelector('input[name="modal-exp-choice"]:checked');
+      if (!selectedRadio) return;
+      const selectedExp = selectedRadio.value;
+
+      try {
+        btnSaveExp.disabled = true;
+        btnSaveExp.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving Profile...';
+
+        const res = await fetch(`${API_BASE}/api/employee/experience`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            employee_id: employee.id,
+            experience: selectedExp
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          employee.experience = selectedExp;
+          setLoggedInEmployee(employee);
+          localStorage.setItem("employee", JSON.stringify(employee));
+          sessionStorage.setItem("employee", JSON.stringify(employee));
+
+          const levelSelect = document.getElementById("prep-level-select");
+          if (levelSelect && levelSelect.options[0]) {
+            levelSelect.options[0].text = `Auto (My Profile: ${selectedExp})`;
+          }
+
+          modal.style.display = "none";
+          showToast("Experience level saved to profile!", "success");
+          loadCompanyQuestions(true);
+        } else {
+          showToast(data.message || "Failed to update experience.", "error");
+        }
+      } catch (err) {
+        console.error("Error saving experience:", err);
+        showToast("Error updating experience profile.", "error");
+      } finally {
+        btnSaveExp.disabled = false;
+        btnSaveExp.innerHTML = 'Save & Load My Questions <i class="fa-solid fa-arrow-right"></i>';
+      }
+    });
+  }
+}
+
+/**
+ * Load Company-Specific Non-Repeating Questions from API
+ * Always bypasses cache with Cache-Control: no-store and dynamic query timestamp.
+ */
+async function loadCompanyQuestions(showSpinner = true) {
+  const container = document.getElementById("company-questions-container");
+  const seenCountSpan = document.getElementById("seen-count");
+  const totalCountSpan = document.getElementById("total-count");
+  const recycleAlert = document.getElementById("pool-recycle-alert");
+  const levelSelect = document.getElementById("prep-level-select");
+  const typeSelect = document.getElementById("prep-type-select");
+  const categorySelect = document.getElementById("prep-category-select");
+  const roleInput = document.getElementById("prep-role-input");
+
+  if (!container) return;
+
+  if (showSpinner) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 48px 20px; color: var(--text-muted);">
+        <i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--primary-500); margin-bottom: 14px;"></i>
+        <h3 style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 6px;">Loading ${currentCompany} Interview Questions</h3>
+        <p style="font-size: 0.9rem;">Fetching fresh, non-repeating questions tailored to your experience level...</p>
+      </div>
+    `;
+  }
+
+  const employeeId = currentEmployee ? currentEmployee.id : 0;
+  const level = levelSelect ? levelSelect.value : "";
+  const type = typeSelect ? typeSelect.value : "";
+  const category = categorySelect ? categorySelect.value : "all";
+  const role = roleInput ? roleInput.value.trim() : "";
+
+  const queryParams = new URLSearchParams({
+    count: "10",
+    category: category,
+    role: role,
+    experience_level: level,
+    question_type: type,
+    employee_id: String(employeeId),
+    _t: String(Date.now()) // Anti-cache cache buster
+  });
+
+  try {
+    const url = `${API_BASE}/api/preparation/${encodeURIComponent(currentCompany)}/questions?${queryParams.toString()}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Pragma": "no-cache",
+        "X-Employee-Id": String(employeeId)
+      },
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server returned HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (!data.success) {
+      throw new Error(data.message || "Failed to load questions");
+    }
+
+    // Update Progress Counters
+    if (data.stats) {
+      if (seenCountSpan) seenCountSpan.textContent = data.stats.seen_count || 0;
+      if (totalCountSpan) totalCountSpan.textContent = data.stats.total_questions || 0;
+    }
+
+    // Show/hide recycle notice
+    if (recycleAlert) {
+      recycleAlert.style.display = data.pool_recycled ? "inline-block" : "none";
+    }
+
+    // Render questions
+    renderCompanyQuestions(data.questions || [], data.experience_level);
+
+  } catch (err) {
+    console.error("Error loading company questions:", err);
+    container.innerHTML = `
+      <div class="card" style="padding: 28px; text-align: center; border-left: 4px solid var(--danger-color, #ef4444);">
+        <i class="fa-solid fa-triangle-exclamation fa-2x" style="color: #ef4444; margin-bottom: 12px;"></i>
+        <h3 style="font-size: 1.1rem; margin-bottom: 8px;">Unable to Load Questions</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
+          ${escapeHtml(err.message || 'Please check your connection and try again.')}
+        </p>
+        <button type="button" class="btn btn-primary btn-sm" onclick="loadCompanyQuestions(true)">
+          <i class="fa-solid fa-rotate-right"></i> Retry Loading
+        </button>
+      </div>
+    `;
+  }
+}
+
+/**
+ * Render Question Cards into Container
+ */
+function renderCompanyQuestions(questions, level) {
+  const container = document.getElementById("company-questions-container");
+  if (!container) return;
+
+  if (questions.length === 0) {
+    container.innerHTML = `
+      <div class="card" style="padding: 36px 20px; text-align: center;">
+        <i class="fa-solid fa-folder-open fa-2x" style="color: var(--text-muted); margin-bottom: 12px;"></i>
+        <h3 style="font-size: 1.15rem; margin-bottom: 8px;">No unseen questions found for this filter</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 480px; margin: 0 auto 18px auto;">
+          You have completed all questions currently in the pool for this category. You can reset your progress to practice them again, or clear filters.
+        </p>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('prep-category-select').value='all'; document.getElementById('prep-type-select').value=''; loadCompanyQuestions(true);">
+            <i class="fa-solid fa-filter-circle-xmark"></i> Clear Filters
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="handleResetHistory()">
+            <i class="fa-solid fa-rotate-left"></i> Reset Practice History
+          </button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = questions.map((q, idx) => {
+    const levelBadgeClass = getLevelBadgeClass(q.experience_level);
+    const diffBadgeClass = getDiffBadgeClass(q.difficulty);
+    const isAi = q.source === "ai_generated";
+    const typeLabel = formatQuestionType(q.question_type);
+
+    return `
+      <div class="question-card" id="q-card-${q.id}">
+        
+        <!-- Header Badges Row -->
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            <span class="badge ${levelBadgeClass}" title="Experience Tier">
+              <i class="fa-solid fa-user-graduate"></i> ${escapeHtml(q.experience_level)}
+            </span>
+            <span class="badge badge-secondary" title="Interview Round Type">
+              <i class="fa-solid fa-tag"></i> ${escapeHtml(typeLabel)}
+            </span>
+            <span class="badge badge-info" title="Category">
+              ${escapeHtml(q.category || 'General')}
+            </span>
+            <span class="badge ${diffBadgeClass}" title="Complexity">
+              ${capitalize(q.difficulty || 'medium')}
+            </span>
+          </div>
+
+          <span class="badge ${isAi ? 'badge-ai' : 'badge-curated'}" style="font-size: 0.76rem;" title="Question Source">
+            <i class="fa-solid ${isAi ? 'fa-wand-magic-sparkles' : 'fa-database'}"></i> ${isAi ? 'AI Generated' : 'Curated Seed'}
+          </span>
+        </div>
+
+        <!-- Question Body -->
+        <div style="font-size: 1.05rem; font-weight: 600; line-height: 1.55; color: var(--text-main); margin-bottom: 14px;">
+          <span style="color: var(--primary-600); margin-right: 6px;">Q${idx + 1}.</span>${escapeHtml(q.question_text)}
+        </div>
+
+        <!-- Expandable Sample Answer & Approach -->
+        <div>
+          <button type="button" class="btn btn-link btn-toggle-answer" data-id="${q.id}" style="padding: 0; color: var(--primary-600); font-size: 0.88rem; font-weight: 600; text-decoration: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-chevron-down toggle-icon" id="toggle-icon-${q.id}"></i>
+            <span id="toggle-text-${q.id}">View Sample Answer & Approach</span>
+          </button>
+
+          <div class="sample-answer-box" id="answer-box-${q.id}" style="display: none; margin-top: 12px; background: var(--bg-subtle, #f8fafc); padding: 14px 18px; border-radius: 8px; border-left: 3px solid var(--primary-500); font-size: 0.92rem; line-height: 1.6; color: var(--text-main);">
+            <strong style="color: var(--primary-700); display: block; margin-bottom: 6px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em;">
+              <i class="fa-solid fa-lightbulb"></i> Recommended Structure & Key Points:
+            </strong>
+            <div>${escapeHtml(q.sample_answer || 'No sample answer provided.')}</div>
+          </div>
+        </div>
+
+      </div>
+    `;
+  }).join("");
+
+  // Attach accordion listeners for answer toggle
+  container.querySelectorAll(".btn-toggle-answer").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const qId = btn.getAttribute("data-id");
+      const box = document.getElementById(`answer-box-${qId}`);
+      const icon = document.getElementById(`toggle-icon-${qId}`);
+      const text = document.getElementById(`toggle-text-${qId}`);
+
+      if (box) {
+        const isHidden = box.style.display === "none";
+        box.style.display = isHidden ? "block" : "none";
+        if (icon) {
+          icon.className = isHidden ? "fa-solid fa-chevron-up toggle-icon" : "fa-solid fa-chevron-down toggle-icon";
+        }
+        if (text) {
+          text.textContent = isHidden ? "Hide Sample Answer" : "View Sample Answer & Approach";
+        }
+      }
+    });
+  });
+}
+
+/**
+ * Reset Candidate Progress for Current Company
+ */
+async function handleResetHistory() {
+  if (!currentEmployee || !currentEmployee.id) {
+    showToast("Please log in to reset question history.", "error");
+    return;
+  }
+
+  const confirmed = confirm(
+    `Reset your practice history for ${currentCompany}?\n\n` +
+    `All questions you previously saw for ${currentCompany} will be reset, allowing you to practice them from the beginning.`
+  );
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/preparation/${encodeURIComponent(currentCompany)}/reset`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ employee_id: currentEmployee.id })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      showToast(data.message || `Practice history for ${currentCompany} reset!`, "success");
+      loadCompanyQuestions(true);
+    } else {
+      showToast(data.message || "Failed to reset history.", "error");
+    }
+  } catch (err) {
+    console.error("Error resetting history:", err);
+    showToast("Error connecting to server to reset history.", "error");
+  }
+}
+
+/**
+ * Helper to get badge styling class based on canonical experience level
+ */
+function getLevelBadgeClass(level) {
+  if (!level) return "badge-fresher";
+  const l = level.toLowerCase();
+  if (l.includes("lead")) return "badge-lead";
+  if (l.includes("senior")) return "badge-senior";
+  if (l.includes("mid")) return "badge-mid";
+  if (l.includes("junior")) return "badge-junior";
+  return "badge-fresher";
+}
+
+/**
+ * Helper to get difficulty badge class
+ */
+function getDiffBadgeClass(diff) {
+  if (!diff) return "badge-success";
+  const d = diff.toLowerCase();
+  if (d === "hard") return "badge-danger";
+  if (d === "medium") return "badge-warning";
+  return "badge-success";
+}
+
+/**
+ * Format question type identifier into friendly title
+ */
+function formatQuestionType(raw) {
+  if (!raw) return "Technical Depth";
+  const map = {
+    "technical_basics": "Technical Basics",
+    "technical_depth": "Technical Depth",
+    "scenario_based": "Scenario-Based",
+    "system_design": "System Design",
+    "behavioral_star": "Behavioral / STAR",
+    "project_experience": "Project Experience",
+    "aptitude": "Aptitude & Logic",
+    "hr_general": "HR & Culture",
+    "hr_switch": "Career Switch / HR",
+    "leadership_management": "Leadership & Strategy",
+    "consulting_case": "Consulting Case"
+  };
+  return map[raw] || raw.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+}
+
+/**
+ * Capitalize first letter helper
+ */
+function capitalize(str) {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 
 /**
  * Setup Editor Workspace controls, problem change buttons & key listeners

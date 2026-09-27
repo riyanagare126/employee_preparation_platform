@@ -10,6 +10,8 @@ Features:
 - Dynamic Question Shuffling & Change support
 """
 
+import os
+import json
 import random
 from typing import Dict, List, Any, Optional
 
@@ -2191,7 +2193,110 @@ def get_company_bank(slug: str) -> Optional[Dict[str, Any]]:
     elif "pwc" in slug_clean or "pricewaterhouse" in slug_clean:
         slug_clean = "pwc"
 
+    json_bank = _load_json_bank(slug_clean)
+    if json_bank:
+        return json_bank
     return COMPANY_QUESTIONS_BANK.get(slug_clean, COMPANY_QUESTIONS_BANK.get("tcs"))
+
+
+_LOADED_BANKS: Dict[str, Dict[str, Any]] = {}
+
+
+def _load_json_bank(slug: str) -> Optional[Dict[str, Any]]:
+    if slug in _LOADED_BANKS:
+        return _LOADED_BANKS[slug]
+
+    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    file_path = os.path.join(root_dir, "data", "companies", f"{slug}.json")
+    if not os.path.exists(file_path):
+        return None
+
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        comp_name = data.get("name") or data.get("company_name") or slug.upper()
+        raw_qs = data.get("questions", [])
+
+        aptitude_list = []
+        coding_list = []
+        technical_list = []
+        hr_list = []
+        ai_list = []
+
+        seen_q = set()
+        for idx, q in enumerate(raw_qs):
+            q_text = (q.get("question") or "").strip()
+            if not q_text or q_text in seen_q:
+                continue
+            seen_q.add(q_text)
+
+            cat = (q.get("category") or "aptitude").strip().lower()
+            diff = q.get("difficulty") or "Medium"
+            extra = q.get("extra") or {}
+
+            if cat == "aptitude":
+                options = q.get("options", [])
+                ans = q.get("correct_answer")
+                correct_idx = options.index(ans) if ans in options else 0
+                aptitude_list.append({
+                    "id": f"{slug}_apt_{idx}",
+                    "category": extra.get("section", f"{comp_name} Aptitude"),
+                    "question": q_text,
+                    "options": options,
+                    "correctIndex": correct_idx,
+                    "correct_answer": ans,
+                    "explanation": q.get("explanation", ""),
+                    "difficulty": diff
+                })
+            elif cat == "coding":
+                title = q_text.split("] ")[-1].split(":")[0] if "]" in q_text else q_text[:50]
+                coding_list.append({
+                    "id": f"{slug}_code_{idx}",
+                    "title": title,
+                    "difficulty": diff,
+                    "description": q_text,
+                    "sample_input": extra.get("sample_input", ""),
+                    "sample_output": extra.get("sample_output", ""),
+                    "starter_code": extra.get("starter_code", ""),
+                    "explanation": q.get("explanation", ""),
+                    "companies": [comp_name]
+                })
+            elif cat == "technical":
+                technical_list.append({
+                    "id": f"{slug}_tech_{idx}",
+                    "category": extra.get("topic", f"{comp_name} Technical"),
+                    "difficulty": diff,
+                    "question": q_text,
+                    "explanation": q.get("explanation", "")
+                })
+            elif cat == "hr":
+                hr_list.append({
+                    "id": f"{slug}_hr_{idx}",
+                    "category": f"{comp_name} Behavioral & Values",
+                    "question": q_text,
+                    "tips": q.get("explanation", "")
+                })
+            elif cat == "ai_interview":
+                ai_list.append({
+                    "id": f"{slug}_ai_{idx}",
+                    "category": "AI Interview",
+                    "question": q_text,
+                    "explanation": q.get("explanation", "")
+                })
+
+        bank_dict = {
+            "aptitude": aptitude_list,
+            "coding": coding_list,
+            "technical": technical_list,
+            "hr": hr_list,
+            "ai_interview": ai_list
+        }
+        _LOADED_BANKS[slug] = bank_dict
+        return bank_dict
+    except Exception as err:
+        print(f"Error loading company bank for {slug}: {err}")
+        return None
 
 
 def get_company_aptitude_questions(slug: str, shuffle: bool = True) -> List[Dict[str, Any]]:

@@ -18,6 +18,14 @@ let testSubmitted = false;
 let serverReviewData = [];
 let currentCompanySlug = "";
 let currentRoleParam = "";
+let securityManager = null; // Anti-cheating & proctoring manager
+
+// Mode Selection & Per-Question Timer State
+let currentTestMode = "mock"; // 'practice' or 'mock'
+const PER_QUESTION_TIME_LIMIT = 60; // 60s limit per question in Mock mode
+let questionTimerSeconds = 60;
+let questionTimerInterval = null;
+let practiceCheckedMap = {}; // Tracks checked questions in Practice mode
 
 function getActiveCompanySlug() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -78,42 +86,52 @@ document.addEventListener("DOMContentLoaded", async () => {
   const btnNext = document.getElementById("btn-next");
   const btnSubmit = document.getElementById("btn-submit-test");
   const btnRetake = document.getElementById("btn-retake-test");
-  const btnReview = document.getElementById("btn-toggle-review");
 
   if (btnPrev) btnPrev.addEventListener("click", () => navigateQuestion(currentIndex - 1));
   if (btnNext) btnNext.addEventListener("click", () => navigateQuestion(currentIndex + 1));
   
   if (btnSubmit) {
     btnSubmit.addEventListener("click", () => {
+      if (securityManager) securityManager.beginInternalAction();
       const answeredCount = userAnswers.filter(a => a !== null).length;
       if (answeredCount < questions.length) {
         if (confirm(`You have answered ${answeredCount} of ${questions.length} questions. Are you sure you want to submit your final attempt?`)) {
-          submitTest();
+          submitTest(false);
+        } else {
+          if (securityManager) securityManager.endInternalAction();
         }
       } else {
-        submitTest();
+        submitTest(false);
       }
     });
   }
 
   if (btnRetake) {
     btnRetake.style.display = "inline-block";
-    btnRetake.addEventListener("click", async () => {
-      await initOrResumeSecureTest(true);
-      showToast("Starting a fresh assessment with new questions!", "success");
+    btnRetake.addEventListener("click", () => {
+      testSubmitted = false;
+      const resultScreen = document.getElementById("test-result-screen");
+      const viewScreen = document.getElementById("test-view-screen");
+      const modeScreen = document.getElementById("mode-selection-screen");
+      if (resultScreen) resultScreen.style.display = "none";
+      if (viewScreen) viewScreen.style.display = "none";
+      if (modeScreen) modeScreen.style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
 
   const btnNewTest = document.getElementById("btn-new-aptitude");
   if (btnNewTest) {
     btnNewTest.addEventListener("click", async () => {
+      if (securityManager) securityManager.beginInternalAction();
       const answered = userAnswers.filter(a => a !== null).length;
       if (answered > 0 && !confirm("Generate a fresh set of questions? Your current progress will reset.")) {
+        if (securityManager) securityManager.endInternalAction();
         return;
       }
       btnNewTest.disabled = true;
       btnNewTest.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Loading...';
-      await initOrResumeSecureTest(true);
+      await initOrResumeSecureTest(true, currentTestMode);
       btnNewTest.disabled = false;
       btnNewTest.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> New Questions';
       showToast("Fresh randomized aptitude test loaded!", "success");
@@ -123,18 +141,158 @@ document.addEventListener("DOMContentLoaded", async () => {
   const selectDiff = document.getElementById("select-apt-difficulty");
   if (selectDiff) {
     selectDiff.addEventListener("change", async () => {
+      if (securityManager) securityManager.beginInternalAction();
       const answered = userAnswers.filter(a => a !== null).length;
       if (answered > 0 && !confirm("Changing difficulty will start a fresh assessment. Continue?")) {
+        if (securityManager) securityManager.endInternalAction();
         return;
       }
-      await initOrResumeSecureTest(true);
+      await initOrResumeSecureTest(true, currentTestMode);
       showToast(`Questions loaded for ${selectDiff.options[selectDiff.selectedIndex].text}!`, "info");
     });
   }
 
-  // Initialize or restore secure test session
-  await initOrResumeSecureTest();
+  // Mode Selection Screen Handlers
+  const btnSelectPractice = document.getElementById("btn-select-practice");
+  const btnSelectMock = document.getElementById("btn-select-mock");
+  const btnCancelMock = document.getElementById("btn-cancel-mock");
+  const modalInstructions = document.getElementById("modal-test-instructions");
+  const checkAgree = document.getElementById("check-agree-security");
+  const btnStartSecure = document.getElementById("btn-start-secure-test");
+
+  if (btnSelectPractice) {
+    btnSelectPractice.addEventListener("click", async () => {
+      currentTestMode = "practice";
+      const modeScreen = document.getElementById("mode-selection-screen");
+      const viewScreen = document.getElementById("test-view-screen");
+      if (modeScreen) modeScreen.style.display = "none";
+      if (viewScreen) viewScreen.style.display = "block";
+      updateModeHeaderUI("practice");
+      await initOrResumeSecureTest(true, "practice");
+      showToast("Practice Mode started. Learn without time pressure!", "success");
+    });
+  }
+
+  if (btnSelectMock) {
+    btnSelectMock.addEventListener("click", () => {
+      currentTestMode = "mock";
+      if (modalInstructions) {
+        if (checkAgree) checkAgree.checked = false;
+        if (btnStartSecure) {
+          btnStartSecure.disabled = true;
+          btnStartSecure.style.opacity = "0.5";
+          btnStartSecure.style.cursor = "not-allowed";
+        }
+        modalInstructions.style.display = "flex";
+      }
+    });
+  }
+
+  if (btnCancelMock) {
+    btnCancelMock.addEventListener("click", () => {
+      if (modalInstructions) modalInstructions.style.display = "none";
+    });
+  }
+
+  if (checkAgree && btnStartSecure) {
+    checkAgree.addEventListener("change", () => {
+      btnStartSecure.disabled = !checkAgree.checked;
+      btnStartSecure.style.opacity = checkAgree.checked ? "1.0" : "0.5";
+      btnStartSecure.style.cursor = checkAgree.checked ? "pointer" : "not-allowed";
+    });
+
+    btnStartSecure.addEventListener("click", async () => {
+      if (modalInstructions) modalInstructions.style.display = "none";
+      const modeScreen = document.getElementById("mode-selection-screen");
+      const viewScreen = document.getElementById("test-view-screen");
+      if (modeScreen) modeScreen.style.display = "none";
+      if (viewScreen) viewScreen.style.display = "block";
+      updateModeHeaderUI("mock");
+      await initOrResumeSecureTest(true, "mock");
+      if (securityManager) {
+        await securityManager.requestFullscreen();
+        securityManager.start(0);
+      }
+      showToast("Mock Assessment Mode active. Proctored examination started.", "info");
+    });
+  }
+
+  // Check for in-flight active session on page load
+  await checkInFlightSession();
 });
+
+/**
+ * Updates header badges and timer pills according to active mode
+ */
+function updateModeHeaderUI(mode) {
+  const badge = document.getElementById("active-mode-badge");
+  const qTimerBox = document.getElementById("q-timer-box");
+  const timerBox = document.getElementById("timer-box");
+  const timerDisplay = document.getElementById("timer-display");
+
+  if (badge) {
+    badge.style.display = "inline-block";
+    if (mode === "practice") {
+      badge.className = "badge badge-success";
+      badge.innerHTML = '<i class="fa-solid fa-graduation-cap"></i> Practice Mode';
+    } else {
+      badge.className = "badge badge-purple";
+      badge.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Mock Assessment';
+    }
+  }
+
+  if (mode === "practice") {
+    if (qTimerBox) qTimerBox.style.display = "none";
+    if (timerBox) {
+      timerBox.style.background = "#dcfce7";
+      timerBox.style.color = "#15803d";
+      timerBox.style.borderColor = "#bbf7d0";
+    }
+    if (timerDisplay) timerDisplay.textContent = "Self-Paced";
+  } else {
+    if (qTimerBox) qTimerBox.style.display = "inline-flex";
+    if (timerBox) {
+      timerBox.style.background = "#fef2f2";
+      timerBox.style.color = "#dc2626";
+      timerBox.style.borderColor = "#fecaca";
+    }
+  }
+}
+
+/**
+ * Checks if candidate has an existing active in-flight session on page load/reload
+ */
+async function checkInFlightSession() {
+  const employee = getLoggedInEmployee();
+  if (!employee) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/aptitude/session/active?employee_id=${employee.id}&tab_token=${tabToken}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.has_active && data.questions && data.questions.length > 0) {
+        currentTestMode = (data.mode || "mock").toLowerCase();
+        const modeScreen = document.getElementById("mode-selection-screen");
+        const viewScreen = document.getElementById("test-view-screen");
+        if (modeScreen) modeScreen.style.display = "none";
+        if (viewScreen) viewScreen.style.display = "block";
+        updateModeHeaderUI(currentTestMode);
+        await initOrResumeSecureTest(false, currentTestMode);
+        return;
+      }
+    }
+  } catch (e) {
+    console.warn("Could not check active session:", e);
+  }
+
+  // No active session: show mode selection screen
+  const modeScreen = document.getElementById("mode-selection-screen");
+  const viewScreen = document.getElementById("test-view-screen");
+  const resultScreen = document.getElementById("test-result-screen");
+  if (modeScreen) modeScreen.style.display = "block";
+  if (viewScreen) viewScreen.style.display = "none";
+  if (resultScreen) resultScreen.style.display = "none";
+}
 
 /**
  * Swaps out the currently active question with a fresh alternative from the master bank
@@ -190,21 +348,32 @@ async function handleChangeCurrentQuestion() {
 /**
  * Initialize new or resume in-flight secure test session
  */
-async function initOrResumeSecureTest(forceNew = false) {
+async function initOrResumeSecureTest(forceNew = false, mode = null) {
   testSubmitted = false;
   currentIndex = 0;
   serverReviewData = [];
+  practiceCheckedMap = {};
+
+  if (mode) {
+    currentTestMode = mode;
+  } else if (!currentTestMode) {
+    currentTestMode = "mock";
+  }
 
   const employee = getLoggedInEmployee();
   if (!employee) return;
 
+  const modeScreen = document.getElementById("mode-selection-screen");
   const viewScreen = document.getElementById("test-view-screen");
   const resultScreen = document.getElementById("test-result-screen");
   const questionTextEl = document.getElementById("question-text");
 
+  if (modeScreen) modeScreen.style.display = "none";
   if (viewScreen) viewScreen.style.display = "block";
   if (resultScreen) resultScreen.style.display = "none";
   if (questionTextEl) questionTextEl.innerHTML = '<i class="fa-solid fa-gear fa-spin"></i> Connecting to test server & generating questions...';
+
+  updateModeHeaderUI(currentTestMode);
 
   try {
     const activeCompany = getActiveCompanySlug();
@@ -225,7 +394,8 @@ async function initOrResumeSecureTest(forceNew = false) {
         difficulty: selectedDifficulty,
         force_new: forceNew,
         refresh: forceNew,
-        retake: forceNew
+        retake: forceNew,
+        mode: currentTestMode
       })
     });
 
@@ -266,6 +436,9 @@ async function initOrResumeSecureTest(forceNew = false) {
     if (data.success && data.questions && data.questions.length > 0) {
       currentSessionId = data.session_id;
       questions = data.questions;
+      currentTestMode = (data.mode || currentTestMode || "mock").toLowerCase();
+      updateModeHeaderUI(currentTestMode);
+
       timerSeconds = data.remaining_seconds !== undefined ? data.remaining_seconds : (data.duration_seconds || 900);
 
       // Initialize answers array
@@ -280,13 +453,48 @@ async function initOrResumeSecureTest(forceNew = false) {
           }
         }
         if (data.restored) {
-          showToast("Active test session resumed seamlessly", "info");
+          showToast(`Active ${currentTestMode === 'practice' ? 'Practice' : 'Mock'} session resumed seamlessly`, "info");
         }
       }
 
       renderPalette();
       renderQuestion(currentIndex);
-      startTimer();
+
+      if (currentTestMode === "mock") {
+        startTimer();
+        startPerQuestionTimer();
+
+        // Initialize security & anti-cheating manager
+        if (securityManager) {
+          securityManager.stop();
+        }
+
+        securityManager = new TestSecurityManager({
+          attemptId: currentSessionId,
+          employeeId: employee.id,
+          maxViolations: 3,
+          onAutoSubmit: () => {
+            submitTest(true);
+          },
+          onViolation: (count, max, type) => {
+            console.warn(`[AntiCheat] Violation recorded: ${count}/${max} (${type})`);
+          }
+        });
+
+        // Start monitoring (passing restored violation count if restored)
+        securityManager.start(data.violation_count || 0);
+      } else {
+        // Practice Mode: completely deactivate proctoring and timers
+        if (securityManager) {
+          securityManager.stop();
+          securityManager.exitFullscreen();
+          securityManager = null;
+        }
+        if (timerInterval) clearInterval(timerInterval);
+        if (questionTimerInterval) clearInterval(questionTimerInterval);
+        const qTimerBox = document.getElementById("q-timer-box");
+        if (qTimerBox) qTimerBox.style.display = "none";
+      }
     } else {
       throw new Error(data.message || "Failed to initialize test session.");
     }
@@ -294,6 +502,51 @@ async function initOrResumeSecureTest(forceNew = false) {
     console.error("Test initialization error:", err);
     showToast(err.message || "Could not connect to test server.", "error");
   }
+}
+
+/**
+ * Starts strict per-question countdown timer for Mock Assessment Mode (60s)
+ */
+function startPerQuestionTimer() {
+  if (currentTestMode !== "mock" || testSubmitted) {
+    const qTimerBox = document.getElementById("q-timer-box");
+    if (qTimerBox) qTimerBox.style.display = "none";
+    return;
+  }
+
+  if (questionTimerInterval) clearInterval(questionTimerInterval);
+  questionTimerSeconds = PER_QUESTION_TIME_LIMIT;
+
+  const qTimerBox = document.getElementById("q-timer-box");
+  const qTimerDisplay = document.getElementById("q-timer-display");
+  if (qTimerBox) {
+    qTimerBox.style.display = "inline-flex";
+    qTimerBox.classList.remove("timer-urgent");
+  }
+  if (qTimerDisplay) qTimerDisplay.textContent = `${questionTimerSeconds}s`;
+
+  questionTimerInterval = setInterval(() => {
+    if (testSubmitted) {
+      clearInterval(questionTimerInterval);
+      return;
+    }
+    questionTimerSeconds--;
+    if (qTimerDisplay) qTimerDisplay.textContent = `${questionTimerSeconds}s`;
+
+    if (questionTimerSeconds <= 15 && qTimerBox) {
+      qTimerBox.classList.add("timer-urgent");
+    }
+
+    if (questionTimerSeconds <= 0) {
+      clearInterval(questionTimerInterval);
+      showToast(`Question ${currentIndex + 1} time limit reached. Moving to next question.`, "warning");
+      if (currentIndex < questions.length - 1) {
+        navigateQuestion(currentIndex + 1);
+      } else {
+        submitTest(false);
+      }
+    }
+  }, 1000);
 }
 
 /**
@@ -453,9 +706,101 @@ function renderQuestion(index) {
         optionsContainer.appendChild(optBtn);
       });
     }
+
+    // In Practice Mode: render instant "Check Answer & Explanation" section
+    if (currentTestMode === "practice") {
+      const checkContainer = document.createElement("div");
+      checkContainer.className = "practice-check-container";
+      checkContainer.id = "practice-check-container";
+
+      const isAnswered = (userAnswers[currentIndex] !== null && userAnswers[currentIndex] !== undefined);
+      const hasChecked = !!practiceCheckedMap[currentIndex];
+
+      checkContainer.innerHTML = `
+        <div style="display: flex; gap: 10px; align-items: center; margin-top: 6px;">
+          <button type="button" class="btn btn-sm btn-outline-primary" id="btn-check-answer" style="border-color: #16a34a; color: #16a34a; font-weight: 600; padding: 7px 16px;" ${!isAnswered ? 'disabled' : ''}>
+            <i class="fa-solid fa-circle-check"></i> ${hasChecked ? 'Re-check Answer & Explanation' : 'Check Answer & Explanation'}
+          </button>
+        </div>
+        <div id="practice-explanation-display"></div>
+      `;
+      optionsContainer.appendChild(checkContainer);
+
+      const btnCheck = document.getElementById("btn-check-answer");
+      if (btnCheck) {
+        btnCheck.addEventListener("click", () => handlePracticeCheckAnswer(true));
+      }
+
+      // If user had previously checked this question in this session, re-render the explanation
+      if (hasChecked && isAnswered) {
+        handlePracticeCheckAnswer(false);
+      }
+    }
+  }
+
+  // In Mock Mode: start strict per-question timer
+  if (currentTestMode === "mock") {
+    startPerQuestionTimer();
   }
 
   updatePaletteHighlight();
+}
+
+/**
+ * Validates selected answer against client-provided solution in Practice Mode
+ */
+function handlePracticeCheckAnswer(showToastAlert = true) {
+  const q = questions[currentIndex];
+  if (!q) return;
+  const userAns = userAnswers[currentIndex];
+  if (userAns === null || userAns === undefined) {
+    showToast("Please choose an option first.", "info");
+    return;
+  }
+
+  practiceCheckedMap[currentIndex] = true;
+  const correctIdx = q.practice_correct_index;
+  const isCorrect = (userAns === correctIdx);
+
+  // Highlight options dynamically
+  const optionsContainer = document.getElementById("options-container");
+  if (optionsContainer) {
+    const buttons = optionsContainer.querySelectorAll(".option-btn");
+    buttons.forEach((btn, idx) => {
+      btn.classList.remove("practice-correct", "practice-incorrect");
+      if (idx === correctIdx) {
+        btn.classList.add("practice-correct");
+      }
+      if (!isCorrect && idx === userAns) {
+        btn.classList.add("practice-incorrect");
+      }
+    });
+  }
+
+  const explDisplay = document.getElementById("practice-explanation-display");
+  if (explDisplay) {
+    const letters = ["A", "B", "C", "D", "E", "F"];
+    const correctLetter = letters[correctIdx] || (correctIdx + 1);
+    explDisplay.innerHTML = `
+      <div class="practice-explanation-card ${isCorrect ? 'correct-expl' : 'incorrect-expl'}">
+        <div class="practice-explanation-title" style="color: ${isCorrect ? '#15803d' : '#b91c1c'}; font-size: 1rem;">
+          <i class="${isCorrect ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-xmark'}"></i>
+          ${isCorrect ? 'Correct! Excellent work.' : `Incorrect. The correct answer is Option ${correctLetter}.`}
+        </div>
+        <div style="font-size: 0.92rem; color: #334155; line-height: 1.55; margin-top: 6px;">
+          <strong>Explanation:</strong> ${escapeHtml(q.explanation || "Standard analytical formula and reasoning applied.")}
+        </div>
+      </div>
+    `;
+  }
+
+  if (showToastAlert) {
+    if (isCorrect) {
+      showToast("Correct answer! Great job.", "success");
+    } else {
+      showToast("Review the explanation above to learn the solution.", "info");
+    }
+  }
 }
 
 /**
@@ -492,6 +837,16 @@ function selectOption(optionIndex) {
         }
       }
     });
+
+    // In Practice Mode: enable Check Answer button
+    if (currentTestMode === "practice") {
+      const btnCheck = document.getElementById("btn-check-answer");
+      if (btnCheck) {
+        btnCheck.disabled = false;
+        btnCheck.style.opacity = "1";
+        btnCheck.style.cursor = "pointer";
+      }
+    }
   }
 
   updatePaletteHighlight();
@@ -568,11 +923,18 @@ function navigateQuestion(newIndex) {
 /**
  * Final Server-Side Submission & Score Calculation
  */
-async function submitTest() {
+async function submitTest(isAutoSubmit = false) {
   if (testSubmitted) return;
   testSubmitted = true;
 
   if (timerInterval) clearInterval(timerInterval);
+  if (questionTimerInterval) clearInterval(questionTimerInterval);
+
+  // Stop security monitoring and exit fullscreen
+  if (securityManager) {
+    securityManager.stop();
+    securityManager.exitFullscreen();
+  }
 
   const employee = getLoggedInEmployee();
   if (!employee) return;
@@ -580,7 +942,7 @@ async function submitTest() {
   const btnSubmit = document.getElementById("btn-submit-test");
   if (btnSubmit) {
     btnSubmit.disabled = true;
-    btnSubmit.textContent = "Grading Assessment...";
+    btnSubmit.textContent = isAutoSubmit ? "Auto-Submitting Test..." : "Grading Assessment...";
   }
 
   try {
@@ -590,7 +952,9 @@ async function submitTest() {
       body: JSON.stringify({
         session_id: currentSessionId,
         employee_id: employee.id,
-        user_answers: userAnswers
+        user_answers: userAnswers,
+        mode: currentTestMode,
+        auto_submitted: isAutoSubmit
       })
     });
 
@@ -613,7 +977,11 @@ async function submitTest() {
         });
       } catch (e) {}
 
-      showToast("Aptitude test evaluated and permanently recorded!", "success");
+      if (isAutoSubmit) {
+        showToast("Test auto-submitted due to repeated security violations.", "warning");
+      } else {
+        showToast("Aptitude test evaluated and permanently recorded!", "success");
+      }
     } else {
       throw new Error(data.message || "Failed to grade assessment.");
     }
@@ -644,7 +1012,7 @@ function showResultsScreen(resultData) {
   const msgEl = document.getElementById("result-message");
   const btnRetake = document.getElementById("btn-retake-test");
 
-  if (btnRetake) btnRetake.style.display = "none";
+  if (btnRetake) btnRetake.style.display = "inline-block";
 
   if (scoreText) scoreText.textContent = `${resultData.score} / ${resultData.total}`;
   if (percentText) percentText.textContent = `${resultData.percentage}%`;
@@ -666,6 +1034,87 @@ function showResultsScreen(resultData) {
 
   renderCategoryBreakdown(resultData.category_breakdown || {});
   renderDetailedReview();
+  renderSecurityReport(resultData);
+}
+
+/**
+ * Render Anti-Cheating & Security Report on Result Screen
+ */
+function renderSecurityReport(resultData) {
+  const card = document.getElementById("security-report-card");
+  if (!card) return;
+
+  // In Practice Mode, hide security report section completely
+  if (resultData.mode === "practice" || currentTestMode === "practice" || !resultData.security_report) {
+    card.style.display = "none";
+    return;
+  }
+
+  card.style.display = "block";
+  const badgeEl = document.getElementById("security-badge-status");
+  const summaryEl = document.getElementById("security-summary-text");
+  const eventsEl = document.getElementById("security-events-container");
+
+  const vCount = resultData.violation_count !== undefined 
+    ? resultData.violation_count 
+    : (resultData.security_report?.total_violations || 0);
+  const isAuto = Boolean(resultData.auto_submitted || resultData.security_report?.auto_submitted);
+  const events = resultData.security_report?.events || [];
+
+  if (isAuto) {
+    if (badgeEl) {
+      badgeEl.className = "badge badge-danger";
+      badgeEl.innerHTML = '<i class="fa-solid fa-ban"></i> Auto-submitted (Security Violation)';
+    }
+    if (summaryEl) {
+      summaryEl.innerHTML = `<span style="color: #dc2626; font-weight: 600;">Assessment was automatically terminated and submitted due to reaching ${vCount} security violations.</span>`;
+    }
+  } else if (vCount > 0) {
+    if (badgeEl) {
+      badgeEl.className = "badge badge-warning";
+      badgeEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Flagged (${vCount} violations)`;
+    }
+    if (summaryEl) {
+      summaryEl.textContent = `Warning flags were recorded during this session (${vCount} of 3 maximum allowed). Review the log below:`;
+    }
+  } else {
+    if (badgeEl) {
+      badgeEl.className = "badge badge-success";
+      badgeEl.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Clean Attempt (0 Violations)';
+    }
+    if (summaryEl) {
+      summaryEl.textContent = "Excellent! Zero security or tab-switch violations detected. High integrity attempt verified.";
+    }
+  }
+
+  if (eventsEl) {
+    if (events.length > 0) {
+      eventsEl.style.display = "flex";
+      eventsEl.innerHTML = events.map((ev, i) => {
+        const timeStr = ev.timestamp ? new Date(ev.timestamp).toLocaleTimeString() : `Event #${i+1}`;
+        const typeLabels = {
+          "tab_switch": "Tab Switched / Window Minimized",
+          "window_blur": "Window Lost Focus",
+          "fullscreen_exit": "Exited Fullscreen Mode",
+          "copy_paste_attempt": "Prohibited Shortcut (Copy/Paste)",
+          "right_click": "Disabled Context Menu Click"
+        };
+        const label = typeLabels[ev.event_type] || ev.event_type;
+        const durStr = ev.duration_away_seconds ? ` (${ev.duration_away_seconds}s away)` : "";
+        return `
+          <div class="security-timeline-item">
+            <span class="event-label">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>${escapeHtml(label)}${durStr}</span>
+            </span>
+            <span class="event-meta">${escapeHtml(timeStr)}</span>
+          </div>
+        `;
+      }).join("");
+    } else {
+      eventsEl.style.display = "none";
+    }
+  }
 }
 
 function renderCategoryBreakdown(breakdown) {

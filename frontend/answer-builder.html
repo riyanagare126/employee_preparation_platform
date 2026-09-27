@@ -42,6 +42,21 @@
   <main class="main-content">
     <div class="container">
 
+      <!-- TOP TAB SELECTOR: 60s PITCH VS HONEST-TO-PROFESSIONAL CONVERTER -->
+      <div class="answer-tabs-nav" style="display: flex; justify-content: center; gap: 12px; margin: 0 auto 28px auto; max-width: 680px;">
+        <button id="tab-btn-pitch" class="btn btn-primary" type="button" style="flex: 1; border-radius: 9999px; padding: 10px 20px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fa-solid fa-microphone"></i> 60s Pitch Builder
+        </button>
+        <button id="tab-btn-converter" class="btn btn-secondary" type="button" style="flex: 1; border-radius: 9999px; padding: 10px 20px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Honest-to-Professional Converter (<span id="saved-conv-count-badge">0</span>)
+        </button>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SECTION 1: 60-SECOND PITCH BUILDER (PRESENT-PAST-FUTURE)            -->
+      <!-- =================================================================== -->
+      <div id="pitch-builder-section">
+
       <!-- Header Section -->
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
         <div>
@@ -69,6 +84,7 @@
           </div>
         </div>
       </div>
+
 
       <!-- Configuration Card (Question, Role, Company) -->
       <div class="card" style="padding: 20px 24px; margin-bottom: 20px;">
@@ -283,6 +299,223 @@
           </div>
         </div>
       </div>
+
+      </div> <!-- END #pitch-builder-section -->
+
+      <!-- =================================================================== -->
+      <!-- SECTION 2: HONEST-TO-PROFESSIONAL ANSWER CONVERTER                   -->
+      <!-- =================================================================== -->
+      <div id="honest-converter-section" style="display: none;">
+
+        <!-- Header Section -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span class="trend-badge-2026"><i class="fa-solid fa-shield-heart text-warning"></i> Career Transition & Gap Coach</span>
+              <span class="badge badge-success"><i class="fa-solid fa-check-double"></i> 100% Truthful Reframing</span>
+            </div>
+            <h1 style="font-size: 2rem; margin-top: 4px;">Honest-to-Professional Answer Converter</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+              Employees often have honest but risky reasons for leaving a job or having an employment gap (low salary, bad manager, layoffs, career break). Turn your raw truth into an interview-safe, positive answer without lying.
+            </p>
+          </div>
+
+          <div style="display: flex; gap: 10px;">
+            <a href="#saved-converter-library-section" class="btn btn-outline-primary btn-sm">
+              <i class="fa-solid fa-bookmark"></i> My Saved Answers (<span id="saved-conv-count">0</span>)
+            </a>
+          </div>
+        </div>
+
+        <!-- Strategy Explainer Banner -->
+        <div class="card" style="background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); color: #fff; padding: 22px 26px; margin-bottom: 24px; border: none; border-radius: var(--radius-lg);">
+          <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+            <div style="font-size: 2.2rem; background: rgba(255,255,255,0.1); padding: 12px 16px; border-radius: 12px; color: #a855f7;"><i class="fa-solid fa-scale-balanced"></i></div>
+            <div style="flex: 1;">
+              <h3 style="font-size: 1.15rem; color: #c084fc; margin: 0 0 4px 0;">The 2026 Reframing Principle: Truthful, Positive & Forward-Looking</h3>
+              <p style="color: #cbd5e1; font-size: 0.88rem; margin: 0; line-height: 1.5;">
+                Never lie or fabricate false stories. Interviewers respect honesty, but they test your professional maturity and composure under pressure. Our converter isolates red-flag phrases (e.g., manager criticism, low pay complaints) and reframes them around technical autonomy, fair market alignment, and sustainable delivery.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Converter Input Card -->
+        <div class="card" style="padding: 26px; margin-bottom: 24px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+          <form id="form-honest-converter">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; margin-bottom: 20px;">
+              
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="select-conv-qtype" class="form-label" style="font-weight: 700;">Question Type <span style="color: var(--rose-500);">*</span></label>
+                <select id="select-conv-qtype" class="form-select" style="font-weight: 600;" required>
+                  <option value="Why are you leaving your current job?">Why are you leaving your current job?</option>
+                  <option value="Explain your employment gap">Explain your employment gap</option>
+                  <option value="Why were you laid off?">Why were you laid off?</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="input-conv-role" class="form-label">Target Role (Optional)</label>
+                <input type="text" id="input-conv-role" class="form-control" placeholder="e.g. Senior Software Engineer" value="Software Engineer">
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="input-conv-company" class="form-label">Target Company (Optional)</label>
+                <input type="text" id="input-conv-company" class="form-control" placeholder="e.g. Google, TCS, Startup" value="Target Enterprise">
+              </div>
+
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label for="input-honest-raw" class="form-label" style="font-weight: 700; margin-bottom: 0;">
+                  Your Raw, Unfiltered Honest Answer <span style="color: var(--rose-500);">*</span>
+                </label>
+                <span style="font-size: 0.78rem; color: var(--text-muted);" id="raw-char-count">0 characters</span>
+              </div>
+              <textarea id="input-honest-raw" class="form-control" rows="5" placeholder="Be 100% honest here. Tell us the raw truth: e.g., 'My manager is a micromanager who takes all credit, I haven't gotten a hike in 2 years despite working 60-hour weeks, and there is zero tech growth here.'" required style="font-size: 0.92rem; line-height: 1.5;"></textarea>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font-size: 0.78rem; color: var(--text-muted);">
+                <span><i class="fa-solid fa-lock"></i> Completely private. Used only to calibrate your professional answer.</span>
+                <span>Type as freely as you need.</span>
+              </div>
+            </div>
+
+            <div id="conv-error-box" style="display: none; padding: 10px 14px; background: #fee2e2; border: 1px solid #fca5a5; border-radius: var(--radius-md); color: #991b1b; font-size: 0.85rem; margin-bottom: 16px;"></div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div style="display: flex; gap: 10px;">
+                <button type="button" id="btn-sample-honest" class="btn btn-secondary btn-sm">
+                  <i class="fa-solid fa-lightbulb"></i> Load Sample Honest Answer
+                </button>
+                <button type="button" id="btn-clear-honest" class="btn btn-secondary btn-sm">Clear</button>
+              </div>
+
+              <button type="submit" id="btn-convert-honest" class="btn btn-primary btn-lg" style="font-weight: 600; padding: 10px 24px;">
+                <span id="conv-spinner" style="display: none;"><i class="fa-solid fa-spinner fa-spin"></i> </span>
+                <span id="conv-btn-label"><i class="fa-solid fa-wand-magic-sparkles"></i> Convert to Professional Answer</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Results Display Section -->
+        <div id="converter-results-section" style="display: none; margin-bottom: 36px;">
+          
+          <!-- Section Heading -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <span class="badge badge-success" style="font-size: 0.78rem;"><i class="fa-solid fa-circle-check"></i> Reframing Completed</span>
+              <h2 style="font-size: 1.4rem; margin: 4px 0 0 0;">Your Interview-Ready Responses</h2>
+            </div>
+            <button type="button" id="btn-save-converted-answer" class="btn btn-primary" style="font-weight: 600;">
+              <i class="fa-solid fa-bookmark"></i> Save to My Answers (+20 XP)
+            </button>
+          </div>
+
+          <!-- Answer Cards Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 18px; margin-bottom: 22px;">
+            
+            <!-- Card 1: Polished Professional Answer (4-6 Sentences) -->
+            <div class="card" style="padding: 22px; border: 1px solid #bfdbfe; background: #f8fafc; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="background: #2563eb; color: #fff; padding: 2px 8px; border-radius: 6px; font-weight: 800; font-size: 0.75rem;">(A)</span>
+                    <strong style="color: #1e40af; font-size: 1rem;">Polished Professional Answer</strong>
+                  </div>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-copy-prof-ans" style="font-size: 0.76rem; padding: 3px 9px;" title="Copy to clipboard">
+                    <i class="fa-regular fa-copy"></i> Copy
+                  </button>
+                </div>
+                <div id="res-prof-ans" style="font-size: 0.92rem; line-height: 1.6; color: #1e293b; background: #fff; padding: 14px 16px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 12px;">
+                  Polished answer text here.
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--text-muted);">
+                <span id="prof-ans-meta">~4-6 sentences</span>
+                <span style="color: #2563eb; font-weight: 600;"><i class="fa-solid fa-check"></i> Interview-Safe</span>
+              </div>
+            </div>
+
+            <!-- Card 2: 30-Second Elevator Version -->
+            <div class="card" style="padding: 22px; border: 1px solid #e9d5ff; background: #faf5ff; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="background: #7c3aed; color: #fff; padding: 2px 8px; border-radius: 6px; font-weight: 800; font-size: 0.75rem;">(B)</span>
+                    <strong style="color: #6b21a8; font-size: 1rem;">30-Second Version (Quick Pacing)</strong>
+                  </div>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-copy-short-ans" style="font-size: 0.76rem; padding: 3px 9px;" title="Copy 30-second version">
+                    <i class="fa-regular fa-copy"></i> Copy
+                  </button>
+                </div>
+                <div id="res-short-ans" style="font-size: 0.92rem; line-height: 1.6; color: #1e293b; background: #fff; padding: 14px 16px; border-radius: 8px; border: 1px solid #f3e8ff; margin-bottom: 12px;">
+                  Short 30s version text here.
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--text-muted);">
+                <span id="short-ans-meta">~30 seconds (~45 words)</span>
+                <span style="color: #7c3aed; font-weight: 600;"><i class="fa-solid fa-bolt"></i> High-Impact Opening</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Red-Flag Analysis Box -->
+          <div class="card" style="padding: 22px; margin-bottom: 20px; border: 1px solid #fecaca; background: #fffaf0;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span style="background: #dc2626; color: #fff; padding: 2px 8px; border-radius: 6px; font-weight: 800; font-size: 0.75rem;">(C)</span>
+              <h3 style="font-size: 1.05rem; margin: 0; color: #991b1b; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Red-Flag Phrasing Analysis & Safer Alternatives
+              </h3>
+            </div>
+            <p style="font-size: 0.85rem; color: #78350f; margin-bottom: 14px;">
+              Phrases found in raw honesty that trigger recruiter concern, alongside our recommended reframing:
+            </p>
+            <div id="res-red-flags-container" style="display: flex; flex-direction: column; gap: 10px;">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+
+          <!-- Follow-Up Questions Box -->
+          <div class="card" style="padding: 22px; border: 1px solid #c7d2fe; background: #eef2ff;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span style="background: #4f46e5; color: #fff; padding: 2px 8px; border-radius: 6px; font-weight: 800; font-size: 0.75rem;">(D)</span>
+              <h3 style="font-size: 1.05rem; margin: 0; color: #312e81; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-clipboard-question"></i> 2 Likely Follow-Up Questions to Anticipate
+              </h3>
+            </div>
+            <p style="font-size: 0.85rem; color: #3730a3; margin-bottom: 14px;">
+              When answering this scenario, seasoned interviewers typically probe with these logical follow-ups:
+            </p>
+            <div id="res-followups-container" style="display: flex; flex-direction: column; gap: 10px;">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Saved Answers Library Section -->
+        <div id="saved-converter-library-section" class="card" style="padding: 24px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h2 style="font-size: 1.25rem; margin: 0;">My Saved Converted Answers</h2>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin: 4px 0 0 0;">
+                All reframed answers saved under your employee profile. Access them anytime before behavioral and HR rounds.
+              </p>
+            </div>
+            <button id="btn-refresh-conv-saved" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+          </div>
+
+          <div id="saved-converted-list" style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="text-align: center; padding: 30px; color: var(--text-muted); font-size: 0.9rem;">
+              Loading your saved answers...
+            </div>
+          </div>
+        </div>
+
+      </div> <!-- END #honest-converter-section -->
+
 
     </div>
   </main>

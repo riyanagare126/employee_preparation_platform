@@ -21,6 +21,13 @@ from backend.routes.smart_roadmap import smart_roadmap_bp
 from backend.routes.ai_fluency import ai_fluency_bp
 from backend.routes.answer_builder import answer_builder_bp
 from backend.routes.dashboard import dashboard_bp
+from backend.routes.notice_plan import notice_plan_bp
+from backend.routes.achievements import achievements_bp
+from backend.routes.converted_answers import converted_answers_bp
+from backend.routes.preparation import preparation_bp
+from backend.routes.test_security import test_security_bp
+from backend.seed_questions import seed_questions_if_empty
+
 
 # Load environment variables
 load_dotenv()
@@ -37,9 +44,10 @@ def create_app():
     # Configure CORS to permit all origins and credentials for development and API consumers
     CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
-    # Initialize SQLite Database tables
+    # Initialize SQLite Database tables and seed initial questions if needed
     with app.app_context():
         init_db()
+        seed_questions_if_empty()
 
     # Register Blueprints
     app.register_blueprint(auth_bp)
@@ -59,6 +67,15 @@ def create_app():
     app.register_blueprint(ai_fluency_bp)
     app.register_blueprint(answer_builder_bp)
     app.register_blueprint(dashboard_bp)
+    app.register_blueprint(notice_plan_bp)
+    app.register_blueprint(achievements_bp)
+    app.register_blueprint(converted_answers_bp)
+    app.register_blueprint(preparation_bp)
+    app.register_blueprint(test_security_bp)
+
+
+
+
 
     # Route: Serve Frontend Landing Page
     @app.route("/")
@@ -75,6 +92,14 @@ def create_app():
         if not filename.startswith("api/"):
             return send_from_directory(frontend_dir, "index.html")
         return jsonify({"success": False, "message": "Endpoint not found"}), 404
+
+    # Ensure browsers never serve stale cached frontend files
+    @app.after_request
+    def add_no_cache_headers(response):
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        return response
 
     # API 404 and 500 error handlers
     @app.errorhandler(404)

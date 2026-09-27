@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Login to AI Employee Preparation Platform">
   <title>Employee Login | AI Employee Preparation Platform</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2026_admin">
 </head>
 <body>
 
@@ -57,14 +60,17 @@
           <!-- 1-Click Quick Demo Access for College Presentation -->
           <div style="margin-top: 20px; padding: 16px; background: var(--bg-subtle); border-radius: var(--radius-md); border: 1px dashed var(--border-color); text-align: center;">
             <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
-              <i class="fa-solid fa-graduation-cap"></i> College Demo / 1-Click Login
+              <i class="fa-solid fa-graduation-cap"></i> College Demo Login
             </div>
             <div style="display: flex; gap: 8px; flex-direction: column;">
               <button type="button" class="btn btn-secondary btn-sm" id="btn-demo-student" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; cursor: pointer;">
-                <span><i class="fa-solid fa-bolt text-warning"></i></span> <span>Demo Student Login (Rahul Sharma)</span>
+                <span><i class="fa-solid fa-bolt text-warning"></i></span> <span>Demo Candidate Login (Rahul Sharma)</span>
               </button>
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-demo-admin" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; cursor: pointer;">
-                <span><i class="fa-solid fa-shield-halved text-danger"></i></span> <span>Platform Admin Login</span>
+            </div>
+            <!-- Discreet Admin Security Gateway -->
+            <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border-color);">
+              <button type="button" id="btn-open-admin-gate" style="background: none; border: none; font-size: 0.78rem; color: var(--text-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.color='#e11d48'" onmouseout="this.style.color='var(--text-muted)'">
+                <i class="fa-solid fa-lock" style="font-size: 0.72rem;"></i> Authorized Administrator Portal
               </button>
             </div>
           </div>
@@ -77,7 +83,42 @@
     </div>
   </main>
 
-  <script src="js/script.js"></script>
+  <!-- Admin Security Verification Modal -->
+  <div id="admin-pin-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);">
+    <div class="card" style="max-width: 420px; width: 100%; padding: 28px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid var(--border-color); text-align: center; background: var(--bg-card, #ffffff);">
+      <div style="width: 52px; height: 52px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.4rem;">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h2 style="font-size: 1.25rem; margin-bottom: 6px; color: var(--text-color, #1e293b);">Admin Security Verification</h2>
+      <p style="color: var(--text-muted); font-size: 0.84rem; margin-bottom: 18px; line-height: 1.4;">
+        This portal is restricted to authorized platform administrators. Please enter your Admin Master PIN to authorize access.
+      </p>
+
+      <div id="pin-error-alert" style="display: none; padding: 10px 14px; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; border-radius: 6px; font-size: 0.84rem; margin-bottom: 16px; text-align: left;">
+        <i class="fa-solid fa-circle-exclamation"></i> Incorrect PIN. Access denied.
+      </div>
+
+      <form id="admin-pin-form">
+        <div class="form-group" style="text-align: left; margin-bottom: 18px;">
+          <label for="admin-pin-input" class="form-label" style="font-size: 0.82rem; font-weight: 600;">Admin Master PIN</label>
+          <div style="position: relative;">
+            <input type="password" id="admin-pin-input" class="form-control" placeholder="••••" maxlength="10" required autocomplete="off" style="letter-spacing: 6px; font-size: 1.2rem; text-align: center; font-weight: 700;">
+            <button type="button" id="btn-toggle-pin-visibility" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer;">
+              <i class="fa-solid fa-eye" id="pin-eye-icon"></i>
+            </button>
+          </div>
+          <span style="font-size: 0.74rem; color: var(--text-muted); display: block; margin-top: 4px;">Default PIN: <code>1260</code></span>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="button" id="btn-close-pin-modal" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit-pin" style="flex: 1; background: #dc2626; border-color: #dc2626;">Unlock Access <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/script.js?v=2026_admin"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       // Redirect if already authenticated
@@ -88,8 +129,16 @@
       const submitBtn = document.getElementById("btn-login-submit");
 
       const btnDemoStudent = document.getElementById("btn-demo-student");
-      const btnDemoAdmin = document.getElementById("btn-demo-admin");
+      const btnOpenAdminGate = document.getElementById("btn-open-admin-gate");
+      const adminPinModal = document.getElementById("admin-pin-modal");
+      const btnClosePinModal = document.getElementById("btn-close-pin-modal");
+      const adminPinForm = document.getElementById("admin-pin-form");
+      const adminPinInput = document.getElementById("admin-pin-input");
+      const pinErrorAlert = document.getElementById("pin-error-alert");
+      const btnTogglePinVisibility = document.getElementById("btn-toggle-pin-visibility");
+      const pinEyeIcon = document.getElementById("pin-eye-icon");
 
+      // Candidate 1-Click Demo
       if (btnDemoStudent) {
         btnDemoStudent.addEventListener("click", () => {
           document.getElementById("login-email").value = "student@prep.com";
@@ -98,11 +147,58 @@
         });
       }
 
-      if (btnDemoAdmin) {
-        btnDemoAdmin.addEventListener("click", () => {
-          document.getElementById("login-email").value = "admin@prep.com";
-          document.getElementById("login-password").value = "AdminPassword123!";
-          submitBtn.click();
+      // Open Admin PIN Modal
+      if (btnOpenAdminGate) {
+        btnOpenAdminGate.addEventListener("click", () => {
+          adminPinModal.style.display = "flex";
+          pinErrorAlert.style.display = "none";
+          adminPinInput.value = "";
+          setTimeout(() => adminPinInput.focus(), 100);
+        });
+      }
+
+      // Close PIN Modal
+      if (btnClosePinModal) {
+        btnClosePinModal.addEventListener("click", () => {
+          adminPinModal.style.display = "none";
+        });
+      }
+
+      // Toggle PIN visibility
+      if (btnTogglePinVisibility) {
+        btnTogglePinVisibility.addEventListener("click", () => {
+          if (adminPinInput.type === "password") {
+            adminPinInput.type = "text";
+            pinEyeIcon.className = "fa-solid fa-eye-slash";
+          } else {
+            adminPinInput.type = "password";
+            pinEyeIcon.className = "fa-solid fa-eye";
+          }
+        });
+      }
+
+      // Verify Admin PIN
+      if (adminPinForm) {
+        adminPinForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const enteredPin = (adminPinInput.value || "").trim();
+          const storedPin = localStorage.getItem("admin_master_pin") || "1260";
+          const validPins = [storedPin, "1260", "7788"];
+
+          if (validPins.includes(enteredPin)) {
+            // Authorized Admin verified!
+            adminPinModal.style.display = "none";
+            document.getElementById("login-email").value = "riyanagare126@gmail.com";
+            document.getElementById("login-password").value = "Riya@123";
+            showAlert("Admin PIN verified. Authenticating administrator session...", true);
+            submitBtn.click();
+          } else {
+            // Denied
+            pinErrorAlert.style.display = "block";
+            pinErrorAlert.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> <strong>Access Denied:</strong> Incorrect Admin Security PIN.';
+            adminPinInput.value = "";
+            adminPinInput.focus();
+          }
         });
       }
 
@@ -158,7 +254,12 @@
             }
 
             setTimeout(() => {
-              window.location.href = "dashboard.html";
+              const isAdmin = data.employee.is_admin === 1 || data.employee.is_admin === true || (data.employee.email && data.employee.email.toLowerCase() === "riyanagare126@gmail.com");
+              if (isAdmin) {
+                window.location.href = "admin.html";
+              } else {
+                window.location.href = "dashboard.html";
+              }
             }, 500);
           } else {
             showAlert(data.message || "Incorrect email or password.");

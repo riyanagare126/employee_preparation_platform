@@ -3,10 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Technical Preparation & Coding Practice - AI Employee Preparation Platform">
-  <title>Technical Preparation & Coding | AI Employee Preparation Platform</title>
+  <meta name="description" content="Company-Specific Technical Interview Preparation & Coding Practice - AI Employee Preparation Platform">
+  <title id="html-head-title">Company Interview Preparation | AI Employee Preparation Platform</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Styling for Company Preparation Module */
+    .question-card {
+      background: var(--bg-card, #ffffff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: var(--radius-lg, 12px);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.06));
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .question-card:hover {
+      box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1));
+    }
+    .badge-fresher { background: rgba(16, 185, 129, 0.12); color: #059669; border: 1px solid rgba(16, 185, 129, 0.25); }
+    .badge-junior  { background: rgba(59, 130, 246, 0.12); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.25); }
+    .badge-mid     { background: rgba(139, 92, 246, 0.12); color: #7c3aed; border: 1px solid rgba(139, 92, 246, 0.25); }
+    .badge-senior  { background: rgba(245, 158, 11, 0.12); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.25); }
+    .badge-lead    { background: rgba(239, 68, 68, 0.12); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.25); }
+    .badge-ai      { background: rgba(99, 102, 241, 0.15); color: #4f46e5; border: 1px solid rgba(99, 102, 241, 0.3); }
+    .badge-curated { background: rgba(100, 116, 139, 0.12); color: #475569; border: 1px solid rgba(100, 116, 139, 0.25); }
+  </style>
 </head>
 <body>
 
@@ -23,7 +44,7 @@
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
         <li><a href="aptitude.html" class="nav-link">Aptitude</a></li>
-        <li><a href="preparation.html" class="nav-link active">Coding</a></li>
+        <li><a href="preparation.html" class="nav-link active">Preparation</a></li>
         <li><a href="interview.html" class="nav-link">AI Interview</a></li>
         <li><a href="skills.html" class="nav-link">Skill Assessment</a></li>
         <li><a href="roadmap.html" class="nav-link">Learning Path</a></li>
@@ -40,31 +61,161 @@
   <main class="main-content">
     <div class="container">
 
-      <!-- Page Header with Tabs -->
+      <!-- Dynamic Header with Tabs -->
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
         <div>
-          <span class="badge badge-primary">Technical Mastery</span>
-          <h1 style="font-size: 2rem; margin-top: 4px;">Technical Preparation & Coding Practice</h1>
-          <p style="color: var(--text-muted); font-size: 0.95rem;">
-            Practice programming challenges, explore core language concepts, and track your coding score.
+          <span class="badge badge-primary" id="company-badge-display"><i class="fa-solid fa-building"></i> Company Interview Portal</span>
+          <h1 style="font-size: 2rem; margin-top: 4px;" id="prep-page-title"><span id="company-title-text">TCS</span> Preparation</h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem;" id="prep-subtitle-text">
+            Company-specific questions tailored to your experience level. Non-repeating, dynamic, and updated on every reload.
           </p>
         </div>
 
         <!-- Mode Toggle Tabs -->
-        <div style="display: flex; background: var(--bg-card); padding: 4px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-          <button id="tab-coding" class="btn btn-primary btn-sm" style="border-radius: var(--radius-sm);"><i class="fa-solid fa-laptop-code"></i> Coding Challenges</button>
+        <div style="display: flex; background: var(--bg-card); padding: 4px; border-radius: var(--radius-md); border: 1px solid var(--border-color); gap: 4px; flex-wrap: wrap;">
+          <button id="tab-company-questions" class="btn btn-primary btn-sm" style="border-radius: var(--radius-sm);"><i class="fa-solid fa-building"></i> Company Questions</button>
+          <button id="tab-coding" class="btn btn-secondary btn-sm" style="border: none; border-radius: var(--radius-sm);"><i class="fa-solid fa-laptop-code"></i> Coding Challenges</button>
           <button id="tab-concepts" class="btn btn-secondary btn-sm" style="border: none; border-radius: var(--radius-sm);"><i class="fa-solid fa-book"></i> Language Concepts</button>
         </div>
       </div>
 
-      <!-- SECTION 1: CODING PRACTICE WORKSPACE (Default) -->
-      <div id="coding-workspace-section">
+      <!-- ========================================================================= -->
+      <!-- SECTION 0: COMPANY INTERVIEW PREPARATION (Primary Default Section) -->
+      <!-- ========================================================================= -->
+      <div id="company-questions-section">
+        
+        <!-- Filter and Configuration Bar -->
+        <div class="card" style="padding: 18px 24px; margin-bottom: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+              <span style="font-weight: 700; font-size: 0.95rem; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-sliders text-primary"></i> Filter & Customize Questions:
+              </span>
+              <div id="seen-counter-box" class="badge badge-info" style="font-size: 0.85rem; padding: 6px 12px;">
+                <i class="fa-solid fa-chart-pie"></i> Questions seen: <strong id="seen-count">0</strong> / Total in Pool: <strong id="total-count">0</strong>
+              </div>
+            </div>
+
+            <!-- Filter Controls Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: flex-end;">
+              
+              <!-- Company Selector -->
+              <div>
+                <label for="company-select" class="form-label" style="font-size: 0.82rem; margin-bottom: 4px;">Company:</label>
+                <select id="company-select" class="form-select" style="font-size: 0.88rem; padding: 6px 10px;">
+                  <option value="TCS">TCS (Tata Consultancy Services)</option>
+                  <option value="Infosys">Infosys</option>
+                  <option value="Wipro">Wipro</option>
+                  <option value="Accenture">Accenture</option>
+                  <option value="Cognizant">Cognizant</option>
+                  <option value="Capgemini">Capgemini</option>
+                  <option value="HCL">HCL Technologies</option>
+                  <option value="Tech Mahindra">Tech Mahindra</option>
+                  <option value="Amazon">Amazon</option>
+                  <option value="Google">Google</option>
+                  <option value="Microsoft">Microsoft</option>
+                  <option value="Deloitte">Deloitte</option>
+                  <option value="IBM">IBM</option>
+                </select>
+              </div>
+
+              <!-- Experience Level Filter -->
+              <div>
+                <label for="prep-level-select" class="form-label" style="font-size: 0.82rem; margin-bottom: 4px;">Experience Level:</label>
+                <select id="prep-level-select" class="form-select" style="font-size: 0.88rem; padding: 6px 10px;">
+                  <option value="">Auto (From My Profile)</option>
+                  <option value="fresher (0-1 year)">Fresher (0-1 year)</option>
+                  <option value="junior (1-3 years)">Junior (1-3 years)</option>
+                  <option value="mid (3-5 years)">Mid (3-5 years)</option>
+                  <option value="senior (5-8 years)">Senior (5-8 years)</option>
+                  <option value="lead (8+ years)">Lead (8+ years)</option>
+                </select>
+              </div>
+
+              <!-- Question Type Filter -->
+              <div>
+                <label for="prep-type-select" class="form-label" style="font-size: 0.82rem; margin-bottom: 4px;">Question Type:</label>
+                <select id="prep-type-select" class="form-select" style="font-size: 0.88rem; padding: 6px 10px;">
+                  <option value="">All Question Types</option>
+                  <option value="technical_basics">Technical Basics</option>
+                  <option value="technical_depth">Technical Depth</option>
+                  <option value="scenario_based">Scenario-Based</option>
+                  <option value="system_design">System Design</option>
+                  <option value="behavioral_star">Behavioral / STAR</option>
+                  <option value="project_experience">Project Experience</option>
+                  <option value="aptitude">Aptitude & Puzzles</option>
+                  <option value="hr_general">HR & Cultural Fit</option>
+                  <option value="hr_switch">HR & Career Switch</option>
+                  <option value="leadership_management">Leadership & Strategy</option>
+                  <option value="consulting_case">Consulting & Advisory</option>
+                </select>
+              </div>
+
+              <!-- Category Filter -->
+              <div>
+                <label for="prep-category-select" class="form-label" style="font-size: 0.82rem; margin-bottom: 4px;">Category:</label>
+                <select id="prep-category-select" class="form-select" style="font-size: 0.88rem; padding: 6px 10px;">
+                  <option value="all">All Categories</option>
+                  <option value="Technical">Technical</option>
+                  <option value="System Design">System Design</option>
+                  <option value="Behavioral">Behavioral</option>
+                  <option value="Project">Project Experience</option>
+                  <option value="Aptitude">Aptitude</option>
+                  <option value="HR">HR</option>
+                  <option value="Leadership">Leadership</option>
+                  <option value="Consulting">Consulting</option>
+                  <option value="Scenario">Scenario</option>
+                </select>
+              </div>
+
+              <!-- Role Filter -->
+              <div>
+                <label for="prep-role-input" class="form-label" style="font-size: 0.82rem; margin-bottom: 4px;">Role:</label>
+                <input type="text" id="prep-role-input" class="form-input" placeholder="e.g. Software Engineer" value="Software Engineer" style="font-size: 0.88rem; padding: 6px 10px;">
+              </div>
+
+            </div>
+
+            <!-- Action Buttons Row -->
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <button type="button" id="btn-get-new-questions" class="btn btn-primary btn-sm" style="font-weight: 600; cursor: pointer;">
+                  <i class="fa-solid fa-arrows-rotate"></i> Get New Questions
+                </button>
+                <button type="button" id="btn-reset-company-history" class="btn btn-secondary btn-sm" style="cursor: pointer; color: var(--danger-color, #ef4444); border-color: rgba(239, 68, 68, 0.3);">
+                  <i class="fa-solid fa-rotate-left"></i> Reset My Progress
+                </button>
+              </div>
+
+              <div id="pool-recycle-alert" style="display: none; font-size: 0.82rem; color: #b45309; background: #fef3c7; padding: 4px 10px; border-radius: 4px; border: 1px solid #fde68a;">
+                <i class="fa-solid fa-circle-info"></i> All questions for this level were practiced! Re-cycling question pool.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Questions List Container -->
+        <div id="company-questions-container" style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- Questions will be injected dynamically via JS -->
+          <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+            <i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--primary-500); margin-bottom: 12px;"></i>
+            <p>Loading company-tailored interview questions...</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- SECTION 1: CODING PRACTICE WORKSPACE (Secondary Tab) -->
+      <!-- ========================================================================= -->
+      <div id="coding-workspace-section" style="display: none;">
         
         <!-- Controls: Filters, Language & Problem Selection -->
         <div class="card" style="padding: 18px 24px; margin-bottom: 20px;">
           <div style="display: flex; flex-direction: column; gap: 14px;">
             
-            <!-- Top Controls Row: Problem Dropdown & Quick Change Buttons -->
             <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;">
               <div style="flex: 2; min-width: min(100%, 260px); width: 100%;">
                 <label for="select-problem" class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
@@ -84,7 +235,6 @@
                 </div>
               </div>
 
-              <!-- Instant Change Question & Shuffle Buttons -->
               <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                 <button type="button" id="btn-random-problem" class="btn btn-primary btn-sm" style="font-weight: 600; cursor: pointer;" title="Pick a random new coding challenge">
                   <i class="fa-solid fa-dice"></i> Change Question
@@ -95,7 +245,6 @@
               </div>
             </div>
 
-            <!-- Bottom Filter & Language Bar -->
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
               <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 6px;">
@@ -112,7 +261,7 @@
                   <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Topic:</span>
                   <select id="filter-topic" class="form-select" style="width: auto; padding: 4px 10px; font-size: 0.85rem;">
                     <option value="all">All Topics</option>
-                    <option value="high_demand"><i class="fa-solid fa-fire text-danger"></i> High Demand (Top Companies)</option>
+                    <option value="high_demand">High Demand</option>
                     <option value="arrays">Arrays & Greedy</option>
                     <option value="strings">Strings & Sliding Window</option>
                     <option value="dynamic programming">Dynamic Programming</option>
@@ -138,7 +287,6 @@
                 </div>
               </div>
 
-              <!-- Status indicators -->
               <div style="display: flex; gap: 8px; align-items: center;">
                 <span class="badge badge-success" id="problem-difficulty-badge">Easy</span>
                 <span style="font-size: 0.85rem; color: var(--text-muted);" id="solved-status-text">Status: Unsolved</span>
@@ -151,7 +299,6 @@
         <!-- Problem Description & Code Editor Grid -->
         <div class="code-workspace">
           
-          <!-- Left: Problem Description -->
           <div class="card">
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
               <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
@@ -159,12 +306,11 @@
                 <span class="badge badge-info" id="problem-category-badge">Category</span>
                 <span class="badge badge-warning" id="problem-demand-badge" style="font-size: 0.75rem;"><i class="fa-solid fa-fire text-danger"></i> High Demand</span>
               </div>
-              <button type="button" id="btn-quick-change" class="btn btn-secondary btn-sm" style="font-size: 0.8rem; padding: 4px 10px; cursor: pointer;" title="Change to a different coding problem">
+              <button type="button" id="btn-quick-change" class="btn btn-secondary btn-sm" style="font-size: 0.8rem; padding: 4px 10px; cursor: pointer;">
                 <i class="fa-solid fa-dice"></i> Next Random
               </button>
             </div>
 
-            <!-- Companies Tag Banner -->
             <div id="problem-companies-banner" style="background: rgba(99, 102, 241, 0.08); border-left: 3px solid var(--primary-600); padding: 6px 12px; border-radius: 4px; margin-bottom: 14px; font-size: 0.83rem; color: var(--primary-700); font-weight: 500;">
               <i class="fa-solid fa-building"></i> Frequently Asked in: <span id="problem-companies-list">Amazon, TCS, Infosys, Google</span>
             </div>
@@ -173,7 +319,6 @@
               Problem description details...
             </div>
 
-            <!-- Structured Input/Output & Constraints -->
             <div style="margin-bottom: 16px; font-size: 0.9rem; line-height: 1.5;">
               <div style="margin-bottom: 8px;">
                 <strong><i class="fa-solid fa-download"></i> Input Format:</strong> <span id="problem-input-format" style="color: var(--text-muted);">A single string 's'</span>
@@ -189,7 +334,6 @@
             <div style="margin-bottom: 16px;">
               <h3 style="font-size: 0.95rem; margin-bottom: 6px;"><i class="fa-solid fa-thumbtack"></i> Sample Input & Output:</h3>
               <div id="problem-examples-display" style="background: var(--bg-subtle); padding: 12px 14px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.5;">
-                <!-- Examples -->
               </div>
             </div>
 
@@ -201,7 +345,6 @@
             </div>
           </div>
 
-          <!-- Right: Interactive Code Editor Box -->
           <div class="code-editor-box">
             <div class="editor-toolbar">
               <div style="display: flex; align-items: center; gap: 8px;">
@@ -211,9 +354,9 @@
                 <span style="color: #a6adc8; font-size: 0.85rem; font-family: var(--font-mono); margin-left: 8px;" id="editor-filename">solution.py</span>
               </div>
               <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <button type="button" class="btn btn-secondary btn-sm" id="btn-reset-code" style="background: #313244; color: #cdd6f4; border: 1px solid #45475a; cursor: pointer; transition: all 0.2s;" title="Reset code to initial starter template"><i class="fa-solid fa-arrows-rotate"></i> Reset</button>
-                <button type="button" class="btn btn-success btn-sm" id="btn-run-code" style="cursor: pointer; font-weight: 700; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);" title="Run code against test cases"><i class="fa-solid fa-play"></i> Run</button>
-                <button type="button" class="btn btn-primary btn-sm" id="btn-submit-code" style="cursor: pointer; font-weight: 700; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);" title="Submit solution and record to profile">Submit <i class="fa-solid fa-check"></i></button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-reset-code" style="background: #313244; color: #cdd6f4; border: 1px solid #45475a; cursor: pointer;"><i class="fa-solid fa-arrows-rotate"></i> Reset</button>
+                <button type="button" class="btn btn-success btn-sm" id="btn-run-code" style="cursor: pointer; font-weight: 700;"><i class="fa-solid fa-play"></i> Run</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-submit-code" style="cursor: pointer; font-weight: 700;">Submit <i class="fa-solid fa-check"></i></button>
               </div>
             </div>
 
@@ -229,10 +372,11 @@
 
       </div>
 
-      <!-- SECTION 2: LANGUAGE CONCEPTS & MCQS (Toggled) -->
+      <!-- ========================================================================= -->
+      <!-- SECTION 2: LANGUAGE CONCEPTS & MCQS (Tertiary Tab) -->
+      <!-- ========================================================================= -->
       <div id="concepts-section" style="display: none;">
         
-        <!-- Concept Filters -->
         <div class="card" style="padding: 16px 24px; margin-bottom: 24px;">
           <div class="form-row" style="align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
             <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
@@ -265,22 +409,83 @@
             </div>
 
             <div>
-              <button id="btn-shuffle-concepts" class="btn btn-secondary" style="height: 38px; display: flex; align-items: center; gap: 8px;" title="Fetch fresh randomized concept questions">
+              <button id="btn-shuffle-concepts" class="btn btn-secondary" style="height: 38px; display: flex; align-items: center; gap: 8px;">
                 <span><i class="fa-solid fa-dice"></i> Change / Shuffle Questions</span>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Concept Questions Grid -->
         <div id="concept-cards-container" style="display: flex; flex-direction: column; gap: 20px;">
-          <!-- Rendered dynamically -->
         </div>
 
       </div>
 
     </div>
   </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: Experience Setup (Shown if profile has no experience) -->
+  <!-- ========================================================================= -->
+  <div id="modal-experience-setup" class="modal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 500px; width: 100%; border-radius: 16px; padding: 28px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="width: 56px; height: 56px; background: rgba(99, 102, 241, 0.12); color: var(--primary-600); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 12px auto;">
+          <i class="fa-solid fa-user-graduate"></i>
+        </div>
+        <h2 style="font-size: 1.4rem; margin-bottom: 6px;">Personalize Your Interview Prep</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          To ensure you get level-appropriate questions (no system design for freshers, no basic syntax for tech leads), please select your professional experience level:
+        </p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+        <label style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer;">
+          <input type="radio" name="modal-exp-choice" value="fresher (0-1 year)" checked>
+          <div>
+            <div style="font-weight: 600; font-size: 0.95rem;">Fresher / College Graduate (0 - 1 year)</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">DSA basics, core CS foundations, project explanation, aptitude</div>
+          </div>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer;">
+          <input type="radio" name="modal-exp-choice" value="junior (1-3 years)">
+          <div>
+            <div style="font-weight: 600; font-size: 0.95rem;">Junior Engineer (1 - 3 years)</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Code debugging, framework internals, production issues, career switch</div>
+          </div>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer;">
+          <input type="radio" name="modal-exp-choice" value="mid (3-5 years)">
+          <div>
+            <div style="font-weight: 600; font-size: 0.95rem;">Mid-Level Engineer (3 - 5 years)</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Low-level system design, concurrency, architecture refactoring</div>
+          </div>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer;">
+          <input type="radio" name="modal-exp-choice" value="senior (5-8 years)">
+          <div>
+            <div style="font-weight: 600; font-size: 0.95rem;">Senior Software Engineer (5 - 8 years)</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">High-level distributed systems, resilience, incident post-mortems</div>
+          </div>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer;">
+          <input type="radio" name="modal-exp-choice" value="lead (8+ years)">
+          <div>
+            <div style="font-weight: 600; font-size: 0.95rem;">Engineering Lead / Architect (8+ years)</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Enterprise scale, planetary systems, organizational technical strategy</div>
+          </div>
+        </label>
+      </div>
+
+      <button type="button" id="btn-save-modal-exp" class="btn btn-primary btn-block" style="padding: 12px; font-weight: 700;">
+        Save & Load My Questions <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
 
   <script src="js/script.js"></script>
   <script src="js/preparation.js"></script>

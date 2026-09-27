@@ -109,6 +109,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (sessionStorage.getItem("interview_active") === "true") {
     startInterview(true);
   }
+
+  // Initialize Achievement Vault extension
+  initAchievementVault(employee);
 });
 
 /**
@@ -613,3 +616,620 @@ function generateFallbackInterviewQuestions(role, companySlug, type) {
     }
   ];
 }
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return "";
+  const div = document.createElement("div");
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+
+// =========================================================================
+// ACHIEVEMENT VAULT & STAR STORY BANK EXTENSION
+// =========================================================================
+
+let cachedVaultAchievements = [];
+
+function initAchievementVault(employee) {
+  if (!employee) return;
+
+  const btnSimulatorTab = document.getElementById("tab-btn-simulator");
+  const btnVaultTab = document.getElementById("tab-btn-vault");
+  const btnToggleAdd = document.getElementById("btn-toggle-add-achievement");
+  const btnCloseForm = document.getElementById("btn-close-vault-form");
+  const btnCancelForm = document.getElementById("btn-cancel-vault-form");
+  const vaultForm = document.getElementById("vault-achievement-form");
+  const searchInput = document.getElementById("vault-search-input");
+
+  const btnOpenVaultPicker = document.getElementById("btn-open-vault-picker");
+  const btnCloseVaultPicker = document.getElementById("btn-close-vault-picker");
+  const btnCloseVaultPickerBottom = document.getElementById("btn-close-vault-picker-bottom");
+
+  // Tab switching
+  if (btnSimulatorTab) {
+    btnSimulatorTab.addEventListener("click", () => switchInterviewTab("simulator"));
+  }
+  if (btnVaultTab) {
+    btnVaultTab.addEventListener("click", () => switchInterviewTab("vault"));
+  }
+
+  // Toggle Form
+  if (btnToggleAdd) {
+    btnToggleAdd.addEventListener("click", () => {
+      resetVaultForm();
+      const formCard = document.getElementById("vault-form-card");
+      if (formCard) {
+        formCard.style.display = formCard.style.display === "none" ? "block" : "none";
+        if (formCard.style.display === "block") {
+          document.getElementById("vault-input-title")?.focus();
+        }
+      }
+    });
+  }
+
+  if (btnCloseForm) {
+    btnCloseForm.addEventListener("click", () => closeVaultForm());
+  }
+  if (btnCancelForm) {
+    btnCancelForm.addEventListener("click", () => closeVaultForm());
+  }
+
+  // Form Submission
+  if (vaultForm) {
+    vaultForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await handleSaveVaultAchievement(employee.id);
+    });
+  }
+
+  // Live Search Filter
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      const q = searchInput.value.toLowerCase().trim();
+      filterVaultAchievements(q);
+    });
+  }
+
+  // Vault Picker in Simulator
+  if (btnOpenVaultPicker) {
+    btnOpenVaultPicker.addEventListener("click", () => openVaultPickerModal(employee.id));
+  }
+  if (btnCloseVaultPicker) {
+    btnCloseVaultPicker.addEventListener("click", closeVaultPickerModal);
+  }
+  if (btnCloseVaultPickerBottom) {
+    btnCloseVaultPickerBottom.addEventListener("click", closeVaultPickerModal);
+  }
+
+  // Check URL params for direct tab navigation (e.g. ?tab=vault)
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("tab") === "vault") {
+    switchInterviewTab("vault");
+  } else {
+    // Preload badge count
+    updateVaultBadgeCount(employee.id);
+  }
+}
+
+function switchInterviewTab(tab) {
+  const btnSimulator = document.getElementById("tab-btn-simulator");
+  const btnVault = document.getElementById("tab-btn-vault");
+  const setupScreen = document.getElementById("interview-setup-screen");
+  const sessionScreen = document.getElementById("interview-session-screen");
+  const summaryScreen = document.getElementById("interview-summary-screen");
+  const vaultScreen = document.getElementById("achievement-vault-screen");
+
+  if (tab === "vault") {
+    if (btnVault) {
+      btnVault.className = "btn btn-primary";
+    }
+    if (btnSimulator) {
+      btnSimulator.className = "btn btn-secondary";
+    }
+
+    if (setupScreen) setupScreen.style.display = "none";
+    if (sessionScreen) sessionScreen.style.display = "none";
+    if (summaryScreen) summaryScreen.style.display = "none";
+    if (vaultScreen) vaultScreen.style.display = "block";
+
+    const employee = getLoggedInEmployee();
+    if (employee) {
+      loadVaultAchievements(employee.id);
+    }
+  } else {
+    if (btnSimulator) {
+      btnSimulator.className = "btn btn-primary";
+    }
+    if (btnVault) {
+      btnVault.className = "btn btn-secondary";
+    }
+
+    if (vaultScreen) vaultScreen.style.display = "none";
+
+    const isInterviewActive = sessionStorage.getItem("interview_active") === "true";
+    if (isInterviewActive && sessionScreen) {
+      sessionScreen.style.display = "block";
+    } else if (answersRecord && answersRecord.length > 0 && summaryScreen && summaryScreen.innerHTML.trim() !== "") {
+      summaryScreen.style.display = "block";
+    } else if (setupScreen) {
+      setupScreen.style.display = "block";
+    }
+  }
+}
+
+function closeVaultForm() {
+  const formCard = document.getElementById("vault-form-card");
+  if (formCard) formCard.style.display = "none";
+  resetVaultForm();
+}
+
+function resetVaultForm() {
+  document.getElementById("vault-form-id").value = "";
+  document.getElementById("vault-input-title").value = "";
+  document.getElementById("vault-input-desc").value = "";
+  document.getElementById("vault-input-metrics").value = "";
+  document.getElementById("vault-input-skills").value = "";
+  const errEl = document.getElementById("vault-form-error");
+  if (errEl) errEl.style.display = "none";
+
+  const labelEl = document.getElementById("vault-form-title-label");
+  if (labelEl) labelEl.textContent = "Add Career Achievement";
+  const btnLabel = document.getElementById("vault-save-label");
+  if (btnLabel) btnLabel.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Convert to STAR & Save';
+}
+
+async function updateVaultBadgeCount(employeeId) {
+  try {
+    const res = await fetch(`${API_BASE}/api/achievements?employee_id=${employeeId}`);
+    const data = await res.json();
+    if (data.success && Array.isArray(data.data)) {
+      cachedVaultAchievements = data.data;
+      const badge = document.getElementById("vault-count-badge");
+      if (badge) badge.textContent = data.data.length;
+    }
+  } catch (err) {
+    console.error("Error updating vault count:", err);
+  }
+}
+
+async function loadVaultAchievements(employeeId) {
+  const container = document.getElementById("vault-achievements-list");
+  const statusEl = document.getElementById("vault-items-status");
+  const badge = document.getElementById("vault-count-badge");
+
+  if (container) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 36px; color: var(--text-muted);">
+        <i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--primary-600); margin-bottom: 12px; display: block;"></i>
+        Loading your Achievement Vault...
+      </div>
+    `;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/api/achievements?employee_id=${employeeId}`);
+    const result = await res.json();
+
+    if (result.success && Array.isArray(result.data)) {
+      cachedVaultAchievements = result.data;
+      if (badge) badge.textContent = cachedVaultAchievements.length;
+      if (statusEl) {
+        statusEl.textContent = `${cachedVaultAchievements.length} saved achievement${cachedVaultAchievements.length === 1 ? '' : 's'}`;
+      }
+      renderVaultAchievements(cachedVaultAchievements);
+    } else {
+      if (container) {
+        container.innerHTML = `<div class="card" style="text-align: center; padding: 30px; color: var(--rose-600);">Failed to load achievements.</div>`;
+      }
+    }
+  } catch (err) {
+    console.error("Error fetching achievements:", err);
+    if (container) {
+      container.innerHTML = `<div class="card" style="text-align: center; padding: 30px; color: var(--rose-600);">Error connecting to vault.</div>`;
+    }
+  }
+}
+
+function filterVaultAchievements(query) {
+  if (!query) {
+    renderVaultAchievements(cachedVaultAchievements);
+    return;
+  }
+  const filtered = cachedVaultAchievements.filter(item => {
+    const text = `${item.title} ${item.skills_used} ${item.raw_description} ${item.metrics_result}`.toLowerCase();
+    return text.includes(query);
+  });
+  renderVaultAchievements(filtered);
+}
+
+function renderVaultAchievements(items) {
+  const container = document.getElementById("vault-achievements-list");
+  if (!container) return;
+
+  if (!items || items.length === 0) {
+    container.innerHTML = `
+      <div class="card" style="text-align: center; padding: 48px 24px; border: 2px dashed var(--border-color); background: var(--bg-subtle);">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 16px auto;">
+          <i class="fa-solid fa-vault"></i>
+        </div>
+        <h3 style="font-size: 1.2rem; margin: 0 0 6px 0;">No Career Achievements in Vault Yet</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; max-width: 480px; margin: 0 auto 20px auto;">
+          Add real projects, performance optimizations, or leadership accomplishments. Our AI will automatically rewrite them into executive STAR stories and map behavioral interview questions.
+        </p>
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('btn-toggle-add-achievement').click()">
+          <i class="fa-solid fa-plus"></i> Add Your First Achievement
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = items.map((item) => {
+    const skillsList = (item.skills_used || "")
+      .split(/[,|;]/)
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    const questionsList = Array.isArray(item.mapped_questions) ? item.mapped_questions : [];
+
+    const createdDate = item.created_at ? new Date(item.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Recent";
+
+    return `
+      <div class="card vault-card" id="achievement-card-${item.id}" style="padding: 24px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); border-radius: var(--radius-lg); transition: all 0.2s ease;">
+        
+        <!-- Header & Action Buttons -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+          <div style="flex: 1; min-width: 260px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+              <span class="badge badge-purple" style="font-size: 0.72rem;"><i class="fa-solid fa-star"></i> STAR Answer</span>
+              <span style="font-size: 0.76rem; color: var(--text-muted);"><i class="fa-regular fa-clock"></i> ${createdDate}</span>
+              ${item.metrics_result ? `<span class="badge badge-success" style="font-size: 0.72rem;"><i class="fa-solid fa-arrow-trend-up"></i> ${escapeHtml(item.metrics_result)}</span>` : ''}
+            </div>
+            <h3 style="font-size: 1.2rem; margin: 0; color: var(--primary-900);">${escapeHtml(item.title)}</h3>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="btn btn-secondary btn-sm" style="font-size: 0.78rem; padding: 4px 10px;" onclick="copyStarStory(${item.id})" title="Copy entire STAR response to clipboard">
+              <i class="fa-regular fa-copy"></i> Copy
+            </button>
+            <button class="btn btn-secondary btn-sm" style="font-size: 0.78rem; padding: 4px 10px;" onclick="editVaultAchievement(${item.id})" title="Edit raw details">
+              <i class="fa-solid fa-pen-to-square"></i> Edit
+            </button>
+            <button class="btn btn-secondary btn-sm" style="font-size: 0.78rem; padding: 4px 10px; color: var(--rose-600);" onclick="deleteVaultAchievement(${item.id})" title="Delete achievement">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Skills Badges -->
+        ${skillsList.length > 0 ? `
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
+            ${skillsList.map(skill => `<span class="badge" style="background: #eef2ff; color: #4338ca; font-weight: 500; font-size: 0.74rem;">${escapeHtml(skill)}</span>`).join('')}
+          </div>
+        ` : ''}
+
+        <!-- 4-Box STAR Framework Layout -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; margin-bottom: 18px;">
+          
+          <!-- Situation -->
+          <div style="background: #f8fafc; border-left: 4px solid #3b82f6; border-radius: 6px; padding: 12px 14px;">
+            <strong style="color: #1e40af; font-size: 0.82rem; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+              <i class="fa-solid fa-location-dot"></i> Situation (Context & Stakes)
+            </strong>
+            <p style="font-size: 0.88rem; line-height: 1.5; color: #334155; margin: 0;">
+              ${escapeHtml(item.star_situation || item.raw_description)}
+            </p>
+          </div>
+
+          <!-- Task -->
+          <div style="background: #f8fafc; border-left: 4px solid #8b5cf6; border-radius: 6px; padding: 12px 14px;">
+            <strong style="color: #6d28d9; font-size: 0.82rem; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+              <i class="fa-solid fa-list-check"></i> Task (Objective & Role)
+            </strong>
+            <p style="font-size: 0.88rem; line-height: 1.5; color: #334155; margin: 0;">
+              ${escapeHtml(item.star_task || 'Take technical ownership and execute solution.')}
+            </p>
+          </div>
+
+          <!-- Action -->
+          <div style="background: #f8fafc; border-left: 4px solid #06b6d4; border-radius: 6px; padding: 12px 14px;">
+            <strong style="color: #0e7490; font-size: 0.82rem; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+              <i class="fa-solid fa-gears"></i> Action (Engineering & Collaboration)
+            </strong>
+            <p style="font-size: 0.88rem; line-height: 1.5; color: #334155; margin: 0;">
+              ${escapeHtml(item.star_action || item.raw_description)}
+            </p>
+          </div>
+
+          <!-- Result -->
+          <div style="background: #f0fdf4; border-left: 4px solid #10b981; border-radius: 6px; padding: 12px 14px;">
+            <strong style="color: #166534; font-size: 0.82rem; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+              <i class="fa-solid fa-trophy"></i> Result (Metrics & Impact)
+            </strong>
+            <p style="font-size: 0.88rem; line-height: 1.5; color: #166534; margin: 0;">
+              ${escapeHtml(item.star_result || item.metrics_result || 'Delivered significant business value.')}
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Mapped Behavioral Questions Box -->
+        ${questionsList.length > 0 ? `
+          <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: var(--radius-md); padding: 14px 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+              <strong style="font-size: 0.85rem; color: #6b21a8; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-bullseye"></i> Common Behavioral Questions This Story Answers:
+              </strong>
+              <button class="btn btn-sm btn-primary" style="font-size: 0.74rem; padding: 3px 10px; border-radius: 9999px;" onclick="practiceInSimulator(${item.id})">
+                <i class="fa-solid fa-microphone"></i> Practice in Simulator
+              </button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              ${questionsList.map((qObj) => {
+                const qText = typeof qObj === 'string' ? qObj : (qObj.question || '');
+                const qTag = (typeof qObj === 'object' && qObj.tag) ? qObj.tag : 'Behavioral';
+                return `
+                  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; background: #fff; padding: 8px 12px; border-radius: 6px; border: 1px solid #f3e8ff;">
+                    <div style="display: flex; align-items: flex-start; gap: 8px;">
+                      <span class="badge badge-warning" style="font-size: 0.68rem; padding: 2px 6px; margin-top: 2px;">${escapeHtml(qTag)}</span>
+                      <span style="font-size: 0.85rem; color: #1e293b;">${escapeHtml(qText)}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+      </div>
+    `;
+  }).join('');
+}
+
+async function handleSaveVaultAchievement(employeeId) {
+  const formId = document.getElementById("vault-form-id").value;
+  const title = document.getElementById("vault-input-title").value.trim();
+  const desc = document.getElementById("vault-input-desc").value.trim();
+  const metrics = document.getElementById("vault-input-metrics").value.trim();
+  const skills = document.getElementById("vault-input-skills").value.trim();
+  const errEl = document.getElementById("vault-form-error");
+  const spinner = document.getElementById("vault-save-spinner");
+  const btn = document.getElementById("btn-save-vault-item");
+
+  if (!title || !desc) {
+    if (errEl) {
+      errEl.textContent = "Please fill in both the achievement title and description.";
+      errEl.style.display = "block";
+    }
+    return;
+  }
+
+  if (errEl) errEl.style.display = "none";
+  if (spinner) spinner.style.display = "inline-block";
+  if (btn) btn.disabled = true;
+
+  try {
+    const payload = {
+      employee_id: employeeId,
+      id: formId ? parseInt(formId, 10) : undefined,
+      title: title,
+      raw_description: desc,
+      metrics_result: metrics,
+      skills_used: skills
+    };
+
+    const res = await fetch(`${API_BASE}/api/achievements/save`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      closeVaultForm();
+      await loadVaultAchievements(employeeId);
+      if (typeof showToast === "function") {
+        showToast("Achievement saved to vault & formatted into STAR story!");
+      }
+    } else {
+      if (errEl) {
+        errEl.textContent = data.message || "Failed to save achievement.";
+        errEl.style.display = "block";
+      }
+    }
+  } catch (err) {
+    console.error("Save achievement error:", err);
+    if (errEl) {
+      errEl.textContent = "Network error. Please try again.";
+      errEl.style.display = "block";
+    }
+  } finally {
+    if (spinner) spinner.style.display = "none";
+    if (btn) btn.disabled = false;
+  }
+}
+
+function editVaultAchievement(achievementId) {
+  const item = cachedVaultAchievements.find(a => a.id === achievementId);
+  if (!item) return;
+
+  const formCard = document.getElementById("vault-form-card");
+  if (!formCard) return;
+
+  document.getElementById("vault-form-id").value = item.id;
+  document.getElementById("vault-input-title").value = item.title;
+  document.getElementById("vault-input-desc").value = item.raw_description;
+  document.getElementById("vault-input-metrics").value = item.metrics_result || "";
+  document.getElementById("vault-input-skills").value = item.skills_used || "";
+
+  document.getElementById("vault-form-title-label").textContent = "Edit Career Achievement";
+  document.getElementById("vault-save-label").innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Update & Re-Convert STAR';
+
+  formCard.style.display = "block";
+  formCard.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function deleteVaultAchievement(achievementId) {
+  if (!confirm("Are you sure you want to remove this achievement from your vault?")) {
+    return;
+  }
+
+  const employee = getLoggedInEmployee();
+  if (!employee) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/achievements/${achievementId}?employee_id=${employee.id}`, {
+      method: "DELETE"
+    });
+    const data = await res.json();
+    if (data.success) {
+      await loadVaultAchievements(employee.id);
+      if (typeof showToast === "function") {
+        showToast("Achievement removed from vault.");
+      }
+    } else {
+      alert(data.message || "Failed to delete achievement.");
+    }
+  } catch (err) {
+    console.error("Delete error:", err);
+    alert("Network error deleting achievement.");
+  }
+}
+
+function copyStarStory(achievementId) {
+  const item = cachedVaultAchievements.find(a => a.id === achievementId);
+  if (!item) return;
+
+  const text = `Title: ${item.title}\n\n[SITUATION]\n${item.star_situation}\n\n[TASK]\n${item.star_task}\n\n[ACTION]\n${item.star_action}\n\n[RESULT]\n${item.star_result}`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    if (typeof showToast === "function") {
+      showToast("STAR story copied to clipboard!");
+    } else {
+      alert("STAR story copied to clipboard!");
+    }
+  }).catch(() => {
+    alert("Could not copy to clipboard.");
+  });
+}
+
+function practiceInSimulator(achievementId) {
+  const item = cachedVaultAchievements.find(a => a.id === achievementId);
+  if (!item) return;
+
+  // Switch to simulator
+  switchInterviewTab("simulator");
+
+  // If in setup screen, start interview or prefill
+  const sessionScreen = document.getElementById("interview-session-screen");
+  if (sessionScreen && sessionScreen.style.display === "block") {
+    insertVaultAnswer(item.id);
+  } else {
+    // Start interview first
+    const btnStart = document.getElementById("btn-start-interview");
+    if (btnStart) {
+      btnStart.click();
+      setTimeout(() => {
+        insertVaultAnswer(item.id);
+      }, 500);
+    }
+  }
+}
+
+// Vault Picker inside Active Mock Session
+function openVaultPickerModal(employeeId) {
+  const modal = document.getElementById("vault-picker-modal");
+  const listEl = document.getElementById("vault-picker-list");
+  if (!modal || !listEl) return;
+
+  if (cachedVaultAchievements.length === 0) {
+    listEl.innerHTML = `<div style="text-align: center; padding: 24px; color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Loading vault...</div>`;
+    fetch(`${API_BASE}/api/achievements?employee_id=${employeeId}`)
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && Array.isArray(d.data)) {
+          cachedVaultAchievements = d.data;
+          renderVaultPickerItems(cachedVaultAchievements);
+        } else {
+          listEl.innerHTML = `<div style="text-align: center; padding: 24px; color: var(--rose-600);">No achievements found.</div>`;
+        }
+      })
+      .catch(() => {
+        listEl.innerHTML = `<div style="text-align: center; padding: 24px; color: var(--rose-600);">Error loading achievements.</div>`;
+      });
+  } else {
+    renderVaultPickerItems(cachedVaultAchievements);
+  }
+
+  modal.style.display = "flex";
+}
+
+function closeVaultPickerModal() {
+  const modal = document.getElementById("vault-picker-modal");
+  if (modal) modal.style.display = "none";
+}
+
+function renderVaultPickerItems(items) {
+  const listEl = document.getElementById("vault-picker-list");
+  if (!listEl) return;
+
+  if (!items || items.length === 0) {
+    listEl.innerHTML = `
+      <div style="text-align: center; padding: 32px; color: var(--text-muted);">
+        <i class="fa-solid fa-vault fa-2x" style="color: var(--primary-400); margin-bottom: 10px; display: block;"></i>
+        Your Achievement Vault is empty.<br>
+        <button type="button" class="btn btn-sm btn-primary" style="margin-top: 12px;" onclick="closeVaultPickerModal(); switchInterviewTab('vault');">
+          Open Vault to Add Achievements
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  listEl.innerHTML = items.map(item => {
+    return `
+      <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 16px; background: var(--bg-subtle); display: flex; justify-content: space-between; align-items: flex-start; gap: 14px;">
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+            <strong style="font-size: 0.95rem; color: var(--primary-900);">${escapeHtml(item.title)}</strong>
+            ${item.metrics_result ? `<span class="badge badge-success" style="font-size: 0.7rem;">${escapeHtml(item.metrics_result)}</span>` : ''}
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0 0 6px 0; line-height: 1.4;">
+            ${escapeHtml((item.star_situation || item.raw_description).substring(0, 160))}...
+          </p>
+          <div style="font-size: 0.74rem; color: var(--primary-700);">
+            <i class="fa-solid fa-tags"></i> ${escapeHtml(item.skills_used || 'General')}
+          </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-primary" style="white-space: nowrap; font-size: 0.78rem;" onclick="insertVaultAnswer(${item.id})">
+          <i class="fa-solid fa-check"></i> Insert Answer
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+function insertVaultAnswer(achievementId) {
+  const item = cachedVaultAchievements.find(a => a.id === achievementId);
+  if (!item) return;
+
+  const answerInput = document.getElementById("candidate-answer-input");
+  const charCount = document.getElementById("char-count");
+
+  if (answerInput) {
+    const starAnswer = `Situation:\n${item.star_situation}\n\nTask:\n${item.star_task}\n\nAction:\n${item.star_action}\n\nResult:\n${item.star_result}`;
+
+    answerInput.value = starAnswer;
+    const words = starAnswer.trim().split(/\s+/).length;
+    if (charCount) charCount.textContent = `${words} words`;
+
+    closeVaultPickerModal();
+    answerInput.focus();
+
+    if (typeof showToast === "function") {
+      showToast("STAR answer inserted from Vault! You can customize it before submitting.");
+    }
+  }
+}
+

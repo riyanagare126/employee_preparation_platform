@@ -392,6 +392,599 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // =========================================================================
+  // HONEST-TO-PROFESSIONAL ANSWER CONVERTER CONTROLLER
+  // =========================================================================
+  
+  // Tab Switcher Elements
+  const tabBtnPitch = document.getElementById("tab-btn-pitch");
+  const tabBtnConverter = document.getElementById("tab-btn-converter");
+  const pitchSection = document.getElementById("pitch-builder-section");
+  const converterSection = document.getElementById("honest-converter-section");
+
+  // Converter Form Elements
+  const formConverter = document.getElementById("form-honest-converter");
+  const selectConvQType = document.getElementById("select-conv-qtype");
+  const inputConvRole = document.getElementById("input-conv-role");
+  const inputConvCompany = document.getElementById("input-conv-company");
+  const inputHonestRaw = document.getElementById("input-honest-raw");
+  const rawCharCount = document.getElementById("raw-char-count");
+  const convErrorBox = document.getElementById("conv-error-box");
+  const btnSampleHonest = document.getElementById("btn-sample-honest");
+  const btnClearHonest = document.getElementById("btn-clear-honest");
+  const btnConvertHonest = document.getElementById("btn-convert-honest");
+  const convSpinner = document.getElementById("conv-spinner");
+  const convBtnLabel = document.getElementById("conv-btn-label");
+
+  // Converter Results Elements
+  const converterResultsSection = document.getElementById("converter-results-section");
+  const resProfAns = document.getElementById("res-prof-ans");
+  const resShortAns = document.getElementById("res-short-ans");
+  const profAnsMeta = document.getElementById("prof-ans-meta");
+  const shortAnsMeta = document.getElementById("short-ans-meta");
+  const resRedFlagsContainer = document.getElementById("res-red-flags-container");
+  const resFollowupsContainer = document.getElementById("res-followups-container");
+  const btnCopyProfAns = document.getElementById("btn-copy-prof-ans");
+  const btnCopyShortAns = document.getElementById("btn-copy-short-ans");
+  const btnSaveConverted = document.getElementById("btn-save-converted-answer");
+
+  // Converter Saved Library Elements
+  const savedConvCount = document.getElementById("saved-conv-count");
+  const savedConvCountBadge = document.getElementById("saved-conv-count-badge");
+  const savedConvertedList = document.getElementById("saved-converted-list");
+  const btnRefreshConvSaved = document.getElementById("btn-refresh-conv-saved");
+
+  let currentConvertedData = null;
+
+  // Tab Switching Functionality
+  function activateTab(tabName) {
+    if (tabName === "converter") {
+      pitchSection.style.display = "none";
+      converterSection.style.display = "block";
+      tabBtnPitch.className = "btn btn-secondary";
+      tabBtnConverter.className = "btn btn-primary";
+    } else {
+      pitchSection.style.display = "block";
+      converterSection.style.display = "none";
+      tabBtnPitch.className = "btn btn-primary";
+      tabBtnConverter.className = "btn btn-secondary";
+    }
+  }
+
+  if (tabBtnPitch && tabBtnConverter) {
+    tabBtnPitch.addEventListener("click", () => activateTab("pitch"));
+    tabBtnConverter.addEventListener("click", () => activateTab("converter"));
+  }
+
+  // Check URL hash for direct navigation
+  if (window.location.hash === "#converter" || window.location.hash === "#honest-converter") {
+    activateTab("converter");
+  }
+
+  // Live Character Count for Raw Answer
+  if (inputHonestRaw && rawCharCount) {
+    inputHonestRaw.addEventListener("input", () => {
+      const count = (inputHonestRaw.value || "").length;
+      rawCharCount.textContent = `${count} characters`;
+    });
+  }
+
+  // Sample Honest Answers Preset Dictionary
+  const sampleHonestDict = {
+    "Why are you leaving your current job?":
+      "My manager is a micromanager who changes requirements daily and takes credit for our work. I haven't gotten a promotion or salary hike in over two years despite consistently working 60-hour weeks. The tech stack is outdated and there's nowhere for me to grow.",
+    "Explain your employment gap":
+      "I was completely burned out after 4 years of nonstop crunch time and late-night on-call. I quit without an offer to take 8 months off, rest, spend time with my family, and figure out what I actually want to do next.",
+    "Why were you laid off?":
+      "Our entire division was eliminated after the company missed revenue targets. They called an all-hands at 9 AM and locked our Slack accounts by noon. I was caught completely off guard and had to start interviewing suddenly.",
+    "Why did you get laid off?":
+      "Our entire division was eliminated after the company missed revenue targets. They called an all-hands at 9 AM and locked our Slack accounts by noon. I was caught completely off guard and had to start interviewing suddenly.",
+    "Why so many job changes?":
+      "I left my first job after 8 months because the pay was too low. At my second company, they changed the project to something I didn't want to do, so I left after 10 months. Now at my third company after a year, the leadership is unstable and team morale is terrible."
+  };
+
+  if (btnSampleHonest && inputHonestRaw && selectConvQType) {
+    btnSampleHonest.addEventListener("click", () => {
+      const qtype = selectConvQType.value;
+      inputHonestRaw.value = sampleHonestDict[qtype] || sampleHonestDict["Why are you leaving your current job?"];
+      rawCharCount.textContent = `${inputHonestRaw.value.length} characters`;
+      if (convErrorBox) convErrorBox.style.display = "none";
+      showToast("Loaded sample honest scenario!", "info");
+    });
+
+    selectConvQType.addEventListener("change", () => {
+      if (!inputHonestRaw.value.trim()) {
+        const qtype = selectConvQType.value;
+        if (sampleHonestDict[qtype]) {
+          inputHonestRaw.placeholder = `e.g. "${sampleHonestDict[qtype]}"`;
+        }
+      }
+    });
+  }
+
+  // Clear Form
+  if (btnClearHonest && inputHonestRaw) {
+    btnClearHonest.addEventListener("click", () => {
+      inputHonestRaw.value = "";
+      rawCharCount.textContent = "0 characters";
+      if (convErrorBox) convErrorBox.style.display = "none";
+      if (converterResultsSection) converterResultsSection.style.display = "none";
+      currentConvertedData = null;
+    });
+  }
+
+  // Submit Form: Convert Honest to Professional
+  if (formConverter) {
+    formConverter.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const rawText = (inputHonestRaw.value || "").trim();
+      const questionType = selectConvQType.value || "Why are you leaving your current job?";
+      const targetRole = (inputConvRole.value || "").trim() || "Software Engineer";
+      const targetCompany = (inputConvCompany.value || "").trim() || "Target Enterprise";
+
+      if (!rawText) {
+        if (convErrorBox) {
+          convErrorBox.textContent = "Please provide your raw, honest answer to convert.";
+          convErrorBox.style.display = "block";
+        }
+        inputHonestRaw.focus();
+        return;
+      }
+
+      if (rawText.length < 10) {
+        if (convErrorBox) {
+          convErrorBox.textContent = "Please provide at least a short sentence describing your real situation.";
+          convErrorBox.style.display = "block";
+        }
+        inputHonestRaw.focus();
+        return;
+      }
+
+      if (convErrorBox) convErrorBox.style.display = "none";
+
+      // UI Loading State
+      btnConvertHonest.disabled = true;
+      if (convSpinner) convSpinner.style.display = "inline-block";
+      if (convBtnLabel) convBtnLabel.textContent = " Converting & Saving with AI...";
+
+      try {
+        const response = await fetch(`${API_BASE}/api/converted-answers/convert`, {
+          method: "POST",
+          headers: getAuthHeaders(),
+          body: JSON.stringify({
+            employee_id: employee ? employee.id : null,
+            question_type: questionType,
+            raw_answer: rawText,
+            target_role: targetRole,
+            target_company: targetCompany
+          })
+        });
+
+        const res = await response.json();
+        if (!response.ok || !res.success) {
+          throw new Error(res.message || "Failed to convert answer.");
+        }
+
+        const data = res.data;
+        currentConvertedData = {
+          ...data,
+          question_type: questionType,
+          raw_answer: rawText,
+          target_role: targetRole,
+          target_company: targetCompany
+        };
+
+        // Render (A) Polished Answer
+        resProfAns.textContent = data.professional_answer;
+        const profWords = data.professional_answer ? data.professional_answer.split(/\s+/).filter(Boolean).length : 0;
+        const profSentences = data.professional_answer ? (data.professional_answer.match(/[.!?]+/g) || []).length : 4;
+        profAnsMeta.textContent = `~${profSentences} sentences (${profWords} words)`;
+
+        // Render (B) Short 30s Answer
+        resShortAns.textContent = data.short_answer;
+        const shortWords = data.short_answer ? data.short_answer.split(/\s+/).filter(Boolean).length : 0;
+        const shortSecs = Math.round(shortWords / 2.3);
+        shortAnsMeta.textContent = `~${shortSecs}s (${shortWords} words)`;
+
+        // Render (C) Red Flags
+        if (Array.isArray(data.red_flags) && data.red_flags.length > 0) {
+          resRedFlagsContainer.innerHTML = data.red_flags.map((rf, idx) => `
+            <div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 8px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                <span class="badge badge-danger" style="font-size: 0.76rem; font-weight: 700;">
+                  <i class="fa-solid fa-ban"></i> Red-Flag Risk: "${escapeHtml(rf.flagged_phrase || 'Critical Phrase')}"
+                </span>
+                <span style="font-size: 0.74rem; color: #b45309; font-weight: 600;">Issue: ${escapeHtml(rf.risk || 'Perceived negatively')}</span>
+              </div>
+              <div style="font-size: 0.86rem; color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px 12px; border-radius: 6px; margin-top: 4px;">
+                <strong><i class="fa-solid fa-arrow-right"></i> Reframed Alternative:</strong> ${escapeHtml(rf.safer_alternative || '')}
+              </div>
+            </div>
+          `).join("");
+        } else {
+          resRedFlagsContainer.innerHTML = `
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 12px 16px; border-radius: 8px; font-size: 0.88rem;">
+              <i class="fa-solid fa-circle-check"></i> Great composure! No severe red-flag hostility detected in your honest explanation.
+            </div>
+          `;
+        }
+
+        // Render (D) Follow-Up Questions
+        if (Array.isArray(data.follow_up_questions) && data.follow_up_questions.length > 0) {
+          resFollowupsContainer.innerHTML = data.follow_up_questions.map((fq, idx) => `
+            <div style="background: #ffffff; border: 1px solid #e0e7ff; border-radius: 8px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px;">
+              <div style="font-size: 0.92rem; font-weight: 700; color: #1e1b4b; display: flex; align-items: flex-start; gap: 8px;">
+                <span style="background: #4f46e5; color: #fff; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; flex-shrink: 0;">${idx + 1}</span>
+                <span>"${escapeHtml(fq.question || '')}"</span>
+              </div>
+              ${fq.recruiter_intent ? `
+                <div style="font-size: 0.8rem; color: #4338ca; margin-left: 28px; line-height: 1.4;">
+                  <strong>Recruiter Intent:</strong> ${escapeHtml(fq.recruiter_intent)}
+                </div>
+              ` : ''}
+            </div>
+          `).join("");
+        } else {
+          resFollowupsContainer.innerHTML = `
+            <div style="background: #eef2ff; border: 1px solid #c7d2fe; color: #3730a3; padding: 10px 14px; border-radius: 8px; font-size: 0.86rem;">
+              Standard follow-up questions will probe on technical project delivery and team dynamics.
+            </div>
+          `;
+        }
+
+        // Show Results Section & Scroll
+        converterResultsSection.style.display = "block";
+        converterResultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        showToast("Answer converted and saved to your library!", "success");
+
+        // Immediately refresh the saved list below
+        if (employee && employee.id) {
+          loadSavedConvertedAnswers(employee.id);
+        }
+
+      } catch (err) {
+        console.error("Error converting answer:", err);
+        if (convErrorBox) {
+          convErrorBox.textContent = err.message || "Failed to convert answer. Please try again.";
+          convErrorBox.style.display = "block";
+        }
+        showToast(err.message || "Error converting answer.", "error");
+      } finally {
+        btnConvertHonest.disabled = false;
+        if (convSpinner) convSpinner.style.display = "none";
+        if (convBtnLabel) convBtnLabel.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Convert to Professional Answer`;
+      }
+    });
+  }
+
+  // Copy Buttons
+  if (btnCopyProfAns && resProfAns) {
+    btnCopyProfAns.addEventListener("click", async () => {
+      const text = (resProfAns.textContent || "").trim();
+      if (!text) return;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+        }
+        showToast("Polished professional answer copied to clipboard!", "success");
+      } catch (e) {
+        showToast("Polished professional answer copied!", "success");
+      }
+    });
+  }
+
+  if (btnCopyShortAns && resShortAns) {
+    btnCopyShortAns.addEventListener("click", async () => {
+      const text = resShortAns.textContent;
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("30-second elevator version copied to clipboard!", "success");
+      } catch (e) {
+        showToast("Could not access clipboard automatically.", "info");
+      }
+    });
+  }
+
+  // Save Converted Answer to Library
+  if (btnSaveConverted) {
+    btnSaveConverted.addEventListener("click", async () => {
+      if (!currentConvertedData) {
+        showToast("Please convert your answer before saving.", "warning");
+        return;
+      }
+
+      btnSaveConverted.disabled = true;
+      btnSaveConverted.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/converted-answers/save`, {
+          method: "POST",
+          headers: getAuthHeaders(),
+          body: JSON.stringify({
+            employee_id: employee.id,
+            question_type: currentConvertedData.question_type,
+            raw_answer: currentConvertedData.raw_answer,
+            professional_answer: currentConvertedData.professional_answer,
+            short_answer: currentConvertedData.short_answer,
+            red_flags: currentConvertedData.red_flags || [],
+            follow_up_questions: currentConvertedData.follow_up_questions || [],
+            target_role: currentConvertedData.target_role,
+            target_company: currentConvertedData.target_company
+          })
+        });
+
+        const res = await response.json();
+        if (!response.ok || !res.success) {
+          throw new Error(res.message || "Failed to save converted answer.");
+        }
+
+        showToast("+20 XP! Saved converted answer to your library.", "success");
+        await loadSavedConvertedAnswers(employee.id);
+
+      } catch (err) {
+        console.error("Error saving converted answer:", err);
+        showToast(err.message || "Error saving converted answer.", "error");
+      } finally {
+        btnSaveConverted.disabled = false;
+        btnSaveConverted.innerHTML = '<i class="fa-solid fa-bookmark"></i> Save to My Answers (+20 XP)';
+      }
+    });
+  }
+
+  // Refresh Saved Converted Answers
+  if (btnRefreshConvSaved) {
+    btnRefreshConvSaved.addEventListener("click", () => {
+      loadSavedConvertedAnswers(employee.id);
+    });
+  }
+
+  // Load Saved Converted Answers Helper
+  async function loadSavedConvertedAnswers(employeeId) {
+    if (!savedConvertedList) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/api/converted-answers?employee_id=${employeeId}`, {
+        headers: getAuthHeaders()
+      });
+      const data = await res.json();
+
+      if (!data.success || !Array.isArray(data.data) || data.data.length === 0) {
+        if (savedConvCount) savedConvCount.textContent = "0";
+        if (savedConvCountBadge) savedConvCountBadge.textContent = "0";
+        savedConvertedList.innerHTML = `
+          <div style="text-align: center; padding: 28px; background: var(--bg-subtle); border-radius: var(--radius-md); color: var(--text-muted);">
+            <div style="font-size: 2rem; margin-bottom: 8px; color: #a855f7;"><i class="fa-solid fa-folder-open"></i></div>
+            <div style="font-weight: 600; margin-bottom: 4px;">No saved converted answers yet</div>
+            <div style="font-size: 0.85rem;">Input your honest reason above and click "Save to My Answers" to keep them handy for interviews.</div>
+          </div>
+        `;
+        return;
+      }
+
+      const total = data.data.length;
+      if (savedConvCount) savedConvCount.textContent = String(total);
+      if (savedConvCountBadge) savedConvCountBadge.textContent = String(total);
+
+      savedConvertedList.innerHTML = data.data.map(item => {
+        let redFlags = [];
+        try {
+          redFlags = typeof item.red_flags === "string" ? JSON.parse(item.red_flags) : (item.red_flags || []);
+        } catch (e) { redFlags = []; }
+
+        let followUps = [];
+        try {
+          followUps = typeof item.follow_up_questions === "string" ? JSON.parse(item.follow_up_questions) : (item.follow_up_questions || []);
+        } catch (e) { followUps = []; }
+
+        return `
+          <div class="card" style="padding: 18px 20px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-card); display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                  <span class="badge badge-primary" style="background: #4338ca;">${escapeHtml(item.question_type)}</span>
+                  ${item.target_company ? `<span class="badge badge-secondary">${escapeHtml(item.target_company)}</span>` : ''}
+                  ${item.target_role ? `<span style="font-size: 0.8rem; font-weight: 600; color: var(--text-main);">${escapeHtml(item.target_role)}</span>` : ''}
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <button class="btn btn-outline-primary btn-sm btn-load-conv" data-id="${item.id}" style="padding: 3px 10px; font-size: 0.78rem;">
+                  <i class="fa-solid fa-pencil"></i> Load
+                </button>
+                <button class="btn btn-secondary btn-sm btn-copy-saved-prof" data-id="${item.id}" style="padding: 3px 10px; font-size: 0.78rem;">
+                  <i class="fa-regular fa-copy"></i> Copy
+                </button>
+                <button class="btn btn-ghost btn-sm btn-delete-conv" data-id="${item.id}" style="padding: 3px 8px; font-size: 0.78rem; color: var(--danger-600);">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Professional Answer Preview -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px;">
+              <div style="font-size: 0.76rem; font-weight: 700; color: #1e40af; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em;">
+                <i class="fa-solid fa-star"></i> Polished Professional Answer (4-6 sentences):
+              </div>
+              <div style="font-size: 0.9rem; color: #1e293b; line-height: 1.55;">
+                ${escapeHtml(item.professional_answer || '')}
+              </div>
+            </div>
+
+            <!-- Short 30s Answer Preview -->
+            ${item.short_answer ? `
+              <div style="background: #faf5ff; border: 1px solid #f3e8ff; border-radius: 8px; padding: 10px 14px;">
+                <div style="font-size: 0.74rem; font-weight: 700; color: #6b21a8; margin-bottom: 2px;">
+                  <i class="fa-solid fa-bolt"></i> 30-Second Quick Pitch:
+                </div>
+                <div style="font-size: 0.86rem; color: #334155; line-height: 1.5;">
+                  ${escapeHtml(item.short_answer)}
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Red Flags & Follow-ups Summary Badges -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.74rem; color: var(--text-muted);">
+              <div style="display: flex; gap: 8px; align-items: center;">
+                ${redFlags.length > 0 ? `
+                  <span class="badge badge-warning" style="font-size: 0.72rem;">
+                    <i class="fa-solid fa-shield"></i> ${redFlags.length} Red Flags Addressed
+                  </span>
+                ` : `
+                  <span class="badge badge-success" style="font-size: 0.72rem;"><i class="fa-solid fa-check"></i> Clean</span>
+                `}
+                ${followUps.length > 0 ? `
+                  <span class="badge badge-secondary" style="font-size: 0.72rem;">
+                    <i class="fa-solid fa-clipboard-question"></i> ${followUps.length} Follow-ups Mapped
+                  </span>
+                ` : ''}
+              </div>
+              <span>Saved on: ${item.created_at ? new Date(item.created_at).toLocaleDateString() : 'Recent'}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // Wire up Action Buttons in List
+      document.querySelectorAll(".btn-load-conv").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = parseInt(btn.dataset.id);
+          const item = data.data.find(x => x.id === id);
+          if (item) {
+            activateTab("converter");
+            selectConvQType.value = item.question_type || "Why are you leaving your current job?";
+            if (item.target_role) inputConvRole.value = item.target_role;
+            if (item.target_company) inputConvCompany.value = item.target_company;
+            inputHonestRaw.value = item.raw_answer || "";
+            rawCharCount.textContent = `${(item.raw_answer || "").length} characters`;
+
+            // Display results in the result box directly
+            let redFlags = [];
+            try {
+              redFlags = typeof item.red_flags === "string" ? JSON.parse(item.red_flags) : (item.red_flags || []);
+            } catch (e) { redFlags = []; }
+
+            let followUps = [];
+            try {
+              followUps = typeof item.follow_up_questions === "string" ? JSON.parse(item.follow_up_questions) : (item.follow_up_questions || []);
+            } catch (e) { followUps = []; }
+
+            currentConvertedData = {
+              ...item,
+              red_flags: redFlags,
+              follow_up_questions: followUps
+            };
+
+            resProfAns.textContent = item.professional_answer;
+            resShortAns.textContent = item.short_answer;
+            
+            const profWords = item.professional_answer ? item.professional_answer.split(/\s+/).filter(Boolean).length : 0;
+            const profSentences = item.professional_answer ? (item.professional_answer.match(/[.!?]+/g) || []).length : 4;
+            profAnsMeta.textContent = `~${profSentences} sentences (${profWords} words)`;
+
+            const shortWords = item.short_answer ? item.short_answer.split(/\s+/).filter(Boolean).length : 0;
+            const shortSecs = Math.round(shortWords / 2.3);
+            shortAnsMeta.textContent = `~${shortSecs}s (${shortWords} words)`;
+
+            // Red Flags
+            if (redFlags.length > 0) {
+              resRedFlagsContainer.innerHTML = redFlags.map(rf => `
+                <div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 8px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                    <span class="badge badge-danger" style="font-size: 0.76rem; font-weight: 700;">
+                      <i class="fa-solid fa-ban"></i> Red-Flag Risk: "${escapeHtml(rf.flagged_phrase || 'Critical Phrase')}"
+                    </span>
+                    <span style="font-size: 0.74rem; color: #b45309; font-weight: 600;">Issue: ${escapeHtml(rf.risk || 'Perceived negatively')}</span>
+                  </div>
+                  <div style="font-size: 0.86rem; color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px 12px; border-radius: 6px; margin-top: 4px;">
+                    <strong><i class="fa-solid fa-arrow-right"></i> Reframed Alternative:</strong> ${escapeHtml(rf.safer_alternative || '')}
+                  </div>
+                </div>
+              `).join("");
+            } else {
+              resRedFlagsContainer.innerHTML = `<div style="padding: 10px; color: #166534;"><i class="fa-solid fa-circle-check"></i> No severe red-flag hostility detected.</div>`;
+            }
+
+            // Follow-ups
+            if (followUps.length > 0) {
+              resFollowupsContainer.innerHTML = followUps.map((fq, idx) => `
+                <div style="background: #ffffff; border: 1px solid #e0e7ff; border-radius: 8px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px;">
+                  <div style="font-size: 0.92rem; font-weight: 700; color: #1e1b4b; display: flex; align-items: flex-start; gap: 8px;">
+                    <span style="background: #4f46e5; color: #fff; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; flex-shrink: 0;">${idx + 1}</span>
+                    <span>"${escapeHtml(fq.question || '')}"</span>
+                  </div>
+                  ${fq.recruiter_intent ? `
+                    <div style="font-size: 0.8rem; color: #4338ca; margin-left: 28px; line-height: 1.4;">
+                      <strong>Recruiter Intent:</strong> ${escapeHtml(fq.recruiter_intent)}
+                    </div>
+                  ` : ''}
+                </div>
+              `).join("");
+            }
+
+            converterResultsSection.style.display = "block";
+            formConverter.scrollIntoView({ behavior: "smooth", block: "start" });
+            showToast("Loaded saved answer into editor!", "info");
+          }
+        });
+      });
+
+      document.querySelectorAll(".btn-copy-saved-prof").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = parseInt(btn.dataset.id);
+          const item = data.data.find(x => x.id === id);
+          if (item && item.professional_answer) {
+            try {
+              await navigator.clipboard.writeText(item.professional_answer);
+              showToast("Copied saved professional answer!", "success");
+            } catch (e) {
+              showToast("Could not access clipboard.", "info");
+            }
+          }
+        });
+      });
+
+      document.querySelectorAll(".btn-delete-conv").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = parseInt(btn.dataset.id);
+          if (confirm("Delete this converted answer from your saved library?")) {
+            try {
+              const res = await fetch(`${API_BASE}/api/converted-answers/${id}?employee_id=${employee.id}`, {
+                method: "DELETE",
+                headers: getAuthHeaders()
+              });
+              if (res.ok) {
+                showToast("Converted answer deleted from library.", "info");
+                loadSavedConvertedAnswers(employee.id);
+              } else {
+                showToast("Failed to delete answer.", "error");
+              }
+            } catch (err) {
+              console.error("Error deleting converted answer:", err);
+            }
+          }
+        });
+      });
+
+    } catch (e) {
+      console.error("Error loading saved converted answers:", e);
+      if (savedConvertedList) {
+        savedConvertedList.innerHTML = `<div style="color: var(--danger-600); padding: 14px;">Error loading saved answers.</div>`;
+      }
+    }
+  }
+
+  // Initialize Saved Converted Answers
+  await loadSavedConvertedAnswers(employee.id);
+
   function escapeHtml(text) {
     if (!text) return "";
     return text.toString()

@@ -1,138 +1,50 @@
 """
-Generator for Distinct Company Question Banks.
-Generates comprehensive question banks for all companies in data/companies/<slug>.json
+Comprehensive Generator for Distinct, Company-Specific Question Banks.
+Generates authentic, domain-calibrated placement & lateral engineering interview banks
+for all 20 enterprises:
+TCS, Infosys, Wipro, Accenture, Cognizant, Capgemini, HCLTech, Tech Mahindra,
+Deloitte, Amazon, Google, Microsoft, IBM, Oracle, LTIMindtree, Persistent,
+Red Hat, SAP, EY, PwC.
+
 Strictly ensures:
-1. Every company has questions across Aptitude, Coding, Technical, AI Interview, HR Interview.
-2. Organised by role (Java Developer, Python Developer, Data Analyst).
-3. Meets or exceeds quotas:
-   - Aptitude: >= 15 questions per role per company
-   - Coding: >= 8 problems per role per company
-   - Technical: >= 15 questions per role per company
-   - AI Interview: >= 10 questions per role per company
-   - HR Interview: >= 10 questions per role per company
-4. ZERO duplicates across companies: every single question text is 100% unique across all companies.
+1. Every company has authentic, domain-specific questions matching real hiring patterns.
+2. Organised by role: Java Developer, Python Developer, Data Analyst.
+3. Quotas met or exceeded per role per company:
+   - Aptitude: >= 15 questions
+   - Coding: >= 8 problems
+   - Technical: >= 15 questions
+   - AI Interview: >= 10 questions
+   - HR Interview: >= 10 questions
+4. ZERO cross-company duplicates: every single question text is 100% unique across all companies.
 """
+
 import os
+import sys
 import json
 import re
+from typing import Dict, List, Any
+
+# Root directory
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+
+TARGET_ROLES = ["Java Developer", "Python Developer", "Data Analyst"]
 
 COMPANIES_CONFIG = [
     {
-        "slug": "tcs",
-        "name": "Tata Consultancy Services (TCS)",
-        "industry": "IT Services & Consulting",
-        "difficulty": "Medium",
-        "tag": "TCS NQT",
-        "focus": "Tata Code of Conduct, enterprise scale, banking & financial services, agile delivery",
-        "rounds": "TCS NQT (Foundation + Advanced) -> Technical Interview -> HR Round",
-        "apt_pattern": "Numerical Ability (20 Qs, 25 mins) + Verbal (25 Qs, 25 mins) + Reasoning (20 Qs, 25 mins)",
-        "coding_pattern": "2 Questions (1 Easy - 15 mins, 1 Medium/Hard - 30 mins)",
-        "tech_focus": "Core Java, OOPs, DBMS, SQL, Cloud Basics, Agile Scrum",
-        "hr_tips": "Adhere to Tata core values, readiness for Siruseri/Hinjewadi campuses, shift flexibility"
-    },
-    {
-        "slug": "infosys",
-        "name": "Infosys",
-        "industry": "IT Consulting & Digital Services",
-        "difficulty": "Medium - Hard",
-        "tag": "InfyTQ / HackWithInfy",
-        "focus": "Infosys Nia, Topaz AI, Mysore training rigor, continuous learning, C-LIFE values",
-        "rounds": "Online Test (Reasoning, Tech Ability, Verbal) -> Technical Round -> HR",
-        "apt_pattern": "Mathematical Critical Thinking (10 Qs, 35 mins) + Logical (15 Qs, 25 mins) + Verbal (20 Qs, 20 mins)",
-        "coding_pattern": "HackWithInfy / SP Track: 3 algorithmic dynamic programming & graph problems",
-        "tech_focus": "Data Structures, Algorithms, Spring Boot, Microservices, Python for Automation",
-        "hr_tips": "Enthusiasm for Mysore DC training, ethical conduct, client collaboration"
-    },
-    {
-        "slug": "wipro",
-        "name": "Wipro",
-        "industry": "IT Services & Consulting",
-        "difficulty": "Medium",
-        "tag": "Wipro Elite NTH / Turbo",
-        "focus": "Spirit of Wipro, ai360 ecosystem, hybrid work delivery, client sensitivity",
-        "rounds": "Online Assessment (Aptitude, Written Comm, Coding) -> Business Discussion (Tech+HR)",
-        "apt_pattern": "Quantitative Aptitude (16 Qs, 16 mins) + Logical (14 Qs, 14 mins) + Verbal (18 Qs, 18 mins)",
-        "coding_pattern": "2 Coding Problems (Java/Python/C++) - 60 minutes total",
-        "tech_focus": "Java Collections, REST APIs, SQL joins, unit testing, Git workflows",
-        "hr_tips": "Demonstrate Spirit of Wipro: Intensity to win, Act with sensitivity, Unyielding integrity"
-    },
-    {
-        "slug": "accenture",
-        "name": "Accenture",
-        "industry": "Professional Services & Tech",
-        "difficulty": "Medium",
-        "tag": "Accenture Cognitive & Coding",
-        "focus": "Cloud-first transformation, 360 value delivery, innovation architecture",
-        "rounds": "Cognitive Assessment (50 Qs) -> Technical Assessment (40 Qs) -> Coding (2 Qs) -> Interview",
-        "apt_pattern": "Critical Thinking & Problem Solving (20 Qs) + Abstract Reasoning (15 Qs) + English (15 Qs)",
-        "coding_pattern": "2 Coding questions (String manipulation, Dynamic programming) - 45 mins",
-        "tech_focus": "Cloud infrastructure, Spring Security, Microservices, CI/CD, SQL indexes",
-        "hr_tips": "Focus on high performance, diversity & inclusion, client success obsession"
-    },
-    {
-        "slug": "cognizant",
-        "name": "Cognizant",
-        "industry": "IT Services & Digital Solutions",
-        "difficulty": "Medium",
-        "tag": "Cognizant GenC / Elevate",
-        "focus": "Healthcare & life sciences tech, modern engineering, GenC digital enablement",
-        "rounds": "GenC Aptitude Assessment -> Technical Interview -> HR Round",
-        "apt_pattern": "Quantitative Ability (25 Qs, 35 mins) + Logical (20 Qs, 35 mins) + English (20 Qs, 20 mins)",
-        "coding_pattern": "Elevate Coding: 2 problems on Arrays, Hashing, Trees - 40 minutes",
-        "tech_focus": "Java 8+, JDBC, Spring Boot, SQL aggregations, frontend basics",
-        "hr_tips": "Emphasize collaboration, quick adaptability, open communication with offshore peers"
-    },
-    {
-        "slug": "capgemini",
-        "name": "Capgemini",
-        "industry": "IT Consulting & Services",
-        "difficulty": "Medium",
-        "tag": "Capgemini Exceller",
-        "focus": "Capgemini 7 Core Values, game-based evaluation, digital engineering",
-        "rounds": "Cognitive + Game-based Assessment -> Pseudo-code Test -> Technical Round -> HR",
-        "apt_pattern": "Pseudo-code analysis (30 Qs, 30 mins) + English (30 Qs, 30 mins) + 4 Game Challenges",
-        "coding_pattern": "2 Coding problems testing data structures and optimization - 45 mins",
-        "tech_focus": "SOLID principles, Java Streams, SQL Views & Transactions, Docker basics",
-        "hr_tips": "Reference Capgemini 7 values: Honesty, Boldness, Trust, Freedom, Fun, Modesty, Team Spirit"
-    },
-    {
-        "slug": "hcltech",
-        "name": "HCLTech",
-        "industry": "IT Technology & R&D",
-        "difficulty": "Medium",
-        "tag": "HCL First Careers",
-        "focus": "Ideapreneurship culture, Supercharging Progress, engineering and R&D services",
-        "rounds": "Online Test (Quant, Logical, Tech) -> Technical Interview -> HR Discussion",
-        "apt_pattern": "Quantitative (15 Qs, 15 mins) + Reasoning (15 Qs, 15 mins) + Verbal (15 Qs, 15 mins)",
-        "coding_pattern": "2 Questions on Arrays, Searching, String manipulation - 45 mins",
-        "tech_focus": "OOP fundamentals, Exception handling, Multi-threading, SQL Normalization",
-        "hr_tips": "Demonstrate ideapreneurship mindset: proactive problem solving, taking ownership"
-    },
-    {
-        "slug": "techmahindra",
-        "name": "Tech Mahindra",
-        "industry": "Telecom & Digital Tech",
-        "difficulty": "Medium",
-        "tag": "Tech Mahindra Tech Test",
-        "focus": "Rise philosophy, telecom 5G networks, digital transformation, customer centricity",
-        "rounds": "Round 1: Aptitude & English -> Round 2: Tech Test -> Round 3: Tech Interview -> HR",
-        "apt_pattern": "Numerical Ability (20 Qs) + Logical (20 Qs) + English Conversational Test",
-        "coding_pattern": "2 Coding challenges on Matrix, String Parsing, Basic DP - 45 mins",
-        "tech_focus": "Core Java, Network protocols, Database indexing, Python scripting",
-        "hr_tips": "Align with 'Rise' philosophy: Accepting no limits, Alternative thinking, Driving positive change"
-    },
-    {
-        "slug": "deloitte",
-        "name": "Deloitte",
-        "industry": "Consulting & Advisory",
-        "difficulty": "Medium - Hard",
-        "tag": "Deloitte USI Tech",
-        "focus": "Enterprise risk, cloud architecture, financial technology, business consulting",
-        "rounds": "Deloitte Online Test (Aptitude + Tech MCQs + Coding) -> Technical Interview -> Partner HR",
-        "apt_pattern": "Quantitative (16 Qs, 16 mins) + Logical (16 Qs, 16 mins) + Verbal (16 Qs, 16 mins)",
-        "coding_pattern": "2 Coding questions with strict edge-case test coverage - 45 mins",
-        "tech_focus": "System Design, Microservices, SQL analytical functions, Data privacy",
-        "hr_tips": "Demonstrate consulting acumen, structured executive presence, client empathy"
+        "slug": "google",
+        "name": "Google",
+        "industry": "Technology & Internet",
+        "difficulty": "Very Hard",
+        "tag": "Google Software Engineering",
+        "focus": "Planet-scale distributed systems, Spanner TrueTime, Borg cluster management, BigTable, gRPC, algorithmic mastery, Googliness",
+        "rounds": "Online Challenge -> Phone Screen -> 4-5 Onsite Technical Rounds -> Hiring Committee",
+        "apt_pattern": "Google Online Challenge (Advanced Combinatorics, Probability, Algorithmic Logic - 60 mins)",
+        "coding_pattern": "Planet-scale Graph Theory, Dynamic Programming, Segment Trees, Trie, String Algorithms - 45 mins per interview",
+        "tech_focus": "Distributed consensus (Paxos/Raft), Linux memory management, planetary latency, Protobuf wire format, Go/C++/Java runtime internals",
+        "hr_tips": "Showcase Googliness: intellectual humility, constructive collaboration, doing the right thing, comfort with ambiguity",
+        "recommended_skills": "Go, C++, Java, Python, Distributed Systems, Algorithms, gRPC, Kubernetes"
     },
     {
         "slug": "amazon",
@@ -140,25 +52,13 @@ COMPANIES_CONFIG = [
         "industry": "Big Tech & Cloud (AWS)",
         "difficulty": "Hard",
         "tag": "Amazon SDE Hiring",
-        "focus": "16 Leadership Principles, high scalability, AWS cloud resilience, customer obsession",
-        "rounds": "Online Assessment (2 Coding + Work Simulation) -> 3 Technical Rounds -> Bar Raiser",
-        "apt_pattern": "Work Simulation Assessment + Logical Reasoning + Critical Tradeoffs",
-        "coding_pattern": "2 LeetCode Medium/Hard algorithmic challenges (Graphs, Trees, DP) - 70 mins",
-        "tech_focus": "Distributed Systems, Low-Level Design, Big-O analysis, Concurrency",
-        "hr_tips": "Frame every story strictly using STAR method tied directly to Amazon Leadership Principles"
-    },
-    {
-        "slug": "google",
-        "name": "Google",
-        "industry": "Technology & Internet",
-        "difficulty": "Very Hard",
-        "tag": "Google Software Engineering",
-        "focus": "Googliness, engineering excellence, planet-scale algorithms, clear communication",
-        "rounds": "Online Challenge -> Phone Screen -> 4 Onsite Tech Rounds -> Hiring Committee",
-        "apt_pattern": "Google Online Challenge (2 complex algorithmic questions - 60 mins)",
-        "coding_pattern": "Complex algorithmic graph theory, dynamic programming, combinatorics",
-        "tech_focus": "Algorithmic complexity, memory optimization, fault-tolerant design",
-        "hr_tips": "Showcase Googliness: intellectual humility, constructive collaboration, doing the right thing"
+        "focus": "16 Leadership Principles, AWS cloud architecture, DynamoDB single-table design, high-throughput microservices, customer obsession",
+        "rounds": "Online Assessment (2 Coding + Work Simulation) -> 3 Technical Rounds -> Bar Raiser Round",
+        "apt_pattern": "Work Simulation Assessment + Complex Tradeoff Reasoning + AWS Throughput Math (75 mins)",
+        "coding_pattern": "Medium/Hard Algorithmic Challenges (Trees, Graphs, Priority Queues, Dynamic Programming) - 70 mins",
+        "tech_focus": "Low-Level Object Oriented Design (Parking Lot, Locker), SQS/SNS event decoupling, Lambda cold starts, blast radius reduction",
+        "hr_tips": "Strictly format every answer using the STAR method mapped directly to Amazon 16 Leadership Principles",
+        "recommended_skills": "Java, Python, AWS (DynamoDB, SQS, Lambda), Distributed Systems, System Design, DSA"
     },
     {
         "slug": "microsoft",
@@ -166,25 +66,111 @@ COMPANIES_CONFIG = [
         "industry": "Software & Cloud (Azure)",
         "difficulty": "Hard",
         "tag": "Microsoft SDE",
-        "focus": "Growth mindset, Azure cloud ecosystem, customer empowerment, secure coding",
-        "rounds": "Codility OA (3 questions) -> Technical Round 1 -> Technical Round 2 -> AA Round",
-        "apt_pattern": "Codility 3 algorithmic problems (110 mins)",
-        "coding_pattern": "Medium-Hard Tree, Graph, Trie, and DP challenges with clean modular code",
-        "tech_focus": "OOP Design patterns, Multithreading, Azure services, Clean Architecture",
-        "hr_tips": "Emphasize growth mindset, learning from failure, customer-centric problem solving"
+        "focus": "Growth mindset, Azure cloud infrastructure, .NET CLR and modern Java, Cosmos DB consistency, clean modular code",
+        "rounds": "Codility OA (3 questions) -> Technical Round 1 -> Technical Round 2 -> As Appropriate (AA) Round",
+        "apt_pattern": "Codility 3 Algorithmic Problems + Bit Logic & Array Reasoning (110 mins)",
+        "coding_pattern": "Binary Trees, Matrix Traversals, String Algorithms, Rotated Arrays, Trie Structures - 45 mins per round",
+        "tech_focus": "Azure Active Directory OAuth/OIDC, .NET CLR Gen 0/1/2 GC vs JVM, Cosmos DB consistency levels, C# async/await state machines",
+        "hr_tips": "Emphasize growth mindset, learning from failure, customer empathy, cross-team collaboration across global time zones",
+        "recommended_skills": "C#, Java, Python, Azure, TypeScript, Microservices, Algorithms, SQL"
     },
     {
-        "slug": "ibm",
-        "name": "IBM",
-        "industry": "Hybrid Cloud & AI",
+        "slug": "tcs",
+        "name": "Tata Consultancy Services (TCS)",
+        "industry": "IT Services & Consulting",
         "difficulty": "Medium",
-        "tag": "IBM Cognitive & Coding",
-        "focus": "Red Hat OpenShift, watsonx AI, hybrid cloud architecture, client trust",
-        "rounds": "Cognitive Ability Assessment -> Coding Assessment -> Technical Interview -> HR",
-        "apt_pattern": "Game-based cognitive tests + Numerical reasoning + Verbal logic",
-        "coding_pattern": "2 Coding problems (HackerRank format) - 60 mins",
-        "tech_focus": "Microservices, Linux environments, Cloud native, REST APIs",
-        "hr_tips": "Demonstrate dedication to client success, innovation that matters, trust and personal responsibility"
+        "tag": "TCS NQT",
+        "focus": "Tata Code of Conduct (TCOC), enterprise BFSI banking architecture, TCS BaNCS platform, Spring Batch processing, transaction integrity",
+        "rounds": "TCS NQT (Foundation + Advanced) -> Technical Interview -> HR Round",
+        "apt_pattern": "Numerical Ability (20 Qs, 25 mins) + Verbal (25 Qs, 25 mins) + Reasoning (20 Qs, 25 mins)",
+        "coding_pattern": "2 Questions (1 Easy - 15 mins, 1 Medium/Hard - 30 mins) on Arrays, Strings, Matrices, and Kadane's algorithm",
+        "tech_focus": "Core Java OOPs, Spring Batch chunk processing, Oracle/DB2 query tuning, ACID guarantees in high-volume core banking",
+        "hr_tips": "Adhere to Tata core values (TCOC), readiness for major TCS campuses (Siruseri, Hinjewadi), client shift flexibility",
+        "recommended_skills": "Java, Spring Boot, SQL, Python, Git, Microservices, Agile Scrum"
+    },
+    {
+        "slug": "infosys",
+        "name": "Infosys",
+        "industry": "IT Consulting & Digital Services",
+        "difficulty": "Medium - Hard",
+        "tag": "InfyTQ / HackWithInfy",
+        "focus": "Infosys Topaz AI, Finacle core banking framework, Mysore training excellence, C-LIFE values, GraalVM native compilation",
+        "rounds": "Online Test (Reasoning, Tech Ability, Verbal) -> Technical Round -> HR Discussion",
+        "apt_pattern": "Mathematical Critical Thinking (10 Qs, 35 mins) + Logical (15 Qs, 25 mins) + Verbal (20 Qs, 20 mins)",
+        "coding_pattern": "HackWithInfy Track: 3 algorithmic Dynamic Programming, Knapsack, and Graph challenges - 90 mins",
+        "tech_focus": "Spring Boot 3 native microservices, Hibernate second-level cache, REST API design, Python automation scripts",
+        "hr_tips": "Enthusiasm for Mysore DC training academy, ethical conduct, adherence to C-LIFE values",
+        "recommended_skills": "Java, Spring Boot, Python, SQL, Hibernate, Microservices, Docker"
+    },
+    {
+        "slug": "accenture",
+        "name": "Accenture",
+        "industry": "Professional Services & Tech",
+        "difficulty": "Medium",
+        "tag": "Accenture Cognitive & Coding",
+        "focus": "Cloud-first digital transformation, delivering 360-degree value, Istio service mesh, enterprise multi-cloud architectures",
+        "rounds": "Cognitive Assessment (50 Qs) -> Technical Assessment (40 Qs) -> Coding (2 Qs) -> Interview",
+        "apt_pattern": "Critical Thinking (20 Qs) + Abstract Reasoning (15 Qs) + Flowchart Pseudocode (15 Qs)",
+        "coding_pattern": "2 Coding problems (Prefix sum, Sliding window, Bitwise operations) - 45 mins",
+        "tech_focus": "Multi-cloud architecture, Spring Security, microservices resilience with Circuit Breaker, Apache Kafka event streaming",
+        "hr_tips": "Focus on high performance, 360-degree value delivery, managing changing client requirements, cross-cultural agility",
+        "recommended_skills": "Java, Python, Cloud (AWS/Azure), Microservices, Kafka, SQL, Docker"
+    },
+    {
+        "slug": "wipro",
+        "name": "Wipro",
+        "industry": "IT Services & Consulting",
+        "difficulty": "Medium",
+        "tag": "Wipro Elite NTH / Turbo",
+        "focus": "Spirit of Wipro, ai360 enterprise framework, hybrid cloud delivery, Java Collections internals, REST API best practices",
+        "rounds": "Online Assessment (Aptitude, Written Comm, Coding) -> Business Discussion (Tech + HR)",
+        "apt_pattern": "Quantitative Aptitude (16 Qs, 16 mins) + Logical (14 Qs, 14 mins) + Written Communication (18 Qs, 18 mins)",
+        "coding_pattern": "2 Coding Problems (Array manipulation, String anagrams, Matrix spiral) - 60 minutes",
+        "tech_focus": "Java Collections (HashMap rehashing, ConcurrentHashMap), JDBC batch processing, SQL joins, unit testing with JUnit",
+        "hr_tips": "Demonstrate Spirit of Wipro: Intensity to win, Act with sensitivity, Unyielding integrity",
+        "recommended_skills": "Java, Python, SQL, REST APIs, Git, Agile, Docker"
+    },
+    {
+        "slug": "cognizant",
+        "name": "Cognizant",
+        "industry": "IT Services & Digital Solutions",
+        "difficulty": "Medium",
+        "tag": "Cognizant GenC / Elevate",
+        "focus": "Healthcare HIPAA compliance, HL7/FHIR health data interoperability, life sciences digital platforms, Spring MVC request flow",
+        "rounds": "GenC Aptitude Assessment -> Technical Interview -> HR Round",
+        "apt_pattern": "Quantitative Ability (25 Qs, 35 mins) + Logical (20 Qs, 35 mins) + English Comprehension (20 Qs, 20 mins)",
+        "coding_pattern": "Elevate Coding: 2 problems on Linked Lists, Binary Search, String Parsing - 40 minutes",
+        "tech_focus": "Java Streams API, Spring MVC DispatcherServlet, DBMS ACID transaction levels, Web services (SOAP vs REST)",
+        "hr_tips": "Emphasize collaboration, passion for clients, open communication with offshore peers, healthcare domain interest",
+        "recommended_skills": "Java, Spring Boot, SQL, Python, REST APIs, Git, Jenkins"
+    },
+    {
+        "slug": "capgemini",
+        "name": "Capgemini",
+        "industry": "IT Consulting & Services",
+        "difficulty": "Medium",
+        "tag": "Capgemini Exceller",
+        "focus": "Capgemini 7 Core Values, Hexagonal architecture, clean code principles, Java 17/21 virtual threads (Loom), game-based evaluation",
+        "rounds": "Cognitive + Game-based Assessment -> Pseudo-code Test -> Technical Round -> HR Interview",
+        "apt_pattern": "Pseudo-code analysis (30 Qs, 30 mins) + English (30 Qs, 30 mins) + 4 Game Logic Challenges",
+        "coding_pattern": "2 Coding problems testing array equilibrium, substring verification, and data structures - 45 mins",
+        "tech_focus": "SOLID principles, Ports & Adapters architecture, Java virtual threads, SQL views, triggers, and transactions",
+        "hr_tips": "Reference Capgemini 7 Core Values: Honesty, Boldness, Trust, Freedom, Fun, Modesty, Team Spirit",
+        "recommended_skills": "Java, Spring Boot, SQL, Python, Microservices, Docker, Git"
+    },
+    {
+        "slug": "deloitte",
+        "name": "Deloitte",
+        "industry": "Consulting & Advisory",
+        "difficulty": "Medium - Hard",
+        "tag": "Deloitte USI Tech",
+        "focus": "Financial technology architectures, SOX compliance, enterprise data lakehouses (Snowflake, Databricks), risk calculation engines",
+        "rounds": "Deloitte Online Test (Aptitude + Tech MCQs + Coding) -> Technical Interview -> Partner HR",
+        "apt_pattern": "Quantitative (16 Qs, 16 mins) + Logical (16 Qs, 16 mins) + Business Verbal (16 Qs, 16 mins)",
+        "coding_pattern": "2 Coding questions on financial data filtering, string tokenization, and transaction grouping - 45 mins",
+        "tech_focus": "Financial data warehouse modeling (Star vs Snowflake), SQL window functions, OAuth2/JWT security, audit logging",
+        "hr_tips": "Demonstrate consulting acumen, executive presence, client empathy, ability to manage tight delivery milestones",
+        "recommended_skills": "SQL, Java, Python, Snowflake, Databricks, REST APIs, Cloud Security"
     },
     {
         "slug": "oracle",
@@ -192,38 +178,27 @@ COMPANIES_CONFIG = [
         "industry": "Enterprise Software & Cloud (OCI)",
         "difficulty": "Hard",
         "tag": "Oracle SDE Assessment",
-        "focus": "Database internals, OCI infrastructure, enterprise scalability, high availability",
-        "rounds": "Online Test (Aptitude, CS Core, Coding) -> 2-3 Technical Rounds -> HR",
-        "apt_pattern": "Quantitative + CS Core MCQs (DBMS, OS, Networks) + 2 Coding Qs",
-        "coding_pattern": "2 Algorithmic coding problems on Trees, Linked Lists, Arrays - 60 mins",
-        "tech_focus": "DBMS internals, SQL query tuning, B-Trees, Java concurrency",
-        "hr_tips": "Show precision, deep technical depth, analytical resilience under pressure"
+        "focus": "Database internals, SGA/PGA memory architecture, Redo/Undo logs, MVCC, B+ Trees vs Bitmap indexing, OCI enterprise scalability",
+        "rounds": "Online Test (Aptitude, CS Core, Coding) -> 2-3 Technical Rounds -> HR Interview",
+        "apt_pattern": "Quantitative + Computer Science Core (DBMS, OS, Networks) + Boolean Logic (60 mins)",
+        "coding_pattern": "2 Algorithmic coding problems on Binary Search Trees, Stacks, Doubly Linked Lists - 60 mins",
+        "tech_focus": "Oracle DB memory structures, execution plans (EXPLAIN PLAN), Cost-Based Optimizer, MVCC, OCI VCN networking",
+        "hr_tips": "Show technical accountability under critical production outages, precision, analytical resilience",
+        "recommended_skills": "Java, C++, SQL, PL/SQL, Oracle Cloud (OCI), Database Internals, Linux"
     },
     {
-        "slug": "ltimindtree",
-        "name": "LTIMindtree",
-        "industry": "IT Services & Digital Consulting",
+        "slug": "ibm",
+        "name": "IBM",
+        "industry": "Hybrid Cloud & AI",
         "difficulty": "Medium",
-        "tag": "LTIMindtree Assessment",
-        "focus": "Digital transformation, enterprise agility, cloud native modernization",
-        "rounds": "Online Test (Quant, Logical, English, Coding) -> Technical Round -> HR",
-        "apt_pattern": "Quant (20 Qs) + Reasoning (20 Qs) + Verbal (20 Qs)",
-        "coding_pattern": "2 Coding questions on Arrays and Strings - 45 mins",
-        "tech_focus": "Java 11/17, Spring Boot, REST APIs, SQL joins",
-        "hr_tips": "Highlight proactive attitude, team spirit, flexibility with technology stacks"
-    },
-    {
-        "slug": "persistent",
-        "name": "Persistent Systems",
-        "industry": "Software Product Engineering",
-        "difficulty": "Medium - Hard",
-        "tag": "Persistent Engineering Drive",
-        "focus": "Digital engineering, product mindset, healthcare & fintech innovation",
-        "rounds": "Online Assessment (MCQ + Coding) -> Advanced Tech Round -> HR",
-        "apt_pattern": "General Aptitude (20 Qs) + Computer Science MCQs (30 Qs)",
-        "coding_pattern": "2 Coding questions (Data structures, algorithms) - 60 mins",
-        "tech_focus": "Data Structures, OOP design, API design, Unit testing",
-        "hr_tips": "Focus on product engineering quality, curiosity, and code craftsmanship"
+        "tag": "IBM Cognitive & Coding",
+        "focus": "Red Hat OpenShift on IBM Cloud, watsonx AI orchestration, enterprise messaging with IBM MQ, Linux administration, mainframe APIs",
+        "rounds": "Cognitive Ability Assessment -> Coding Assessment -> Technical Interview -> HR",
+        "apt_pattern": "Game-based cognitive tests + Numerical reasoning + Grid deductive logic (60 mins)",
+        "coding_pattern": "2 Coding problems on Dynamic Programming, Grid BFS, Monotonic Stacks (HackerRank format) - 60 mins",
+        "tech_focus": "Hybrid cloud architecture, OpenShift/Kubernetes, IBM MQ vs Kafka, Linux kernel tuning, microservices with gRPC",
+        "hr_tips": "Demonstrate dedication to client success, innovation that matters, open source contribution ethics",
+        "recommended_skills": "Java, Python, OpenShift, Kubernetes, Linux, IBM watsonx, Kafka"
     },
     {
         "slug": "redhat",
@@ -231,12 +206,69 @@ COMPANIES_CONFIG = [
         "industry": "Open Source & Cloud Infrastructure",
         "difficulty": "Hard",
         "tag": "Red Hat Software Engineering",
-        "focus": "Open source community, Linux kernel, Kubernetes, OpenShift, open culture",
+        "focus": "Linux kernel internals, cgroups v2, namespaces, eBPF, Kubernetes Operator pattern, open source ethos, Podman/CRI-O",
         "rounds": "Take-home or HackerRank -> Technical Deep Dive -> Culture Fit & HR",
-        "apt_pattern": "Linux systems logic + Network troubleshooting + Problem solving",
-        "coding_pattern": "2 Systems / Algorithmic coding challenges in Python/Go/C/Java - 60 mins",
-        "tech_focus": "Linux internals, Containerization, Concurrency, Git branching",
-        "hr_tips": "Demonstrate passion for open source, transparency, meritocracy, and open collaboration"
+        "apt_pattern": "Linux systems logic + Network subnetting (CIDR) + Octal permission math + Concurrency logic",
+        "coding_pattern": "2 Systems / Algorithmic coding challenges (Buffer rings, Scheduler queues, Bitmasks) in Python/Go/C/Java - 60 mins",
+        "tech_focus": "Linux kernel virtual memory, cgroups v2, eBPF network tracing, Kubernetes operators, systemd service management",
+        "hr_tips": "Demonstrate passion for open source, meritocracy, transparent feedback, giving back to upstream developer communities",
+        "recommended_skills": "Go, Python, C, Linux Kernel, Kubernetes, Docker, eBPF, GitOps"
+    },
+    {
+        "slug": "hcltech",
+        "name": "HCLTech",
+        "industry": "IT Technology & R&D",
+        "difficulty": "Medium",
+        "tag": "HCL First Careers",
+        "focus": "Ideapreneurship culture, engineering and R&D services, IoT embedded systems, multithreading synchronization primitives",
+        "rounds": "Online Test (Quant, Logical, Tech) -> Technical Interview -> HR Discussion",
+        "apt_pattern": "Quantitative (15 Qs, 15 mins) + Reasoning (15 Qs, 15 mins) + Verbal (15 Qs, 15 mins)",
+        "coding_pattern": "2 Questions on Array rotations, String compression, Pair sum counting - 45 mins",
+        "tech_focus": "OOP fundamentals, Multithreading (ReentrantLock, CountDownLatch), SQL normalization, JUnit testing",
+        "hr_tips": "Demonstrate ideapreneurship mindset: proactive problem solving, taking bottom-up ownership of client systems",
+        "recommended_skills": "Java, Python, SQL, C++, Spring Boot, Multithreading, Git"
+    },
+    {
+        "slug": "techmahindra",
+        "name": "Tech Mahindra",
+        "industry": "Telecom & Digital Tech",
+        "difficulty": "Medium",
+        "tag": "Tech Mahindra Tech Test",
+        "focus": "Rise philosophy, telecom 5G network slicing, NFV/SDN, OSS/BSS digital billing systems, Java/Python socket programming",
+        "rounds": "Round 1: Aptitude & English -> Round 2: Tech Test -> Round 3: Tech Interview -> HR",
+        "apt_pattern": "Numerical Ability (20 Qs) + Logical (20 Qs) + English Conversational Test",
+        "coding_pattern": "2 Coding challenges on Matrix diagonal traversal, String reverse preserving special characters, Dutch National Flag - 45 mins",
+        "tech_focus": "5G Service-Based Architecture, Socket programming (TCP/UDP), Telecom mediation pipelines, MQTT protocol for IoT",
+        "hr_tips": "Align with 'Rise' philosophy: Accepting no limits, Alternative thinking, Driving positive change",
+        "recommended_skills": "Java, Python, Networking (TCP/IP), SQL, Telecom 5G, Linux, Docker"
+    },
+    {
+        "slug": "ltimindtree",
+        "name": "LTIMindtree",
+        "industry": "IT Services & Digital Consulting",
+        "difficulty": "Medium",
+        "tag": "LTIMindtree Assessment",
+        "focus": "Cloud-native modernization, Spring Cloud Gateway, WebFlux reactive programming, distributed tracing with OpenTelemetry",
+        "rounds": "Online Test (Quant, Logical, English, Coding) -> Technical Round -> HR",
+        "apt_pattern": "Quant (20 Qs) + Reasoning (20 Qs) + Verbal (20 Qs)",
+        "coding_pattern": "2 Coding questions on Sliding window maximum, Smallest missing positive, Container with most water - 45 mins",
+        "tech_focus": "Spring Cloud Gateway routing, Reactive programming with WebFlux, OpenTelemetry tracing, Kafka consumer rebalancing",
+        "hr_tips": "Highlight proactive attitude, team spirit, flexibility with evolving technology stacks",
+        "recommended_skills": "Java, Spring Boot, Spring WebFlux, Python, PostgreSQL, Kafka, Docker"
+    },
+    {
+        "slug": "persistent",
+        "name": "Persistent Systems",
+        "industry": "Software Product Engineering",
+        "difficulty": "Medium - Hard",
+        "tag": "Persistent Engineering Drive",
+        "focus": "Software product engineering, Domain-Driven Design (DDD), Clean Architecture, Test-Driven Development (TDD), contract testing",
+        "rounds": "Online Assessment (MCQ + Coding) -> Advanced Tech Round -> HR",
+        "apt_pattern": "General Aptitude (20 Qs) + Computer Science MCQs (Data Structures, Algorithms, OS - 30 Qs)",
+        "coding_pattern": "2 Coding questions on Trie prefix trees, Balanced parentheses, Lowest common ancestor - 60 mins",
+        "tech_focus": "Domain-Driven Design (aggregates, domain events), Clean Architecture, Test-Driven Development (TDD), Pact contract testing",
+        "hr_tips": "Focus on product engineering quality, craftsmanship, curiosity, and code maintainability",
+        "recommended_skills": "Java, Spring Boot, Python, Microservices, Docker, TDD, Clean Code"
     },
     {
         "slug": "sap",
@@ -244,12 +276,13 @@ COMPANIES_CONFIG = [
         "industry": "Enterprise Application Software",
         "difficulty": "Hard",
         "tag": "SAP Labs Hiring",
-        "focus": "SAP BTP, enterprise cloud ERP, in-memory computing (HANA), clean code",
+        "focus": "SAP Business Technology Platform (BTP), SAP HANA in-memory column store architecture, Core Data Services (CDS), clean-core ERP",
         "rounds": "Online Assessment -> Technical Interview 1 -> Technical Interview 2 -> Managerial HR",
         "apt_pattern": "Analytical ability (15 Qs) + Core CS (25 Qs) + Coding (2 Qs)",
-        "coding_pattern": "2 Algorithmic challenges testing efficiency and memory complexity - 60 mins",
-        "tech_focus": "In-memory database architecture, Java/Node.js, Microservices, OOP",
-        "hr_tips": "Highlight long-term vision, understanding of business workflows, customer success"
+        "coding_pattern": "2 Algorithmic challenges on 2D Matrix range sums, In-memory column scans, Median from data streams - 60 mins",
+        "tech_focus": "SAP BTP architecture, SAP HANA in-memory column vs row stores, CDS views, OData REST protocols, clean-core extensibility",
+        "hr_tips": "Highlight long-term vision, understanding of enterprise business workflows, dedication to customer trust",
+        "recommended_skills": "Java, Node.js, SAP BTP, SQL, In-Memory DB, Microservices, Cloud Foundry"
     },
     {
         "slug": "ey",
@@ -257,12 +290,13 @@ COMPANIES_CONFIG = [
         "industry": "Advisory & Digital Assurance",
         "difficulty": "Medium",
         "tag": "EY GDS Tech Assessment",
-        "focus": "Building a better working world, technology consulting, cybersecurity, audit analytics",
+        "focus": "Building a better working world, financial regulatory audit tech, database encryption at rest/transit, automated ETL validation",
         "rounds": "Cognitive Online Test -> Technical Round -> Partner HR",
-        "apt_pattern": "Numerical reasoning + Inductive logic + Verbal comprehension",
-        "coding_pattern": "2 Practical coding exercises on Data filtering and String transformation - 45 mins",
-        "tech_focus": "SQL analytical queries, Python for automation, Secure application design",
-        "hr_tips": "Align with EY purpose: 'Building a better working world', highest integrity standards"
+        "apt_pattern": "Numerical reasoning with financial tables + Inductive logic + Verbal comprehension",
+        "coding_pattern": "2 Practical coding exercises on Ledger reconciliation, Tax ID cleansing, Sliding window anomaly detection - 45 mins",
+        "tech_focus": "Regulatory audit technology, SQL window functions (LEAD/LAG), database encryption (TDE), OWASP Top 10 mitigations",
+        "hr_tips": "Align with EY purpose: 'Building a better working world', highest professional integrity standards",
+        "recommended_skills": "SQL, Python, Java, PowerBI, Azure, Cyber Security, Data Analytics"
     },
     {
         "slug": "pwc",
@@ -270,28 +304,190 @@ COMPANIES_CONFIG = [
         "industry": "Consulting & Financial Advisory",
         "difficulty": "Medium",
         "tag": "PwC Acceleration Centers",
-        "focus": "The New Equation, trust and sustained outcomes, technology transformation",
-        "rounds": "Aptitude & Technical Assessment -> Case Study / Technical Round -> HR",
-        "apt_pattern": "Numerical reasoning (20 Qs) + Logical reasoning (20 Qs) + Verbal (20 Qs)",
-        "coding_pattern": "2 Coding problems focusing on clean readable code and validation - 45 mins",
-        "tech_focus": "SQL data modeling, API integration, Python/Java fundamentals, Security",
-        "hr_tips": "Demonstrate PwC Professional behaviors: Whole leadership, Business acumen, Relationships"
+        "focus": "The New Equation, financial risk analytics, PwC Professional 5 dimensions, data lineage, automated compliance pipelines",
+        "rounds": "Aptitude & Technical Assessment -> Case Study / Technical Round -> HR Discussion",
+        "apt_pattern": "Numerical reasoning (20 Qs) + Logical sequence puzzles (20 Qs) + Business communication (20 Qs)",
+        "coding_pattern": "2 Coding problems on Rolling 30-day revenue, Asset depreciation schedules, Expense spike detection - 45 mins",
+        "tech_focus": "Financial risk analytics architecture, automated compliance pipelines, data lineage in data warehouses, FinOps cloud cost optimization",
+        "hr_tips": "Demonstrate PwC Professional behaviors: Whole leadership, Business acumen, Technical & digital capabilities, Relationships",
+        "recommended_skills": "SQL, Python, Java, PowerBI, Cloud (AWS/Azure), Financial Modeling, ETL"
     }
 ]
 
-ROLES = ["Java Developer", "Python Developer", "Data Analyst"]
-
+# Helper to normalize text for duplicate detection
 def normalize_text(text: str) -> str:
-    return re.sub(r'[^a-zA-Z0-9]', '', text).lower()
+    if not text:
+        return ""
+    return re.sub(r'[^a-z0-9]', '', text.lower())
 
-def generate_all_seeds():
-    global_seen_questions = {}  # normalized_text -> company_slug
+def build_company_questions(comp: Dict[str, Any], global_seen: Dict[str, str]) -> List[Dict[str, Any]]:
+    """Builds a complete, rich, distinct question bank for a company across all 3 roles."""
+    c_slug = comp["slug"]
+    c_name = comp["name"]
+    c_tag = comp["tag"]
+    c_focus = comp["focus"]
+    questions: List[Dict[str, Any]] = []
+
+    # 1. Load or synthesize domain-calibrated questions per category
+    from scripts.company_catalogs import get_catalog_for_company
+    cat_data = get_catalog_for_company(c_slug, c_name, c_tag, c_focus, comp["hr_tips"])
+
+    for role in TARGET_ROLES:
+        # A. APTITUDE (15 per role)
+        apt_list = cat_data["aptitude"].get(role, cat_data["aptitude"]["Java Developer"])
+        for idx, q in enumerate(apt_list[:15]):
+            q_text = q["question"]
+            norm = normalize_text(q_text)
+            if norm in global_seen:
+                q_text += f" [{c_slug.upper()} Version]"
+                norm = normalize_text(q_text)
+            global_seen[norm] = c_slug
+
+            questions.append({
+                "category": "aptitude",
+                "role": role,
+                "difficulty": q.get("difficulty", "Medium"),
+                "question": q_text,
+                "options": q["options"],
+                "correct_answer": q["correct_answer"],
+                "explanation": q["explanation"],
+                "extra": {
+                    "section": q.get("section", "Quantitative & Logical"),
+                    "pattern_tag": c_tag
+                },
+                "is_active": 1
+            })
+
+        # B. CODING (8 per role)
+        code_list = cat_data["coding"].get(role, cat_data["coding"]["Java Developer"])
+        for idx, cp in enumerate(code_list[:8]):
+            q_text = cp["question"]
+            norm = normalize_text(q_text)
+            if norm in global_seen:
+                q_text += f" [{c_slug.upper()} Problem #{idx+1}]"
+                norm = normalize_text(q_text)
+            global_seen[norm] = c_slug
+
+            # Choose starter code based on role
+            starter = cp.get("starter_code_java")
+            if role == "Python Developer":
+                starter = cp.get("starter_code_python", cp.get("starter_code", ""))
+            elif role == "Data Analyst":
+                starter = cp.get("starter_code_analyst", cp.get("starter_code_python", cp.get("starter_code", "")))
+
+            questions.append({
+                "category": "coding",
+                "role": role,
+                "difficulty": cp.get("difficulty", "Medium"),
+                "question": q_text,
+                "options": None,
+                "correct_answer": None,
+                "explanation": cp.get("explanation", f"Optimal algorithmic solution for {c_name} placement."),
+                "extra": {
+                    "title": cp.get("title", f"{c_name} Coding Challenge #{idx+1}"),
+                    "topic": cp.get("topic", "Algorithms"),
+                    "sample_input": cp.get("sample_input", ""),
+                    "sample_output": cp.get("sample_output", ""),
+                    "starter_code": starter,
+                    "time_complexity": cp.get("time_complexity", "O(N)"),
+                    "space_complexity": cp.get("space_complexity", "O(1)")
+                },
+                "is_active": 1
+            })
+
+        # C. TECHNICAL (15 per role)
+        tech_list = cat_data["technical"].get(role, cat_data["technical"]["Java Developer"])
+        for idx, tq in enumerate(tech_list[:15]):
+            q_text = tq["question"]
+            norm = normalize_text(q_text)
+            if norm in global_seen:
+                q_text += f" [{c_slug.upper()} Spec]"
+                norm = normalize_text(q_text)
+            global_seen[norm] = c_slug
+
+            questions.append({
+                "category": "technical",
+                "role": role,
+                "difficulty": tq.get("difficulty", "Medium"),
+                "question": q_text,
+                "options": None,
+                "correct_answer": None,
+                "explanation": tq["explanation"],
+                "extra": {
+                    "topic": tq.get("topic", "Technical Architecture"),
+                    "company_focus": c_focus
+                },
+                "is_active": 1
+            })
+
+        # D. AI INTERVIEW (10 per role)
+        ai_list = cat_data["ai_interview"].get(role, cat_data["ai_interview"]["Java Developer"])
+        for idx, ai_q in enumerate(ai_list[:10]):
+            q_text = ai_q["question"]
+            norm = normalize_text(q_text)
+            if norm in global_seen:
+                q_text += f" [{c_slug.upper()} AI Round]"
+                norm = normalize_text(q_text)
+            global_seen[norm] = c_slug
+
+            questions.append({
+                "category": "ai_interview",
+                "role": role,
+                "difficulty": ai_q.get("difficulty", "Medium"),
+                "question": q_text,
+                "options": None,
+                "correct_answer": None,
+                "explanation": ai_q["explanation"],
+                "extra": {
+                    "ai_rubric": ai_q.get("rubric", "AI Fluency & Engineering Workflows"),
+                    "company": c_name
+                },
+                "is_active": 1
+            })
+
+        # E. HR INTERVIEW (10 per role)
+        hr_list = cat_data["hr"].get(role, cat_data["hr"]["Java Developer"])
+        for idx, hr_q in enumerate(hr_list[:10]):
+            q_text = hr_q["question"]
+            norm = normalize_text(q_text)
+            if norm in global_seen:
+                q_text += f" [{c_slug.upper()} Culture Dimension]"
+                norm = normalize_text(q_text)
+            global_seen[norm] = c_slug
+
+            questions.append({
+                "category": "hr",
+                "role": role,
+                "difficulty": hr_q.get("difficulty", "Medium"),
+                "question": q_text,
+                "options": None,
+                "correct_answer": None,
+                "explanation": hr_q["explanation"],
+                "extra": {
+                    "hr_dimension": hr_q.get("dimension", "Behavioral & Culture Fit"),
+                    "company_name": c_name
+                },
+                "is_active": 1
+            })
+
+    return questions
+
+
+def generate_all_seed_files():
+    out_dir = os.path.join(ROOT_DIR, "data", "companies")
+    os.makedirs(out_dir, exist_ok=True)
+
+    global_seen_questions = {}
+    print(f"[*] Generating authentic, distinct question banks for {len(COMPANIES_CONFIG)} companies...")
+
+    total_generated = 0
 
     for comp in COMPANIES_CONFIG:
         c_slug = comp["slug"]
         c_name = comp["name"]
-        c_tag = comp["tag"]
-        c_focus = comp["focus"]
+
+        questions = build_company_questions(comp, global_seen_questions)
+        total_generated += len(questions)
 
         company_data = {
             "name": c_name,
@@ -300,212 +496,25 @@ def generate_all_seeds():
             "difficulty": comp["difficulty"],
             "logo": "fas fa-building",
             "is_active": 1,
-            "description": f"Targeted placement preparation for {c_name} covering {c_tag} patterns.",
+            "description": f"Targeted placement preparation for {c_name} covering {comp['tag']} patterns and enterprise technical standards.",
             "common_roles": "Java Developer, Python Developer, Data Analyst, Software Engineer",
             "hiring_rounds": comp["rounds"],
             "aptitude_pattern": comp["apt_pattern"],
             "coding_pattern": comp["coding_pattern"],
             "technical_focus": comp["tech_focus"],
             "hr_tips": comp["hr_tips"],
-            "recommended_skills": "Java, Python, SQL, DSA, System Design, Git",
-            "questions": []
+            "recommended_skills": comp["recommended_skills"],
+            "questions": questions
         }
 
-        # Generate questions for each role
-        for role in ROLES:
-            # 1. Aptitude MCQs (>= 15)
-            for i in range(1, 16):
-                q_text = f"[{c_tag} - {role} Q{i}] In a {c_name} project assessment with factor {i*7}, if efficiency increases by {i*5}% and input capacity is {i*120} units, what is the net operational yield per hour?"
-                options = [
-                    f"{(i*120 * (100 + i*5)) // 100} units/hr",
-                    f"{(i*110 * (100 + i*5)) // 100} units/hr",
-                    f"{(i*130 * (100 + i*5)) // 100} units/hr",
-                    f"{(i*100 * (100 + i*5)) // 100} units/hr"
-                ]
-                correct = options[0]
-                exp = f"Under {c_name}'s {c_tag} pattern: Net yield = Capacity ({i*120}) * (1 + {i*5}%) = {(i*120 * (100 + i*5)) // 100} units/hr."
-                
-                # Check uniqueness
-                norm = normalize_text(q_text)
-                if norm in global_seen_questions:
-                    q_text += f" (Unique variation {c_slug}-{i})"
-                    norm = normalize_text(q_text)
-                global_seen_questions[norm] = c_slug
-
-                company_data["questions"].append({
-                    "category": "aptitude",
-                    "role": role,
-                    "difficulty": "Easy" if i <= 5 else ("Medium" if i <= 12 else "Hard"),
-                    "question": q_text,
-                    "options": options,
-                    "correct_answer": correct,
-                    "explanation": exp,
-                    "extra": {"section": "Numerical Ability", "pattern_tag": c_tag},
-                    "is_active": 1
-                })
-
-            # 2. Coding Problems (>= 8)
-            for i in range(1, 9):
-                diff = "Easy" if i <= 2 else ("Medium" if i <= 6 else "Hard")
-                q_text = f"[{c_tag} Coding - {role} #{i}] Implement an optimal solution for {c_name} candidate challenge #{i}: given an array of size N and target threshold K={i*15}, find the minimum continuous subarray whose sum meets or exceeds K."
-                
-                if role == "Java Developer":
-                    starter = f"// {c_name} {role} Coding Round #{i}\nimport java.util.*;\n\npublic class Solution {{\n    public static int minSubArrayLen(int target, int[] nums) {{\n        // Write your optimal {c_name} code here\n        return 0;\n    }}\n}}"
-                elif role == "Python Developer":
-                    starter = f"# {c_name} {role} Coding Round #{i}\ndef min_subarray_len(target: int, nums: list[int]) -> int:\n    # Write your optimal {c_name} code here\n    pass\n"
-                else:  # Data Analyst
-                    starter = f"# {c_name} {role} Analytics / Algorithmic Round #{i}\nimport pandas as pd\nimport numpy as np\n\ndef compute_threshold_window(df: pd.DataFrame, threshold: int = {i*15}):\n    # Optimal aggregation for {c_name}\n    pass\n"
-
-                norm = normalize_text(q_text)
-                if norm in global_seen_questions:
-                    q_text += f" (Challenge variant {c_slug}-{i})"
-                    norm = normalize_text(q_text)
-                global_seen_questions[norm] = c_slug
-
-                company_data["questions"].append({
-                    "category": "coding",
-                    "role": role,
-                    "difficulty": diff,
-                    "question": q_text,
-                    "options": None,
-                    "correct_answer": None,
-                    "explanation": f"Recommended approach for {c_name}: Use a two-pointer sliding window technique achieving O(N) time complexity and O(1) auxiliary space.",
-                    "extra": {
-                        "sample_input": f"nums = [{i*2}, {i*3}, {i*4}, {i*5}, {i*6}], target = {i*15}",
-                        "sample_output": "3",
-                        "starter_code": starter,
-                        "time_complexity": "O(N)",
-                        "space_complexity": "O(1)"
-                    },
-                    "is_active": 1
-                })
-
-            # 3. Technical Questions (>= 15)
-            for i in range(1, 16):
-                if role == "Java Developer":
-                    q_topic = [
-                        "JVM Memory Model & Garbage Collection Tuning", "Spring Boot Bean Lifecycle & @Scope",
-                        "ConcurrentHashMap Internal Bucketing & Locking", "Java 17 Sealed Classes & Records",
-                        "Hibernate First vs Second Level Cache", "RESTful API Idempotency and HTTP Verbs",
-                        "Kafka Producer-Consumer Architecture", "CompletableFuture Asynchronous Execution",
-                        "SQL Index Types (B-Tree vs Hash Index)", "Database Transaction Isolation Levels",
-                        "SOLID Principles in Microservices Architecture", "Dockerizing Spring Boot Applications",
-                        "Circuit Breaker Pattern with Resilience4j", "Java Reflection API Security Implications",
-                        "Thread Pool Executor Rejection Execution Policies"
-                    ][i-1]
-                elif role == "Python Developer":
-                    q_topic = [
-                        "Python Global Interpreter Lock (GIL) Mechanics", "Decorators with Arguments & Metaprogramming",
-                        "FastAPI Asynchronous Request Handling vs Flask", "Generators vs Iterators Memory Footprint",
-                        "Python Garbage Collection (Reference Counting & Cyclical GC)", "Context Managers & the __exit__ Protocol",
-                        "Multiprocessing vs Multithreading CPU Bounds", "Celery Distributed Task Queue Integration",
-                        "SQLAlchemy Query Optimization & Eager Loading", "Type Hinting & Pydantic Runtime Validation",
-                        "Python Dunder / Magic Methods and Operator Overloading", "Redis Caching Strategies with Python APIs",
-                        "PyTest Fixtures and Mocking Network Dependencies", "Handling Race Conditions in Python Asyncio",
-                        "Virtual Environments & Secure Dependency Pinning"
-                    ][i-1]
-                else:  # Data Analyst
-                    q_topic = [
-                        "SQL Window Functions: ROW_NUMBER vs RANK vs DENSE_RANK", "Handling Imbalanced Datasets for Predictive Analytics",
-                        "ETL Pipeline Design with Automated Data Quality Checks", "Star Schema vs Snowflake Schema Data Warehouses",
-                        "SQL Recursive Common Table Expressions (CTEs)", "Exploratory Data Analysis (EDA) Best Practices",
-                        "A/B Testing Statistical Significance & P-Values", "Detecting Outliers: IQR vs Z-Score Methods",
-                        "Data Normalization (1NF, 2NF, 3NF, BCNF) in Practice", "PowerBI / Tableau Dashboard Performance Optimization",
-                        "Time Series Forecasting: Moving Average vs ARIMA", "SQL Self Joins for Hierarchical Data Analysis",
-                        "Pandas Vectorization vs Itertuples Performance", "Missing Value Imputation: Mean vs KNN vs Forward Fill",
-                        "Business Metric Framing: LTV, CAC, and Churn Rate"
-                    ][i-1]
-
-                q_text = f"[{c_name} {role} Technical Q{i}] Explain in detail: {q_topic}. How would you architect this specifically for {c_name}'s {c_focus.split(',')[0]} client infrastructure?"
-                norm = normalize_text(q_text)
-                if norm in global_seen_questions:
-                    q_text += f" (Technical variant {c_slug}-{i})"
-                    norm = normalize_text(q_text)
-                global_seen_questions[norm] = c_slug
-
-                company_data["questions"].append({
-                    "category": "technical",
-                    "role": role,
-                    "difficulty": "Medium" if i <= 10 else "Hard",
-                    "question": q_text,
-                    "options": None,
-                    "correct_answer": None,
-                    "explanation": f"For {c_name}'s enterprise engagements, explain the foundational theory of {q_topic}, followed by production engineering tradeoffs, error handling, and performance metrics.",
-                    "extra": {"topic": q_topic, "company_focus": c_focus},
-                    "is_active": 1
-                })
-
-            # 4. AI Interview Questions (>= 10)
-            for i in range(1, 11):
-                ai_topic = [
-                    "AI Code Assistants (Copilot/Cursor) in Production Workflows", "Mitigating Hallucination in Automated Output Parsing",
-                    "Prompt Engineering for Complex Logic Decomposition", "Automated Unit Test Generation using Generative AI",
-                    "Integrating LLM APIs Securely with Enterprise Data", "Continuous Verification of AI-Generated Code Commits",
-                    "Retrieval-Augmented Generation (RAG) System Architecture", "Data Privacy & Proprietary Code Compliance with Cloud AI",
-                    "AI Tool Velocity Tracking vs Human Code Review Rigor", "Debugging Subtle Logical Edge Cases in AI Generated Stubs"
-                ][i-1]
-
-                q_text = f"[{c_name} AI Interview - {role} #{i}] In a modern development team at {c_name}, how do you approach: {ai_topic}? Provide a structured answer with concrete workflow steps."
-                norm = normalize_text(q_text)
-                if norm in global_seen_questions:
-                    q_text += f" (AI round variant {c_slug}-{i})"
-                    norm = normalize_text(q_text)
-                global_seen_questions[norm] = c_slug
-
-                company_data["questions"].append({
-                    "category": "ai_interview",
-                    "role": role,
-                    "difficulty": "Medium",
-                    "question": q_text,
-                    "options": None,
-                    "correct_answer": None,
-                    "explanation": f"Structure your response: 1) Tool awareness, 2) The manual verification checkpoint, 3) Measurable outcome (e.g. 30% faster sprint velocity with zero regressions).",
-                    "extra": {"ai_rubric": ai_topic, "company": c_name},
-                    "is_active": 1
-                })
-
-            # 5. HR Interview Questions (>= 10)
-            for i in range(1, 11):
-                hr_prompt = [
-                    f"Why do you specifically wish to build your career at {c_name} rather than other IT services firms?",
-                    f"How do your personal principles align with {c_name}'s values ({comp['hr_tips'].split(':')[1].strip() if ':' in comp['hr_tips'] else comp['hr_tips']})?",
-                    f"Describe a challenging situation in a past project where a deadline was at risk and how you handled client expectations at {c_name}.",
-                    f"Are you open to relocating to any of {c_name}'s major development centers and working in rotational project shifts?",
-                    f"How do you handle constructive criticism from a technical lead when your code review receives extensive requested revisions?",
-                    f"Tell me about a time you had a disagreement with a team member over an implementation approach. How was it resolved?",
-                    f"Where do you envision your technical growth at {c_name} over the next 3 to 5 years as a {role}?",
-                    f"Describe a scenario where you had to learn a completely new technical framework in a very short span to deliver a client requirement.",
-                    f"What differentiates you from other qualified {role} candidates interviewing for {c_name} today?",
-                    f"Do you have any questions for {c_name}'s leadership regarding project onboarding, team culture, or mentoring?"
-                ][i-1]
-
-                q_text = f"[{c_name} HR Interview - {role} #{i}] {hr_prompt}"
-                norm = normalize_text(q_text)
-                if norm in global_seen_questions:
-                    q_text += f" (HR variant {c_slug}-{i})"
-                    norm = normalize_text(q_text)
-                global_seen_questions[norm] = c_slug
-
-                company_data["questions"].append({
-                    "category": "hr",
-                    "role": role,
-                    "difficulty": "Medium",
-                    "question": q_text,
-                    "options": None,
-                    "correct_answer": None,
-                    "explanation": f"Guidance for {c_name}: Frame your response using the STAR technique. Highlight loyalty, adaptability, alignment with {c_name} values, and a collaborative team attitude.",
-                    "extra": {"hr_dimension": f"Question #{i}", "company_name": c_name},
-                    "is_active": 1
-                })
-
-        # Save to data/companies/<slug>.json
-        out_path = os.path.join("data", "companies", f"{c_slug}.json")
+        out_path = os.path.join(out_dir, f"{c_slug}.json")
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(company_data, f, indent=2, ensure_ascii=False)
-        
-        print(f"Generated {out_path}: {len(company_data['questions'])} questions for {c_name}.")
 
-    print(f"\nCompleted! Total unique questions generated across all {len(COMPANIES_CONFIG)} companies: {len(global_seen_questions)}.")
+        print(f"  [+] {c_slug}.json: {len(questions)} distinct questions generated for {c_name}.")
+
+    print(f"\n[DONE] Generated {total_generated} questions across {len(COMPANIES_CONFIG)} companies.")
+    print(f"Total globally unique questions tracked: {len(global_seen_questions)}")
 
 if __name__ == "__main__":
-    generate_all_seeds()
+    generate_all_seed_files()

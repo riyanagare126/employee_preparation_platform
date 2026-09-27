@@ -184,6 +184,118 @@ def init_db():
                     raw_cur.execute(sql)
                     conn.commit()
                     raw_cur.close()
+            # Ensure notice_plans and notice_plan_tasks exist in PostgreSQL
+            try:
+                raw_cur = conn._conn.cursor()
+                raw_cur.execute("""
+                    CREATE TABLE IF NOT EXISTS notice_plans (
+                        id SERIAL PRIMARY KEY,
+                        employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+                        target_role VARCHAR(150) NOT NULL,
+                        experience_years VARCHAR(50) NOT NULL,
+                        notice_period_days INTEGER NOT NULL,
+                        last_working_date VARCHAR(50) NOT NULL,
+                        interview_dates_json TEXT DEFAULT '[]',
+                        weak_areas_json TEXT DEFAULT '[]',
+                        daily_study_time VARCHAR(50) DEFAULT '1 hr',
+                        inputs_json TEXT,
+                        generated_plan_json TEXT NOT NULL,
+                        is_active INTEGER DEFAULT 1,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                    CREATE TABLE IF NOT EXISTS notice_plan_tasks (
+                        id SERIAL PRIMARY KEY,
+                        notice_plan_id INTEGER NOT NULL REFERENCES notice_plans(id) ON DELETE CASCADE,
+                        employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+                        day_number INTEGER NOT NULL,
+                        task_key VARCHAR(100) NOT NULL,
+                        title VARCHAR(255) NOT NULL,
+                        description TEXT NOT NULL,
+                        category VARCHAR(80) NOT NULL,
+                        estimated_minutes INTEGER DEFAULT 30,
+                        link_url VARCHAR(255),
+                        is_completed INTEGER DEFAULT 0,
+                        completed_at TIMESTAMP,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                    CREATE TABLE IF NOT EXISTS notice_plan (
+                        id SERIAL PRIMARY KEY,
+                        employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+                        target_role VARCHAR(150) NOT NULL,
+                        experience VARCHAR(50) NOT NULL,
+                        notice_days INTEGER NOT NULL,
+                        weak_areas TEXT,
+                        plan_text TEXT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                    CREATE TABLE IF NOT EXISTS achievements (
+                        id SERIAL PRIMARY KEY,
+                        employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+                        title VARCHAR(255) NOT NULL,
+                        raw_description TEXT NOT NULL,
+                        metrics_result TEXT NOT NULL,
+                        skills_used TEXT NOT NULL,
+                        star_situation TEXT NOT NULL,
+                        star_task TEXT NOT NULL,
+                        star_action TEXT NOT NULL,
+                        star_result TEXT NOT NULL,
+                        mapped_questions_json TEXT DEFAULT '[]',
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                    CREATE TABLE IF NOT EXISTS converted_answers (
+                        id SERIAL PRIMARY KEY,
+                        employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+                        question_type VARCHAR(150) NOT NULL,
+                        raw_answer TEXT NOT NULL,
+                        professional_answer TEXT NOT NULL,
+                        short_answer TEXT NOT NULL,
+                        red_flags_json TEXT DEFAULT '[]',
+                        follow_up_questions_json TEXT DEFAULT '[]',
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                    CREATE TABLE IF NOT EXISTS converted_answer (
+                        id SERIAL PRIMARY KEY,
+                        employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+                        question_type VARCHAR(150) NOT NULL,
+                        raw_answer TEXT NOT NULL,
+                        professional_answer TEXT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                    CREATE TABLE IF NOT EXISTS questions (
+                        id SERIAL PRIMARY KEY,
+                        company VARCHAR(100) NOT NULL,
+                        category VARCHAR(100) NOT NULL,
+                        role VARCHAR(100) DEFAULT '',
+                        difficulty VARCHAR(50) DEFAULT 'medium',
+                        experience_level VARCHAR(80) NOT NULL,
+                        question_type VARCHAR(80) NOT NULL,
+                        question_text TEXT NOT NULL,
+                        sample_answer TEXT,
+                        question_hash VARCHAR(64) NOT NULL,
+                        source VARCHAR(50) DEFAULT 'seed',
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        CONSTRAINT uq_company_question_hash UNIQUE (company, question_hash)
+                    );
+                    CREATE INDEX IF NOT EXISTS idx_questions_company ON questions(company);
+                    CREATE INDEX IF NOT EXISTS idx_questions_exp_level ON questions(experience_level);
+                    CREATE INDEX IF NOT EXISTS idx_questions_type ON questions(question_type);
+
+                    CREATE TABLE IF NOT EXISTS user_question_history (
+                        id SERIAL PRIMARY KEY,
+                        employee_id INTEGER NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+                        question_id INTEGER NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
+                        seen_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        CONSTRAINT uq_user_question UNIQUE (employee_id, question_id)
+                    );
+                    CREATE INDEX IF NOT EXISTS idx_uqh_employee_id ON user_question_history(employee_id);
+                """)
+                conn.commit()
+                raw_cur.close()
+            except Exception as e_np:
+                print(f"Postgres tables check: {e_np}")
         except Exception as e:
             print(f"Warning initializing PostgreSQL database: {e}")
         finally:
@@ -344,6 +456,10 @@ def init_db():
             percentage REAL,
             performance_message TEXT,
             result_json TEXT,
+            violation_count INTEGER DEFAULT 0,
+            auto_submitted INTEGER DEFAULT 0,
+            mode TEXT DEFAULT 'mock',
+            started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             submitted_at TIMESTAMP,
             FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
@@ -496,6 +612,10 @@ def init_db():
             percentage REAL NOT NULL,
             status TEXT DEFAULT 'completed',
             details_json TEXT,
+            violation_count INTEGER DEFAULT 0,
+            auto_submitted INTEGER DEFAULT 0,
+            mode TEXT DEFAULT 'mock',
+            started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES employees(id) ON DELETE CASCADE
         );
@@ -753,6 +873,182 @@ def init_db():
         );
     """)
 
+    # 28. Notice Period Countdown Plans Table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS notice_plans (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            employee_id INTEGER NOT NULL,
+            target_role TEXT NOT NULL,
+            experience_years TEXT NOT NULL,
+            notice_period_days INTEGER NOT NULL,
+            last_working_date TEXT NOT NULL,
+            interview_dates_json TEXT DEFAULT '[]',
+            weak_areas_json TEXT DEFAULT '[]',
+            daily_study_time TEXT NOT NULL DEFAULT '1 hr',
+            inputs_json TEXT,
+            generated_plan_json TEXT NOT NULL,
+            is_active INTEGER DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+        );
+    """)
+
+    # 29. Notice Period Daily Plan Tasks Table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS notice_plan_tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            notice_plan_id INTEGER NOT NULL,
+            employee_id INTEGER NOT NULL,
+            day_number INTEGER NOT NULL,
+            task_key TEXT NOT NULL,
+            title TEXT NOT NULL,
+            description TEXT NOT NULL,
+            category TEXT NOT NULL,
+            estimated_minutes INTEGER DEFAULT 30,
+            link_url TEXT,
+            is_completed INTEGER DEFAULT 0,
+            completed_at TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (notice_plan_id) REFERENCES notice_plans(id) ON DELETE CASCADE,
+            FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+        );
+    """)
+
+    # 30. Achievements Vault Table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS achievements (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            employee_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            raw_description TEXT NOT NULL,
+            metrics_result TEXT NOT NULL,
+            skills_used TEXT NOT NULL,
+            star_situation TEXT NOT NULL,
+            star_task TEXT NOT NULL,
+            star_action TEXT NOT NULL,
+            star_result TEXT NOT NULL,
+            mapped_questions_json TEXT DEFAULT '[]',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+        );
+    """)
+
+    # 31. Converted Answers (Honest-to-Professional Answer Converter) Table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS converted_answers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            employee_id INTEGER NOT NULL,
+            question_type TEXT NOT NULL,
+            raw_answer TEXT NOT NULL,
+            professional_answer TEXT NOT NULL,
+            short_answer TEXT NOT NULL,
+            red_flags_json TEXT DEFAULT '[]',
+            follow_up_questions_json TEXT DEFAULT '[]',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+        );
+    """)
+
+    # 31b. ConvertedAnswer (Honest-to-Professional Answer Converter) Table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS converted_answer (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            employee_id INTEGER NOT NULL,
+            question_type TEXT NOT NULL,
+            raw_answer TEXT NOT NULL,
+            professional_answer TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+        );
+    """)
+
+    # 32. Notice Period Simple Plan Table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS notice_plan (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            employee_id INTEGER NOT NULL,
+            target_role TEXT NOT NULL,
+            experience TEXT NOT NULL,
+            notice_days INTEGER NOT NULL,
+            weak_areas TEXT,
+            plan_text TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+        );
+    """)
+
+    # 33. Company-Specific, Level-Wise Interview Questions Table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS questions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            company TEXT NOT NULL,
+            category TEXT NOT NULL,
+            role TEXT DEFAULT '',
+            difficulty TEXT DEFAULT 'medium',
+            experience_level TEXT NOT NULL,
+            question_type TEXT NOT NULL,
+            question_text TEXT NOT NULL,
+            sample_answer TEXT,
+            question_hash TEXT NOT NULL,
+            source TEXT DEFAULT 'seed',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE (company, question_hash)
+        );
+    """)
+
+    # 34. User Question History Table (Tracking seen questions to avoid duplicates)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS user_question_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            employee_id INTEGER NOT NULL,
+            question_id INTEGER NOT NULL,
+            seen_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE (employee_id, question_id),
+            FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE,
+            FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
+        );
+    """)
+
+    # 35. Test Security / Anti-Cheating Logs Table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS test_security_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            employee_id INTEGER NOT NULL,
+            test_attempt_id TEXT NOT NULL,
+            event_type TEXT NOT NULL,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            duration_away_seconds REAL,
+            FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+        );
+    """)
+
+    # Safe column checks for pre-existing tables on disk
+    def _ensure_col(tbl, col, def_sql):
+        try:
+            cursor.execute(f"PRAGMA table_info({tbl});")
+            cols = [r[1] for r in cursor.fetchall()]
+            if col not in cols:
+                try:
+                    cursor.execute(f"ALTER TABLE {tbl} ADD COLUMN {col} {def_sql};")
+                except Exception:
+                    # SQLite raises error when adding a column with non-constant default like CURRENT_TIMESTAMP
+                    clean_type = def_sql.split("DEFAULT")[0].strip()
+                    cursor.execute(f"ALTER TABLE {tbl} ADD COLUMN {col} {clean_type};")
+        except Exception:
+            pass
+
+    _ensure_col("secure_test_sessions", "violation_count", "INTEGER DEFAULT 0")
+    _ensure_col("secure_test_sessions", "auto_submitted", "INTEGER DEFAULT 0")
+    _ensure_col("secure_test_sessions", "mode", "TEXT DEFAULT 'mock'")
+    _ensure_col("secure_test_sessions", "started_at", "TIMESTAMP")
+    _ensure_col("test_attempts", "violation_count", "INTEGER DEFAULT 0")
+    _ensure_col("test_attempts", "auto_submitted", "INTEGER DEFAULT 0")
+    _ensure_col("test_attempts", "mode", "TEXT DEFAULT 'mock'")
+    _ensure_col("test_attempts", "started_at", "TIMESTAMP")
+
     # Unique Indexes
     cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_user_prep_user_comp ON user_preparation(user_id, company_slug);")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_test_attempts_user ON test_attempts(user_id, company_slug);")
@@ -762,9 +1058,23 @@ def init_db():
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_resume_ver_user ON resume_versions(employee_id);")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_ai_fluency_user ON ai_fluency_attempts(employee_id);")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_struct_ans_user ON structured_answers(employee_id);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_notice_plans_emp ON notice_plans(employee_id, is_active);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_notice_plan_emp ON notice_plan(employee_id, created_at);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_notice_tasks_plan ON notice_plan_tasks(notice_plan_id, day_number);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_notice_tasks_emp ON notice_plan_tasks(employee_id, is_completed);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_achievements_emp ON achievements(employee_id);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_converted_answers_emp ON converted_answers(employee_id);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_converted_answer_emp ON converted_answer(employee_id);")
     cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_companies_slug ON companies(slug);")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_comp_questions_lookup ON company_questions(company_id, category, role);")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_comp_questions_active ON company_questions(company_id, is_active);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_questions_company ON questions(company);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_questions_exp_level ON questions(experience_level);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_questions_type ON questions(question_type);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_uqh_employee_id ON user_question_history(employee_id);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_test_sec_logs_attempt ON test_security_logs(test_attempt_id);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_test_sec_logs_emp ON test_security_logs(employee_id);")
+
 
     # Initial sync from company_prep to companies if empty
     try:
@@ -801,9 +1111,10 @@ def init_db():
 
 
     # Seed Default Admin User if not exists
-    cursor.execute("SELECT id FROM employees WHERE email = 'admin@prep.com'")
-    if not cursor.fetchone():
-        hashed_admin_pw = generate_password_hash("admin123")
+    cursor.execute("SELECT id FROM employees WHERE LOWER(email) = 'admin@prep.com'")
+    admin_row = cursor.fetchone()
+    hashed_admin_pw = generate_password_hash("AdminPassword123!")
+    if not admin_row:
         cursor.execute("""
             INSERT INTO employees (name, email, password, qualification, skills, experience, job_role, target_company, target_role, is_admin)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
@@ -818,6 +1129,8 @@ def init_db():
             "Tata Consultancy Services (TCS)",
             "Software Engineer"
         ))
+    else:
+        cursor.execute("UPDATE employees SET password = ?, is_admin = 1 WHERE LOWER(email) = 'admin@prep.com'", (hashed_admin_pw,))
 
     # Seed 20 Top Companies Catalog
     top_20_companies = [

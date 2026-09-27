@@ -2,6 +2,7 @@ import sqlite3
 import json
 import re
 import time
+import hashlib
 from datetime import datetime, date, timedelta
 from typing import Optional, Dict, Any, List
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -74,6 +75,61 @@ class EmployeeModel:
             comp_slug = comp["slug"] if comp else target_company.lower().replace(" ", "-")
             UserPreparationModel.get_or_create(employee_id, comp_slug, target_company, target_role)
         return affected
+
+    @staticmethod
+    def update_experience(employee_id: int, experience: str) -> bool:
+        clean_exp = str(experience or "").strip()
+        if not clean_exp:
+            clean_exp = "Fresher (0 years)"
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE employees SET experience = ? WHERE id = ?", (clean_exp, employee_id))
+        affected = cursor.rowcount > 0
+        conn.commit()
+        conn.close()
+        return affected
+
+    @staticmethod
+    def map_experience_to_level(exp_str: str) -> str:
+        """
+        Maps employee profile experience string to one of the 5 canonical experience levels:
+        - "fresher (0-1 year)"
+        - "junior (1-3 years)"
+        - "mid (3-5 years)"
+        - "senior (5-8 years)"
+        - "lead (8+ years)"
+        """
+        if not exp_str:
+            return "fresher (0-1 year)"
+        s = str(exp_str).lower().strip()
+        if "fresher" in s or s in ("0", "0-1", "0 - 1", "0-1 years", "0 - 1 years", "0 years"):
+            return "fresher (0-1 year)"
+        if "lead" in s or "principal" in s or "architect" in s or "8+" in s or "8-10" in s:
+            return "lead (8+ years)"
+        if "senior" in s or "5-8" in s or "5 - 8" in s or "5-8 years" in s:
+            return "senior (5-8 years)"
+        if "mid" in s or "3-5" in s or "3 - 5" in s or "3+" in s or "3+ years" in s:
+            return "mid (3-5 years)"
+        if "junior" in s or "1-3" in s or "1 - 3" in s or "1-3 years" in s:
+            return "junior (1-3 years)"
+
+        digits = re.findall(r'\d+', s)
+        if digits:
+            try:
+                val = float(digits[0])
+                if val <= 1:
+                    return "fresher (0-1 year)"
+                elif val <= 3:
+                    return "junior (1-3 years)"
+                elif val <= 5:
+                    return "mid (3-5 years)"
+                elif val <= 8:
+                    return "senior (5-8 years)"
+                else:
+                    return "lead (8+ years)"
+            except Exception:
+                pass
+        return "fresher (0-1 year)"
 
     @staticmethod
     def update_extracted_skills(employee_id: int, extracted_skills: Any) -> bool:
@@ -1176,10 +1232,11 @@ class SecureTestSessionModel:
         session = dict(row)
         now_epoch = time.time()
         elapsed = now_epoch - session["start_epoch"]
+        mode = session.get("mode") or "mock"
         remaining = max(0, int(session["duration_seconds"] - elapsed))
         
-        # Check if time has expired
-        if remaining <= 0:
+        # In Mock mode, check if authoritative total test time has expired
+        if mode == "mock" and remaining <= 0:
             conn = get_db_connection()
             cursor = conn.cursor()
             cursor.execute("UPDATE secure_test_sessions SET status = 'expired' WHERE session_id = ?", (session["session_id"],))
@@ -1189,10 +1246,11 @@ class SecureTestSessionModel:
             session["remaining_seconds"] = 0
             return session
             
-        session["remaining_seconds"] = remaining
+        session["remaining_seconds"] = remaining if mode == "mock" else session["duration_seconds"]
         session["questions"] = json.loads(session["questions_json"]) if session.get("questions_json") else []
         session["answers"] = json.loads(session["answers_json"]) if session.get("answers_json") else {}
         session["options_map"] = json.loads(session["options_map_json"]) if session.get("options_map_json") else []
+        session["mode"] = mode
         return session
 
     @staticmethod
@@ -1204,20 +1262,22 @@ class SecureTestSessionModel:
         options_map: list,
         duration_seconds: int,
         tab_token: str,
-        job_role: str = ""
+        job_role: str = "",
+        mode: str = "mock"
     ) -> Dict[str, Any]:
+        clean_mode = "practice" if (mode or "").lower().strip() == "practice" else "mock"
         start_epoch = time.time()
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
             INSERT INTO secure_test_sessions (
                 session_id, employee_id, test_type, job_role, questions_json,
-                options_map_json, duration_seconds, start_epoch, tab_token, status
+                options_map_json, duration_seconds, start_epoch, tab_token, status, mode, started_at
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, CURRENT_TIMESTAMP)
         """, (
             session_id, employee_id, test_type, job_role, json.dumps(questions),
-            json.dumps(options_map), duration_seconds, start_epoch, tab_token
+            json.dumps(options_map), duration_seconds, start_epoch, tab_token, clean_mode
         ))
         conn.commit()
         conn.close()
@@ -1228,7 +1288,8 @@ class SecureTestSessionModel:
             "duration_seconds": duration_seconds,
             "remaining_seconds": duration_seconds,
             "tab_token": tab_token,
-            "job_role": job_role
+            "job_role": job_role,
+            "mode": clean_mode
         }
 
     @staticmethod
@@ -1268,23 +1329,26 @@ class SecureTestSessionModel:
         percentage: float,
         performance_message: str,
         answers: dict,
-        result_payload: dict
+        result_payload: dict,
+        auto_submitted: bool = False
     ) -> bool:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
             UPDATE secure_test_sessions
             SET status = 'completed', score = ?, percentage = ?, performance_message = ?,
-                answers_json = ?, result_json = ?, submitted_at = CURRENT_TIMESTAMP
+                answers_json = ?, result_json = ?, submitted_at = CURRENT_TIMESTAMP,
+                auto_submitted = CASE WHEN ? = 1 THEN 1 ELSE auto_submitted END
             WHERE session_id = ? AND employee_id = ? AND status IN ('active', 'expired')
         """, (
             score, percentage, performance_message, json.dumps(answers),
-            json.dumps(result_payload), session_id, employee_id
+            json.dumps(result_payload), (1 if auto_submitted else 0), session_id, employee_id
         ))
         affected = cursor.rowcount > 0
         conn.commit()
         conn.close()
         return affected
+
 
     @staticmethod
     def terminate_session(session_id: str, employee_id: int, reason: str = "terminated") -> bool:
@@ -1628,19 +1692,40 @@ class UserPreparationModel:
 
 class TestAttemptModel:
     @staticmethod
-    def record_attempt(user_id: int, company_slug: str, test_type: str, score: float, total: float, percentage: float, role_name: str = "", details_json: Any = None) -> Dict[str, Any]:
+    def record_attempt(
+        user_id: int,
+        company_slug: str,
+        test_type: str,
+        score: float,
+        total: float,
+        percentage: float,
+        role_name: str = "",
+        details_json: Any = None,
+        violation_count: int = 0,
+        auto_submitted: bool = False,
+        mode: str = "mock"
+    ) -> Dict[str, Any]:
         slug = (company_slug or "tcs").lower().strip()
         comp = CompanyPrepModel.get_by_slug(slug)
         comp_id = comp["id"] if comp else None
+        clean_mode = "practice" if (mode or "").lower().strip() == "practice" else "mock"
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT INTO test_attempts (user_id, company_id, company_slug, role_name, test_type, score, total, percentage, status, details_json)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'completed', ?)
-        """, (user_id, comp_id, slug, role_name, test_type, score, total, percentage, json.dumps(details_json or {})))
+            INSERT INTO test_attempts (
+                user_id, company_id, company_slug, role_name, test_type,
+                score, total, percentage, status, details_json, violation_count, auto_submitted, mode, started_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'completed', ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        """, (
+            user_id, comp_id, slug, role_name, test_type,
+            score, total, percentage, json.dumps(details_json or {}),
+            int(violation_count), (1 if auto_submitted else 0), clean_mode
+        ))
         attempt_id = cursor.lastrowid
         conn.commit()
         conn.close()
+
 
         # Automatically update company preparation module progress
         UserPreparationModel.update_module_progress(user_id, slug, test_type, percentage, role_name)
@@ -1655,7 +1740,8 @@ class TestAttemptModel:
             "test_type": test_type,
             "score": score,
             "total": total,
-            "percentage": percentage
+            "percentage": percentage,
+            "mode": clean_mode
         }
 
     @staticmethod
@@ -3206,4 +3292,1228 @@ class CompanyQuestionModel:
             "skipped": skipped,
             "total": len(questions)
         }
+
+
+class NoticePlanModel:
+    """
+    Manages Notice Period Countdown Plans, day-by-day task generation,
+    and completion tracking per logged-in employee.
+    """
+
+    @staticmethod
+    def save_plan(employee_id: int, inputs: Dict[str, Any], generated_plan: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Saves a generated notice period preparation plan and populates daily tasks.
+        Deactivates any previous plan for this employee so the active plan is always singular.
+        """
+        target_role = (inputs.get("target_role") or "Software Engineer").strip()
+        experience_years = str(inputs.get("experience_years") or "2").strip()
+        notice_period_days = max(3, min(int(inputs.get("notice_period_days") or 30), 90))
+        last_working_date = (inputs.get("last_working_date") or "").strip()
+        if not last_working_date:
+            last_working_date = (date.today() + timedelta(days=notice_period_days)).strftime("%Y-%m-%d")
+
+        interview_dates = inputs.get("interview_dates") or []
+        if isinstance(interview_dates, str):
+            try:
+                interview_dates = json.loads(interview_dates)
+            except Exception:
+                interview_dates = [d.strip() for d in interview_dates.split(",") if d.strip()]
+
+        weak_areas = inputs.get("weak_areas") or []
+        if isinstance(weak_areas, str):
+            try:
+                weak_areas = json.loads(weak_areas)
+            except Exception:
+                weak_areas = [w.strip() for w in weak_areas.split(",") if w.strip()]
+
+        daily_study_time = (inputs.get("daily_study_time") or "1 hr").strip()
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Inactivate existing plans
+        cursor.execute("UPDATE notice_plans SET is_active = 0 WHERE employee_id = ?", (employee_id,))
+
+        # Insert new notice plan
+        cursor.execute("""
+            INSERT INTO notice_plans (
+                employee_id, target_role, experience_years, notice_period_days,
+                last_working_date, interview_dates_json, weak_areas_json,
+                daily_study_time, inputs_json, generated_plan_json, is_active
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+        """, (
+            employee_id, target_role, experience_years, notice_period_days,
+            last_working_date, json.dumps(interview_dates), json.dumps(weak_areas),
+            daily_study_time, json.dumps(inputs), json.dumps(generated_plan)
+        ))
+
+        plan_id = cursor.lastrowid
+
+        # Insert day-by-day tasks into notice_plan_tasks
+        days = generated_plan.get("days") or []
+        for day in days:
+            day_num = int(day.get("day_number", 1))
+            tasks = day.get("tasks") or []
+            for t in tasks:
+                t_key = t.get("task_key") or f"day{day_num}_task"
+                t_title = t.get("title") or "Preparation Task"
+                t_desc = t.get("description") or ""
+                t_cat = t.get("category") or "Technical"
+                t_mins = int(t.get("estimated_minutes") or 30)
+                t_link = t.get("link_url") or "preparation.html"
+
+                cursor.execute("""
+                    INSERT INTO notice_plan_tasks (
+                        notice_plan_id, employee_id, day_number, task_key,
+                        title, description, category, estimated_minutes,
+                        link_url, is_completed
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
+                """, (
+                    plan_id, employee_id, day_num, t_key,
+                    t_title, t_desc, t_cat, t_mins, t_link
+                ))
+
+        conn.commit()
+        conn.close()
+
+        active = NoticePlanModel.get_active_plan(employee_id)
+        return active or {"id": plan_id, "success": True}
+
+    @staticmethod
+    def get_active_plan(employee_id: int) -> Optional[Dict[str, Any]]:
+        """
+        Retrieves the active notice period plan for the employee with:
+        - Remaining days until last working date
+        - Days to upcoming interviews
+        - Today's tasks
+        - Completed tasks counter and progress percentage
+        """
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT id, employee_id, target_role, experience_years, notice_period_days,
+                   last_working_date, interview_dates_json, weak_areas_json,
+                   daily_study_time, inputs_json, generated_plan_json, is_active, created_at, updated_at
+            FROM notice_plans
+            WHERE employee_id = ? AND is_active = 1
+            ORDER BY id DESC LIMIT 1
+        """, (employee_id,))
+        row = cursor.fetchone()
+
+        if not row:
+            conn.close()
+            return None
+
+        plan = dict(row)
+        plan_id = plan["id"]
+
+        # Fetch all tasks
+        cursor.execute("""
+            SELECT id, notice_plan_id, employee_id, day_number, task_key,
+                   title, description, category, estimated_minutes, link_url,
+                   is_completed, completed_at, created_at
+            FROM notice_plan_tasks
+            WHERE notice_plan_id = ?
+            ORDER BY day_number ASC, id ASC
+        """, (plan_id,))
+        task_rows = cursor.fetchall()
+        conn.close()
+
+        tasks = [dict(t) for t in task_rows]
+
+        # Calculate time & progress statistics
+        today = date.today()
+        last_working_date_str = plan.get("last_working_date") or ""
+        days_left = 0
+        if last_working_date_str:
+            try:
+                lwd = datetime.strptime(last_working_date_str.split()[0], "%Y-%m-%d").date()
+                days_left = max(0, (lwd - today).days)
+            except Exception:
+                days_left = plan.get("notice_period_days", 30)
+
+        # Calculate current day in plan based on plan creation date
+        created_at_val = plan.get("created_at")
+        days_passed = 0
+        if created_at_val:
+            try:
+                if isinstance(created_at_val, str):
+                    created_date = datetime.strptime(created_at_val.split()[0], "%Y-%m-%d").date()
+                elif hasattr(created_at_val, "date"):
+                    created_date = created_at_val.date()
+                else:
+                    created_date = today
+                days_passed = max(0, (today - created_date).days)
+            except Exception:
+                days_passed = 0
+
+        current_day = max(1, min(int(plan.get("notice_period_days", 30)), days_passed + 1))
+
+        # Parse interview dates
+        intv_raw = plan.get("interview_dates_json") or "[]"
+        try:
+            interview_dates = json.loads(intv_raw) if isinstance(intv_raw, str) else intv_raw
+        except Exception:
+            interview_dates = []
+
+        # Find closest future interview date
+        next_interview_date = None
+        days_to_next_interview = None
+        upcoming_dates = []
+        for d_str in interview_dates:
+            try:
+                d_obj = datetime.strptime(d_str.split()[0], "%Y-%m-%d").date()
+                if d_obj >= today:
+                    upcoming_dates.append(d_obj)
+            except Exception:
+                pass
+
+        if upcoming_dates:
+            upcoming_dates.sort()
+            next_d = upcoming_dates[0]
+            next_interview_date = next_d.strftime("%Y-%m-%d")
+            days_to_next_interview = (next_d - today).days
+
+        # Parse weak areas
+        weak_raw = plan.get("weak_areas_json") or "[]"
+        try:
+            weak_areas = json.loads(weak_raw) if isinstance(weak_raw, str) else weak_raw
+        except Exception:
+            weak_areas = []
+
+        # Parse generated plan
+        gen_raw = plan.get("generated_plan_json") or "{}"
+        try:
+            generated_plan = json.loads(gen_raw) if isinstance(gen_raw, str) else gen_raw
+        except Exception:
+            generated_plan = {}
+
+        # Progress calculation
+        total_tasks = len(tasks)
+        completed_tasks = sum(1 for t in tasks if t["is_completed"])
+        progress_percent = round((completed_tasks / total_tasks * 100), 1) if total_tasks > 0 else 0.0
+
+        # Group tasks by day
+        tasks_by_day: Dict[int, List[Dict[str, Any]]] = {}
+        for t in tasks:
+            d_num = t["day_number"]
+            if d_num not in tasks_by_day:
+                tasks_by_day[d_num] = []
+            tasks_by_day[d_num].append(t)
+
+        # Select today's tasks
+        today_tasks = tasks_by_day.get(current_day, [])
+        if not today_tasks and tasks_by_day:
+            # Fallback to first day that has incomplete tasks, or day 1
+            for d_num in sorted(tasks_by_day.keys()):
+                if any(not t["is_completed"] for t in tasks_by_day[d_num]):
+                    today_tasks = tasks_by_day[d_num]
+                    current_day = d_num
+                    break
+            if not today_tasks:
+                today_tasks = tasks_by_day[sorted(tasks_by_day.keys())[0]]
+
+        # Enrich plan days with task statuses from DB
+        plan_days = generated_plan.get("days") or []
+        for day in plan_days:
+            d_num = day.get("day_number")
+            day["tasks"] = tasks_by_day.get(d_num, day.get("tasks", []))
+            day["is_current"] = (d_num == current_day)
+            day["all_completed"] = bool(day["tasks"]) and all(t.get("is_completed") for t in day["tasks"])
+
+        return {
+            "id": plan_id,
+            "employee_id": employee_id,
+            "target_role": plan["target_role"],
+            "experience_years": plan["experience_years"],
+            "notice_period_days": plan["notice_period_days"],
+            "last_working_date": plan["last_working_date"],
+            "days_left": days_left,
+            "interview_dates": interview_dates,
+            "next_interview_date": next_interview_date,
+            "days_to_next_interview": days_to_next_interview,
+            "weak_areas": weak_areas,
+            "daily_study_time": plan["daily_study_time"],
+            "current_day": current_day,
+            "total_tasks": total_tasks,
+            "completed_tasks": completed_tasks,
+            "progress_percent": progress_percent,
+            "today_tasks": today_tasks,
+            "plan_summary": generated_plan.get("plan_summary", ""),
+            "days": plan_days,
+            "created_at": str(plan["created_at"])
+        }
+
+    @staticmethod
+    def toggle_task(employee_id: int, task_id: int, is_completed: Optional[int] = None) -> Dict[str, Any]:
+        """
+        Toggles completion status for a specific notice plan task,
+        awards gamification XP when marked done, and returns updated progress.
+        """
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT id, notice_plan_id, employee_id, is_completed, title
+            FROM notice_plan_tasks
+            WHERE id = ? AND employee_id = ?
+        """, (task_id, employee_id))
+        row = cursor.fetchone()
+
+        if not row:
+            conn.close()
+            return {"success": False, "message": "Task not found."}
+
+        task = dict(row)
+        current = int(task.get("is_completed", 0))
+        new_val = (1 - current) if is_completed is None else int(bool(is_completed))
+
+        now_str = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S") if new_val == 1 else None
+
+        cursor.execute("""
+            UPDATE notice_plan_tasks
+            SET is_completed = ?, completed_at = ?
+            WHERE id = ?
+        """, (new_val, now_str, task_id))
+
+        plan_id = task["notice_plan_id"]
+
+        # Calculate updated plan stats
+        cursor.execute("""
+            SELECT COUNT(*), SUM(is_completed)
+            FROM notice_plan_tasks
+            WHERE notice_plan_id = ?
+        """, (plan_id,))
+        stats_row = cursor.fetchone()
+        total = stats_row[0] if stats_row else 0
+        done = stats_row[1] if (stats_row and stats_row[1] is not None) else 0
+        progress_pct = round((done / total * 100), 1) if total > 0 else 0.0
+
+        conn.commit()
+        conn.close()
+
+        # Award XP if marked complete
+        xp_awarded = 0
+        if new_val == 1:
+            try:
+                GamificationModel.add_points(employee_id, 15, "Completed Notice Period Task")
+                xp_awarded = 15
+            except Exception:
+                pass
+
+        return {
+            "success": True,
+            "task_id": task_id,
+            "is_completed": new_val,
+            "total_tasks": total,
+            "completed_tasks": done,
+            "progress_percent": progress_pct,
+            "xp_awarded": xp_awarded
+        }
+
+    @staticmethod
+    def save_simple_plan(employee_id: int, target_role: str, experience: str, notice_days: int, weak_areas: Any, plan_text: str) -> Dict[str, Any]:
+        """
+        Saves a simple notice period preparation plan into table 'notice_plan'.
+        """
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Format weak_areas
+        if isinstance(weak_areas, list):
+            weak_areas_str = ", ".join(str(w) for w in weak_areas)
+        else:
+            weak_areas_str = str(weak_areas or "")
+
+        cursor.execute("""
+            INSERT INTO notice_plan (
+                employee_id, target_role, experience, notice_days, weak_areas, plan_text
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            int(employee_id), str(target_role), str(experience), int(notice_days), weak_areas_str, str(plan_text)
+        ))
+        plan_id = cursor.lastrowid
+        conn.commit()
+
+        cursor.execute("""
+            SELECT id, employee_id, target_role, experience, notice_days, weak_areas, plan_text, created_at
+            FROM notice_plan WHERE id = ?
+        """, (plan_id,))
+        row = cursor.fetchone()
+        conn.close()
+
+        record = dict(row) if row else {}
+        record["days_left"] = int(notice_days)
+        return record
+
+    @staticmethod
+    def get_latest_simple_plan(employee_id: int) -> Optional[Dict[str, Any]]:
+        """
+        Retrieves the latest saved notice period plan from table 'notice_plan'
+        and computes 'days_left' based on notice_days and created_at.
+        """
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT id, employee_id, target_role, experience, notice_days, weak_areas, plan_text, created_at
+            FROM notice_plan
+            WHERE employee_id = ?
+            ORDER BY id DESC
+            LIMIT 1
+        """, (int(employee_id),))
+        row = cursor.fetchone()
+        conn.close()
+
+        if not row:
+            return None
+
+        plan = dict(row)
+        notice_days = int(plan.get("notice_days") or 30)
+
+        # Calculate days left based on created_at and notice_days
+        days_left = notice_days
+        created_at_raw = plan.get("created_at")
+        if created_at_raw:
+            try:
+                dt_str = str(created_at_raw).split(".")[0].replace("T", " ")
+                created_dt = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
+                days_passed = (datetime.utcnow() - created_dt).days
+                days_left = max(0, notice_days - days_passed)
+            except Exception:
+                days_left = notice_days
+
+        plan["days_left"] = days_left
+        return plan
+
+
+class AchievementModel:
+    """
+    Model for managing employee career achievements in the Achievement Vault,
+    storing both raw input and AI-transformed STAR framework breakdowns
+    with mapped behavioral interview questions.
+    """
+
+    @staticmethod
+    def save(employee_id: int, data: Dict[str, Any]) -> Dict[str, Any]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        achievement_id = data.get("id")
+        title = (data.get("title") or "").strip()
+        raw_description = (data.get("raw_description") or "").strip()
+        metrics_result = (data.get("metrics_result") or "").strip()
+        skills_used = (data.get("skills_used") or "").strip()
+
+        star_situation = (data.get("star_situation") or "").strip()
+        star_task = (data.get("star_task") or "").strip()
+        star_action = (data.get("star_action") or "").strip()
+        star_result = (data.get("star_result") or "").strip()
+
+        mapped_questions = data.get("mapped_questions") or []
+        mapped_questions_json = json.dumps(mapped_questions) if isinstance(mapped_questions, list) else str(mapped_questions)
+        now_str = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
+        if achievement_id:
+            # Check ownership
+            cursor.execute("SELECT id FROM achievements WHERE id = ? AND employee_id = ?", (achievement_id, employee_id))
+            if not cursor.fetchone():
+                conn.close()
+                return {"success": False, "message": "Achievement not found or access denied."}
+
+            cursor.execute("""
+                UPDATE achievements
+                SET title = ?, raw_description = ?, metrics_result = ?, skills_used = ?,
+                    star_situation = ?, star_task = ?, star_action = ?, star_result = ?,
+                    mapped_questions_json = ?, updated_at = ?
+                WHERE id = ? AND employee_id = ?
+            """, (
+                title, raw_description, metrics_result, skills_used,
+                star_situation, star_task, star_action, star_result,
+                mapped_questions_json, now_str, achievement_id, employee_id
+            ))
+            saved_id = achievement_id
+        else:
+            cursor.execute("""
+                INSERT INTO achievements (
+                    employee_id, title, raw_description, metrics_result, skills_used,
+                    star_situation, star_task, star_action, star_result,
+                    mapped_questions_json, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                employee_id, title, raw_description, metrics_result, skills_used,
+                star_situation, star_task, star_action, star_result,
+                mapped_questions_json, now_str, now_str
+            ))
+            saved_id = cursor.lastrowid
+
+        conn.commit()
+
+        cursor.execute("SELECT * FROM achievements WHERE id = ?", (saved_id,))
+        row = cursor.fetchone()
+        conn.close()
+
+        res = dict(row) if row else {}
+        if res.get("mapped_questions_json"):
+            try:
+                res["mapped_questions"] = json.loads(res["mapped_questions_json"])
+            except Exception:
+                res["mapped_questions"] = []
+        else:
+            res["mapped_questions"] = []
+
+        return {"success": True, "achievement": res}
+
+    @staticmethod
+    def get_all(employee_id: int) -> List[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT * FROM achievements
+            WHERE employee_id = ?
+            ORDER BY created_at DESC, id DESC
+        """, (employee_id,))
+        rows = cursor.fetchall()
+        conn.close()
+
+        results = []
+        for r in rows:
+            item = dict(r)
+            try:
+                item["mapped_questions"] = json.loads(item.get("mapped_questions_json") or "[]")
+            except Exception:
+                item["mapped_questions"] = []
+            results.append(item)
+
+        return results
+
+    @staticmethod
+    def get_by_id(achievement_id: int, employee_id: int) -> Optional[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT * FROM achievements
+            WHERE id = ? AND employee_id = ?
+        """, (achievement_id, employee_id))
+        row = cursor.fetchone()
+        conn.close()
+
+        if not row:
+            return None
+
+        item = dict(row)
+        try:
+            item["mapped_questions"] = json.loads(item.get("mapped_questions_json") or "[]")
+        except Exception:
+            item["mapped_questions"] = []
+        return item
+
+    @staticmethod
+    def delete(achievement_id: int, employee_id: int) -> bool:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("DELETE FROM achievements WHERE id = ? AND employee_id = ?", (achievement_id, employee_id))
+        deleted = cursor.rowcount > 0
+        conn.commit()
+        conn.close()
+        return deleted
+
+
+class ConvertedAnswerModel:
+    """
+    Model for managing Honest-to-Professional Answer conversions,
+    persisting raw honest input, polished 4-6 sentence responses,
+    30s versions, red-flag analysis, and follow-up questions.
+    """
+
+    @staticmethod
+    def save(employee_id: int, data: Dict[str, Any] = None, **kwargs) -> Dict[str, Any]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        payload = dict(data or {})
+        payload.update(kwargs)
+
+        answer_id = payload.get("id")
+        question_type = (payload.get("question_type") or "General Transition Question").strip()
+        raw_answer = (payload.get("raw_answer") or "").strip()
+        professional_answer = (payload.get("professional_answer") or "").strip()
+        short_answer = (payload.get("short_answer") or "").strip()
+
+        red_flags = payload.get("red_flags") or []
+        red_flags_json = json.dumps(red_flags) if isinstance(red_flags, list) else str(red_flags)
+
+        follow_ups = payload.get("follow_up_questions") or []
+        follow_ups_json = json.dumps(follow_ups) if isinstance(follow_ups, list) else str(follow_ups)
+
+        now_str = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
+        if answer_id:
+            cursor.execute("SELECT id FROM converted_answers WHERE id = ? AND employee_id = ?", (answer_id, employee_id))
+            if not cursor.fetchone():
+                conn.close()
+                return {"success": False, "message": "Record not found or access denied."}
+
+            cursor.execute("""
+                UPDATE converted_answers
+                SET question_type = ?, raw_answer = ?, professional_answer = ?,
+                    short_answer = ?, red_flags_json = ?, follow_up_questions_json = ?,
+                    updated_at = ?
+                WHERE id = ? AND employee_id = ?
+            """, (
+                question_type, raw_answer, professional_answer,
+                short_answer, red_flags_json, follow_ups_json,
+                now_str, answer_id, employee_id
+            ))
+            saved_id = answer_id
+        else:
+            cursor.execute("""
+                INSERT INTO converted_answers (
+                    employee_id, question_type, raw_answer, professional_answer,
+                    short_answer, red_flags_json, follow_up_questions_json,
+                    created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                employee_id, question_type, raw_answer, professional_answer,
+                short_answer, red_flags_json, follow_ups_json,
+                now_str, now_str
+            ))
+            saved_id = cursor.lastrowid
+
+        # Also persist to converted_answer (singular) table
+        try:
+            cursor.execute("""
+                INSERT INTO converted_answer (
+                    employee_id, question_type, raw_answer, professional_answer, created_at
+                ) VALUES (?, ?, ?, ?, ?)
+            """, (employee_id, question_type, raw_answer, professional_answer, now_str))
+        except Exception:
+            pass
+
+        conn.commit()
+
+        cursor.execute("SELECT * FROM converted_answers WHERE id = ?", (saved_id,))
+        row = cursor.fetchone()
+        conn.close()
+
+        res = dict(row) if row else {}
+        try:
+            res["red_flags"] = json.loads(res.get("red_flags_json") or "[]")
+        except Exception:
+            res["red_flags"] = []
+        try:
+            res["follow_up_questions"] = json.loads(res.get("follow_up_questions_json") or "[]")
+        except Exception:
+            res["follow_up_questions"] = []
+
+        return {"success": True, "id": saved_id, "converted_answer": res, **res}
+
+    @staticmethod
+    def get_all(employee_id: int) -> List[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT * FROM converted_answers
+            WHERE employee_id = ?
+            ORDER BY created_at DESC, id DESC
+        """, (employee_id,))
+        rows = cursor.fetchall()
+        conn.close()
+
+        results = []
+        for r in rows:
+            item = dict(r)
+            try:
+                item["red_flags"] = json.loads(item.get("red_flags_json") or "[]")
+            except Exception:
+                item["red_flags"] = []
+            try:
+                item["follow_up_questions"] = json.loads(item.get("follow_up_questions_json") or "[]")
+            except Exception:
+                item["follow_up_questions"] = []
+            results.append(item)
+
+        return results
+
+    @staticmethod
+    def get_by_id(answer_id: int, employee_id: int) -> Optional[Dict[str, Any]]:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT * FROM converted_answers
+            WHERE id = ? AND employee_id = ?
+        """, (answer_id, employee_id))
+        row = cursor.fetchone()
+        conn.close()
+
+        if not row:
+            return None
+
+        item = dict(row)
+        try:
+            item["red_flags"] = json.loads(item.get("red_flags_json") or "[]")
+        except Exception:
+            item["red_flags"] = []
+        try:
+            item["follow_up_questions"] = json.loads(item.get("follow_up_questions_json") or "[]")
+        except Exception:
+            item["follow_up_questions"] = []
+        return item
+
+    @staticmethod
+    def delete(answer_id: int, employee_id: int) -> bool:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("DELETE FROM converted_answers WHERE id = ? AND employee_id = ?", (answer_id, employee_id))
+        deleted = cursor.rowcount > 0
+        try:
+            cursor.execute("DELETE FROM converted_answer WHERE id = ? AND employee_id = ?", (answer_id, employee_id))
+        except Exception:
+            pass
+        conn.commit()
+        conn.close()
+        return deleted
+
+
+# =========================================================================
+# LEVEL-WISE, COMPANY-SPECIFIC INTERVIEW QUESTIONS & HISTORY TRACKING
+# =========================================================================
+
+class QuestionModel:
+    """
+    Manages company-specific, level-wise interview preparation questions.
+    Ensures question separation by company and strict experience levels.
+    """
+
+    CANONICAL_LEVELS = [
+        "fresher (0-1 year)",
+        "junior (1-3 years)",
+        "mid (3-5 years)",
+        "senior (5-8 years)",
+        "lead (8+ years)"
+    ]
+
+    @staticmethod
+    def compute_hash(question_text: str) -> str:
+        """
+        Computes SHA-256 hash of lowercase, trimmed, punctuation-removed question text.
+        """
+        cleaned = re.sub(r'[^\w\s]', '', (question_text or "").lower())
+        cleaned = " ".join(cleaned.split())
+        return hashlib.sha256(cleaned.encode("utf-8")).hexdigest()
+
+    @staticmethod
+    def normalize_company(company: str) -> str:
+        """
+        Normalizes any company name or slug to its standard canonical name.
+        """
+        c = (company or "").strip()
+        c_lower = c.lower()
+        if "tcs" in c_lower or "tata" in c_lower:
+            return "TCS"
+        if "infosys" in c_lower:
+            return "Infosys"
+        if "wipro" in c_lower:
+            return "Wipro"
+        if "accenture" in c_lower:
+            return "Accenture"
+        if "cognizant" in c_lower or "cts" in c_lower:
+            return "Cognizant"
+        if "capgemini" in c_lower:
+            return "Capgemini"
+        if "hcl" in c_lower:
+            return "HCL"
+        if "tech mahindra" in c_lower or "techmahindra" in c_lower or "mahindra" in c_lower:
+            return "Tech Mahindra"
+        if "amazon" in c_lower:
+            return "Amazon"
+        if "google" in c_lower:
+            return "Google"
+        if "microsoft" in c_lower:
+            return "Microsoft"
+        if "deloitte" in c_lower:
+            return "Deloitte"
+        if "ibm" in c_lower:
+            return "IBM"
+        return c.title() if c else "TCS"
+
+    @staticmethod
+    def normalize_level(level: str) -> str:
+        """
+        Normalizes experience level strings into the 5 canonical brackets.
+        """
+        if not level:
+            return "fresher (0-1 year)"
+        l = str(level).strip().lower()
+        if "fresher" in l or "0-1" in l or "0 - 1" in l:
+            return "fresher (0-1 year)"
+        if "junior" in l or "1-3" in l or "1 - 3" in l:
+            return "junior (1-3 years)"
+        if "mid" in l or "3-5" in l or "3 - 5" in l:
+            return "mid (3-5 years)"
+        if "senior" in l or "5-8" in l or "5 - 8" in l:
+            return "senior (5-8 years)"
+        if "lead" in l or "8+" in l or "8" in l:
+            return "lead (8+ years)"
+        return "fresher (0-1 year)"
+
+    @staticmethod
+    def insert(
+        company: str,
+        category: str,
+        role: str,
+        difficulty: str,
+        experience_level: str,
+        question_type: str,
+        question_text: str,
+        sample_answer: Optional[str] = None,
+        source: str = "seed"
+    ) -> Optional[int]:
+        """
+        Inserts a question into the questions table, skipping duplicates by (company, question_hash).
+        """
+        comp = QuestionModel.normalize_company(company)
+        level = QuestionModel.normalize_level(experience_level)
+        q_hash = QuestionModel.compute_hash(question_text)
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Check existing by (company, question_hash)
+        cursor.execute("SELECT id FROM questions WHERE company = ? AND question_hash = ?", (comp, q_hash))
+        existing = cursor.fetchone()
+        if existing:
+            conn.close()
+            return existing[0]
+
+        cursor.execute("""
+            INSERT INTO questions (
+                company, category, role, difficulty, experience_level,
+                question_type, question_text, sample_answer, question_hash, source
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            comp,
+            (category or "Technical").strip(),
+            (role or "").strip(),
+            (difficulty or "medium").strip().lower(),
+            level,
+            (question_type or "technical_basics").strip().lower(),
+            question_text.strip(),
+            sample_answer.strip() if sample_answer else None,
+            q_hash,
+            source
+        ))
+        new_id = cursor.lastrowid
+        conn.commit()
+        conn.close()
+        return new_id
+
+    @staticmethod
+    def get_unseen_questions(
+        employee_id: int,
+        company: str,
+        experience_level: str,
+        category: str = "all",
+        role: str = "",
+        question_type: str = "",
+        count: int = 10,
+        limit: int = None,
+        **kwargs
+    ) -> List[Dict[str, Any]]:
+        """
+        Fetches questions for THAT company and THAT level only,
+        excluding questions already present in user_question_history for this employee.
+        Ordered randomly with func.random() / RANDOM().
+        """
+        if limit is not None:
+            count = limit
+        comp = QuestionModel.normalize_company(company)
+        level = QuestionModel.normalize_level(experience_level)
+
+
+        query = """
+            SELECT id, company, category, role, difficulty, experience_level,
+                   question_type, question_text, sample_answer, source, created_at
+            FROM questions
+            WHERE company = ?
+              AND experience_level = ?
+              AND id NOT IN (
+                  SELECT question_id FROM user_question_history WHERE employee_id = ?
+              )
+        """
+        params = [comp, level, employee_id]
+
+        if category and category.lower() != "all":
+            query += " AND LOWER(category) = ?"
+            params.append(category.strip().lower())
+
+        if role and role.strip():
+            query += " AND (role = '' OR LOWER(role) = ?)"
+            params.append(role.strip().lower())
+
+        if question_type and question_type.lower() != "all":
+            query += " AND LOWER(question_type) = ?"
+            params.append(question_type.strip().lower())
+
+        query += " ORDER BY RANDOM() LIMIT ?"
+        params.append(max(1, count))
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(query, tuple(params))
+        rows = cursor.fetchall()
+        conn.close()
+
+        return [dict(r) for r in rows]
+
+    @staticmethod
+    def get_company_stats(employee_id: int, company: str, experience_level: Optional[str] = None) -> Dict[str, int]:
+        """
+        Returns stats: total questions in pool, total seen by employee, and remaining unseen count.
+        """
+        comp = QuestionModel.normalize_company(company)
+        level = QuestionModel.normalize_level(experience_level) if experience_level else None
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        if level:
+            cursor.execute("SELECT COUNT(*) FROM questions WHERE company = ? AND experience_level = ?", (comp, level))
+            total = cursor.fetchone()[0]
+
+            cursor.execute("""
+                SELECT COUNT(*) FROM user_question_history uqh
+                JOIN questions q ON q.id = uqh.question_id
+                WHERE uqh.employee_id = ? AND q.company = ? AND q.experience_level = ?
+            """, (employee_id, comp, level))
+            seen = cursor.fetchone()[0]
+        else:
+            cursor.execute("SELECT COUNT(*) FROM questions WHERE company = ?", (comp,))
+            total = cursor.fetchone()[0]
+
+            cursor.execute("""
+                SELECT COUNT(*) FROM user_question_history uqh
+                JOIN questions q ON q.id = uqh.question_id
+                WHERE uqh.employee_id = ? AND q.company = ?
+            """, (employee_id, comp))
+            seen = cursor.fetchone()[0]
+
+        conn.close()
+        unseen = max(0, total - seen)
+        return {
+            "total_questions": total,
+            "seen_count": seen,
+            "unseen_count": unseen
+        }
+
+    @staticmethod
+    def get_all_existing_texts(company: str, experience_level: Optional[str] = None) -> List[str]:
+        """
+        Returns existing question texts to provide to the AI generator to avoid duplicates.
+        """
+        comp = QuestionModel.normalize_company(company)
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        if experience_level:
+            level = QuestionModel.normalize_level(experience_level)
+            cursor.execute("SELECT question_text FROM questions WHERE company = ? AND experience_level = ?", (comp, level))
+        else:
+            cursor.execute("SELECT question_text FROM questions WHERE company = ?", (comp,))
+
+        rows = cursor.fetchall()
+        conn.close()
+        return [r[0] for r in rows if r]
+
+    @staticmethod
+    def get_total_count() -> int:
+        """Returns total question count in the database."""
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM questions")
+        count = cursor.fetchone()[0]
+        conn.close()
+        return count
+
+
+class UserQuestionHistoryModel:
+    """
+    Tracks and manages per-employee question history to guarantee zero repetitions.
+    """
+
+    @staticmethod
+    def mark_as_seen(employee_id: int, question_ids: Any) -> int:
+        """
+        Records questions as seen for the employee. Uses INSERT OR IGNORE / ON CONFLICT DO NOTHING.
+        Accepts either a single int question_id or a list/tuple of question_ids.
+        """
+        if not employee_id or question_ids is None:
+            return 0
+
+        if isinstance(question_ids, (int, str)):
+            question_ids = [int(question_ids)]
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        inserted_count = 0
+
+
+        for q_id in question_ids:
+            try:
+                cursor.execute("""
+                    INSERT OR IGNORE INTO user_question_history (employee_id, question_id, seen_at)
+                    VALUES (?, ?, CURRENT_TIMESTAMP)
+                """, (employee_id, q_id))
+                inserted_count += 1
+            except Exception:
+                # PostgreSQL compatibility: try INSERT ... ON CONFLICT DO NOTHING
+                try:
+                    cursor.execute("""
+                        INSERT INTO user_question_history (employee_id, question_id, seen_at)
+                        VALUES (?, ?, CURRENT_TIMESTAMP)
+                        ON CONFLICT (employee_id, question_id) DO NOTHING
+                    """, (employee_id, q_id))
+                    inserted_count += 1
+                except Exception:
+                    pass
+
+        conn.commit()
+        conn.close()
+        return inserted_count
+
+    @staticmethod
+    def reset_history(employee_id: int, company: Optional[str] = None, experience_level: Optional[str] = None) -> int:
+        """
+        Resets an employee's seen history for a company (and optionally level), or entirely.
+        """
+        if not employee_id:
+            return 0
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        if company:
+            comp = QuestionModel.normalize_company(company)
+            if experience_level:
+                level = QuestionModel.normalize_level(experience_level)
+                cursor.execute("""
+                    DELETE FROM user_question_history
+                    WHERE employee_id = ?
+                      AND question_id IN (
+                          SELECT id FROM questions WHERE company = ? AND experience_level = ?
+                      )
+                """, (employee_id, comp, level))
+            else:
+                cursor.execute("""
+                    DELETE FROM user_question_history
+                    WHERE employee_id = ?
+                      AND question_id IN (
+                          SELECT id FROM questions WHERE company = ?
+                      )
+                """, (employee_id, comp))
+        else:
+            cursor.execute("DELETE FROM user_question_history WHERE employee_id = ?", (employee_id,))
+
+        deleted = cursor.rowcount
+        conn.commit()
+        conn.close()
+        return deleted
+
+
+class TestSecurityModel:
+    """
+    Test Security & Anti-Cheating Proctoring Engine:
+    - Server-authoritative violation counter (max 3 allowed)
+    - Logs tab switches, window blurs, fullscreen exits, and clipboard attempts
+    - Triggers auto-submit when threshold is reached
+    - Provides security audit report for candidate test results
+    """
+    MAX_VIOLATIONS = 3
+    VALID_EVENTS = (
+        "tab_switch",
+        "window_blur",
+        "fullscreen_exit",
+        "copy_paste_attempt",
+        "right_click"
+    )
+
+    @staticmethod
+    def record_violation(
+        employee_id: int,
+        test_attempt_id: str,
+        event_type: str,
+        duration_away_seconds: Optional[float] = None
+    ) -> Dict[str, Any]:
+        """
+        Records an anti-cheating violation event in the database, increments the
+        server-authoritative violation counter, and flags auto-submission if threshold reached.
+        """
+        clean_event = event_type.strip().lower() if event_type else "tab_switch"
+        if clean_event not in TestSecurityModel.VALID_EVENTS:
+            clean_event = "tab_switch"
+
+        duration = round(float(duration_away_seconds), 2) if duration_away_seconds is not None else None
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Check if the session is in practice mode: practice attempts must NOT log any security violations
+        cursor.execute("SELECT mode FROM secure_test_sessions WHERE session_id = ?", (str(test_attempt_id),))
+        sess_check = cursor.fetchone()
+        if sess_check:
+            sess_mode = dict(sess_check).get("mode") or "mock"
+            if str(sess_mode).lower().strip() == "practice":
+                conn.close()
+                return {
+                    "success": True,
+                    "mode": "practice",
+                    "test_attempt_id": str(test_attempt_id),
+                    "event_type": clean_event,
+                    "violation_count": 0,
+                    "max_allowed": TestSecurityModel.MAX_VIOLATIONS,
+                    "auto_submit": False,
+                    "message": "Practice mode: security violations are disabled."
+                }
+
+        # 1. Insert violation audit log
+        cursor.execute("""
+            INSERT INTO test_security_logs (employee_id, test_attempt_id, event_type, duration_away_seconds)
+            VALUES (?, ?, ?, ?)
+        """, (employee_id, str(test_attempt_id), clean_event, duration))
+
+        # 2. Increment violation_count in secure_test_sessions if active session exists
+        cursor.execute("""
+            UPDATE secure_test_sessions
+            SET violation_count = COALESCE(violation_count, 0) + 1
+            WHERE session_id = ?
+        """, (str(test_attempt_id),))
+
+        # 3. Read current authoritative count
+        cursor.execute("""
+            SELECT violation_count FROM secure_test_sessions WHERE session_id = ?
+        """, (str(test_attempt_id),))
+        row = cursor.fetchone()
+
+        if row and row["violation_count"] is not None:
+            current_count = row["violation_count"]
+        else:
+            # Fallback count from logs if session_id is a custom attempt_id
+            cursor.execute("""
+                SELECT COUNT(*) as count FROM test_security_logs
+                WHERE test_attempt_id = ? AND employee_id = ?
+            """, (str(test_attempt_id), employee_id))
+            log_row = cursor.fetchone()
+            current_count = log_row["count"] if log_row else 1
+
+        should_auto_submit = (current_count >= TestSecurityModel.MAX_VIOLATIONS)
+
+        # 4. If violation limit exceeded, flag session as auto_submitted
+        if should_auto_submit:
+            cursor.execute("""
+                UPDATE secure_test_sessions
+                SET auto_submitted = 1
+                WHERE session_id = ?
+            """, (str(test_attempt_id),))
+
+        conn.commit()
+        conn.close()
+
+        return {
+            "success": True,
+            "mode": "mock",
+            "test_attempt_id": str(test_attempt_id),
+            "event_type": clean_event,
+            "violation_count": current_count,
+            "max_allowed": TestSecurityModel.MAX_VIOLATIONS,
+            "auto_submit": should_auto_submit
+        }
+
+    @staticmethod
+    def get_security_report(test_attempt_id: str, employee_id: Optional[int] = None) -> Dict[str, Any]:
+        """
+        Retrieves complete proctoring audit log and violation statistics for a test attempt.
+        """
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Check session table for mode and overall violation flags
+        cursor.execute("""
+            SELECT violation_count, auto_submitted, status, mode
+            FROM secure_test_sessions
+            WHERE session_id = ?
+        """, (str(test_attempt_id),))
+        sess_row = cursor.fetchone()
+        sess_dict = dict(sess_row) if sess_row else {}
+        session_mode = sess_dict.get("mode") or "mock"
+
+        # If practice mode, return clean report without logs
+        if str(session_mode).lower().strip() == "practice":
+            conn.close()
+            return {
+                "success": True,
+                "mode": "practice",
+                "test_attempt_id": str(test_attempt_id),
+                "total_violations": 0,
+                "max_allowed": TestSecurityModel.MAX_VIOLATIONS,
+                "is_clean": True,
+                "auto_submitted": False,
+                "events": []
+            }
+
+        # Query all violation events for this test attempt
+        if employee_id:
+            cursor.execute("""
+                SELECT id, employee_id, test_attempt_id, event_type, duration_away_seconds, timestamp
+                FROM test_security_logs
+                WHERE test_attempt_id = ? AND employee_id = ?
+                ORDER BY timestamp ASC
+            """, (str(test_attempt_id), int(employee_id)))
+        else:
+            cursor.execute("""
+                SELECT id, employee_id, test_attempt_id, event_type, duration_away_seconds, timestamp
+                FROM test_security_logs
+                WHERE test_attempt_id = ?
+                ORDER BY timestamp ASC
+            """, (str(test_attempt_id),))
+
+        rows = cursor.fetchall()
+        conn.close()
+
+        events = []
+        for r in rows:
+            events.append({
+                "id": r["id"],
+                "event_type": r["event_type"],
+                "timestamp": str(r["timestamp"]),
+                "duration_away_seconds": r["duration_away_seconds"]
+            })
+
+        total_violations = len(events)
+        sess_dict = dict(sess_row) if sess_row else {}
+        if sess_dict.get("violation_count") is not None and sess_dict["violation_count"] > total_violations:
+            total_violations = sess_dict["violation_count"]
+
+        is_auto_submitted = bool(sess_dict.get("auto_submitted")) or (total_violations >= TestSecurityModel.MAX_VIOLATIONS)
+
+        return {
+            "success": True,
+            "test_attempt_id": str(test_attempt_id),
+            "total_violations": total_violations,
+            "max_allowed": TestSecurityModel.MAX_VIOLATIONS,
+            "is_clean": total_violations == 0,
+            "auto_submitted": is_auto_submitted,
+            "events": events
+        }
+
+
+
+
+
 

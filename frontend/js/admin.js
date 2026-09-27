@@ -6,8 +6,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   const employee = requireAuth();
   if (!employee) return;
 
-  // Basic admin check (if candidate is not admin, warn or allow preview)
-  const isSuperAdmin = employee.is_admin || employee.email.includes("admin");
+  // Strict admin authorization check
+  const isSuperAdmin = Boolean(
+    employee && (
+      employee.is_admin === 1 || 
+      employee.is_admin === true || 
+      (employee.email && employee.email.toLowerCase() === "riyanagare126@gmail.com")
+    )
+  );
+
+  if (!isSuperAdmin) {
+    showToast("Access Denied: Admin authorization required.", "danger");
+    window.location.replace("dashboard.html");
+    return;
+  }
 
   // Tab Elements
   const tabUsersBtn = document.getElementById("tab-users-btn");
@@ -17,6 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tabTrendsBtn = document.getElementById("tab-trends-btn");
   const tabTemplatesBtn = document.getElementById("tab-templates-btn");
   const tabFluencyBtn = document.getElementById("tab-fluency-btn");
+  const tabDatabaseBtn = document.getElementById("tab-database-btn");
 
   const viewUsers = document.getElementById("admin-users-view");
   const viewCompanies = document.getElementById("admin-companies-view");
@@ -25,18 +38,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   const viewTrends = document.getElementById("admin-trends-view");
   const viewTemplates = document.getElementById("admin-templates-view");
   const viewFluency = document.getElementById("admin-fluency-view");
+  const viewDatabase = document.getElementById("admin-database-view");
 
   const btnRefresh = document.getElementById("btn-refresh-admin");
+  const btnReloadDbIframe = document.getElementById("btn-reload-db-iframe");
 
   // Setup tabs
   function activateTab(btn, view) {
-    [tabUsersBtn, tabCompaniesBtn, tabRolesBtn, tabQuestionsBtn, tabTrendsBtn, tabTemplatesBtn, tabFluencyBtn].forEach(b => {
+    [tabUsersBtn, tabCompaniesBtn, tabRolesBtn, tabQuestionsBtn, tabTrendsBtn, tabTemplatesBtn, tabFluencyBtn, tabDatabaseBtn].forEach(b => {
       if (b) {
         b.className = "btn btn-secondary btn-sm";
         b.style.border = "none";
       }
     });
-    [viewUsers, viewCompanies, viewRoles, viewQuestions, viewTrends, viewTemplates, viewFluency].forEach(v => {
+    [viewUsers, viewCompanies, viewRoles, viewQuestions, viewTrends, viewTemplates, viewFluency, viewDatabase].forEach(v => {
       if (v) v.style.display = "none";
     });
 
@@ -51,6 +66,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (tabTrendsBtn) tabTrendsBtn.addEventListener("click", () => { activateTab(tabTrendsBtn, viewTrends); loadTrends(); });
   if (tabTemplatesBtn) tabTemplatesBtn.addEventListener("click", () => { activateTab(tabTemplatesBtn, viewTemplates); loadTemplates(); });
   if (tabFluencyBtn) tabFluencyBtn.addEventListener("click", () => { activateTab(tabFluencyBtn, viewFluency); loadFluencyQuestions(); });
+  if (tabDatabaseBtn) tabDatabaseBtn.addEventListener("click", () => {
+    activateTab(tabDatabaseBtn, viewDatabase);
+    const iframe = document.getElementById("db-iframe");
+    if (iframe) iframe.src = "view_db.html?t=" + Date.now();
+  });
+
+  if (btnReloadDbIframe) {
+    btnReloadDbIframe.addEventListener("click", () => {
+      const iframe = document.getElementById("db-iframe");
+      if (iframe) iframe.src = "view_db.html?t=" + Date.now();
+      showToast("Live Database reloaded!", "info");
+    });
+  }
 
   if (btnRefresh) {
     btnRefresh.addEventListener("click", async () => {

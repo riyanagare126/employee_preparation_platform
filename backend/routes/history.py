@@ -36,14 +36,34 @@ def get_preparation_timeline():
             }
             icon, label = type_labels.get(t_type, ("fa-solid fa-pen-to-square", f"{t_type.capitalize()} Test"))
 
+            mode = (a.get("mode") or "mock").lower()
+            if mode == "practice":
+                mode_badge = {"label": "Practice", "type": "info", "icon": "fa-solid fa-graduation-cap"}
+                sec_badge = None
+            else:
+                mode_badge = {"label": "Mock Assessment", "type": "primary", "icon": "fa-solid fa-shield-halved"}
+                v_count = int(a.get("violation_count") or 0)
+                is_auto = bool(a.get("auto_submitted"))
+                if is_auto:
+                    sec_badge = {"label": "Auto-submitted (Security Violation)", "type": "danger", "icon": "fa-solid fa-ban"}
+                elif v_count > 0:
+                    sec_badge = {"label": f"Flagged ({v_count} violations)", "type": "warning", "icon": "fa-solid fa-triangle-exclamation"}
+                else:
+                    sec_badge = {"label": "Clean attempt", "type": "success", "icon": "fa-solid fa-circle-check"}
+
             timeline.append({
                 "type": t_type,
                 "icon": icon,
                 "company": comp_name,
                 "role": role_name,
+                "mode": mode,
+                "mode_badge": mode_badge,
                 "title": f"{comp_name} • {label} ({role_name})",
                 "score": f"{a.get('percentage', 0)}% ({a.get('score', 0)}/{a.get('total', 100)})",
                 "rating": "Passed" if float(a.get("percentage", 0)) >= 60 else "Review Needed",
+                "violation_count": int(a.get("violation_count") or 0) if mode == "mock" else 0,
+                "auto_submitted": bool(a.get("auto_submitted")) if mode == "mock" else False,
+                "security_badge": sec_badge,
                 "date": a.get("created_at")
             })
 

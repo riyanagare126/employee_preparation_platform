@@ -61,8 +61,8 @@ echo ✔ Platform is now LIVE at: http://localhost:5000
 echo ✔ Chrome will open automatically!
 echo.
 echo [DEMO CREDENTIALS]
-echo   Student: student@prep.com  / Password: Student123!
-echo   Admin:   admin@prep.com    / Password: AdminPassword123!
+echo   Candidate Demo: student@prep.com  / Password: Student123!
+echo   Admin Access:   Authorized Admin Portal (Master PIN: 1260)
 echo.
 echo (Press Ctrl + C in this window to stop the server when finished)
 echo ======================================================================
