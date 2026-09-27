@@ -141,6 +141,7 @@
       // Candidate 1-Click Demo
       if (btnDemoStudent) {
         btnDemoStudent.addEventListener("click", () => {
+          localStorage.removeItem("loggedInEmployee");
           document.getElementById("login-email").value = "student@prep.com";
           document.getElementById("login-password").value = "Student123!";
           submitBtn.click();
