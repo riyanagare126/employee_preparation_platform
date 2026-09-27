@@ -405,7 +405,7 @@ CREATE INDEX IF NOT EXISTS idx_user_prep ON user_preparation(user_id, company_sl
 -- Seed Demo Accounts (Password: Student123! and AdminPassword123!)
 INSERT INTO employees (name, email, password, qualification, skills, experience, job_role, target_company, target_role, is_admin)
 VALUES 
-('Rahul Sharma', 'student@prep.com', 'scrypt:32768:8:1$hE9P4fKq12z$7b01b635dbdb4623190306c5ba8cb3128b7e28b8cf5c6ee61fc1cbb7a47bbfcb2cbb1dbad0811e5399583db56c07a4a0f8bfd4ce979314421b8fbf40d346ff17', 'B.Tech Computer Science', 'Python, SQL, REST APIs, Docker, JavaScript', '1-2 years', 'Backend Engineer', 'Tata Consultancy Services (TCS)', 'Software Engineer', 0),
+('Madhuri Pathav', 'student@prep.com', 'scrypt:32768:8:1$hE9P4fKq12z$7b01b635dbdb4623190306c5ba8cb3128b7e28b8cf5c6ee61fc1cbb7a47bbfcb2cbb1dbad0811e5399583db56c07a4a0f8bfd4ce979314421b8fbf40d346ff17', 'B.Tech Computer Science', 'Python, SQL, REST APIs, Docker, JavaScript', '1-2 years', 'Backend Engineer', 'Tata Consultancy Services (TCS)', 'Software Engineer', 0),
 ('Platform Administrator', 'admin@prep.com', 'scrypt:32768:8:1$kE8P1fJq99y$8c02c746ecec5734201417d6cb9dc4239c8f39c9df6d7ff72fd2dcc8b58ccedc3dcc2ecbe1922f6400694ec67d18b5b109cge5df080425532c9gcg51e457gg28', 'System Administrator', 'System Architecture, Security, Platform Analytics', '5+ years', 'Administrator', 'All', 'Administrator', 1)
 ON CONFLICT (email) DO NOTHING;
 

@@ -21,7 +21,7 @@ def run_tests():
     print("RUNNING 2026 FEATURE SUITE VERIFICATION")
     print("==================================================")
 
-    student_id = 19  # Rahul Sharma seeded test profile
+    student_id = 19  # Madhuri Pathav seeded test profile
 
     # 1. Main Dashboard Summary
     print("\n[1/7] Testing Main Dashboard Summary...")
@@ -95,7 +95,7 @@ def run_tests():
 
     # ATS Scoring
     res = client.post("/api/resume/score-ats", json={
-        "resume_data": {"name": "Rahul Sharma", "summary": "Experienced Python Backend Engineer. Architected REST APIs, optimized SQL queries by 40%, deployed microservices using Docker."},
+        "resume_data": {"name": "Madhuri Pathav", "summary": "Experienced Python Backend Engineer. Architected REST APIs, optimized SQL queries by 40%, deployed microservices using Docker."},
         "target_role": "Backend Engineer",
         "job_description": "We are seeking a Backend Engineer with Python, Docker, SQL, and REST APIs."
     })
@@ -111,7 +111,7 @@ def run_tests():
         "template_name": "modern-single",
         "target_role": "Backend Engineer",
         "target_company": "Microsoft",
-        "resume_data": {"name": "Rahul Sharma", "headline": "Backend Engineer"},
+        "resume_data": {"name": "Madhuri Pathav", "headline": "Backend Engineer"},
         "score": ats_data["overall_score"]
     })
     assert res.status_code == 200

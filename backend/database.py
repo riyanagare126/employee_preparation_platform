@@ -1444,11 +1444,12 @@ def init_db():
         student_pass_hash = generate_password_hash("Student123!")
         cursor.execute("""
             INSERT INTO employees (name, email, password, qualification, skills, experience, job_role, target_company, target_role, is_admin)
-            VALUES ('Rahul Sharma', 'student@prep.com', ?, 'B.Tech Computer Science', 'Java, Spring Boot, SQL, Python, React, DSA', 'Fresher', 'Software Engineer', 'Tata Consultancy Services (TCS)', 'Java Developer', 0)
+            VALUES ('Madhuri Pathav', 'student@prep.com', ?, 'B.Tech Computer Science', 'Java, Spring Boot, SQL, Python, React, DSA', 'Fresher', 'Software Engineer', 'Tata Consultancy Services (TCS)', 'Java Developer', 0)
         """, (student_pass_hash,))
         student_id = cursor.lastrowid
     else:
         student_id = demo_emp["id"]
+        cursor.execute("UPDATE employees SET name = 'Madhuri Pathav' WHERE id = ?", (student_id,))
 
     # Seed demo aptitude result if not present
     cursor.execute("SELECT id FROM aptitude_results WHERE employee_id = ?", (student_id,))
@@ -1495,8 +1496,10 @@ def init_db():
     if not cursor.fetchone():
         cursor.execute("""
             INSERT INTO resume_data (employee_id, full_name, email, phone, role, objective, qualification, skills, projects, experience, certifications, achievements)
-            VALUES (?, 'Rahul Sharma', 'student@prep.com', '+91 9876543210', 'Java Developer', 'Aspiring software engineer eager to build high-scale distributed backend systems.', 'B.Tech Computer Science (CGPA: 8.7)', 'Java, Spring Boot, SQL, Python, Microservices, React, Git, Docker', 'Placement Preparation Platform (AI Copilot); Distributed File Sharing Service; E-Commerce Microservices Engine', 'Software Engineering Intern (Summer 2025) - Built REST APIs using Spring Boot and PostgreSQL.', 'AWS Certified Cloud Practitioner; Oracle Certified Java SE Programmer', 'Winner of University Hackathon 2025 (1st of 60 teams); Dean Academic Excellence Award')
+            VALUES (?, 'Madhuri Pathav', 'student@prep.com', '+91 9876543210', 'Java Developer', 'Aspiring software engineer eager to build high-scale distributed backend systems.', 'B.Tech Computer Science (CGPA: 8.7)', 'Java, Spring Boot, SQL, Python, Microservices, React, Git, Docker', 'Placement Preparation Platform (AI Copilot); Distributed File Sharing Service; E-Commerce Microservices Engine', 'Software Engineering Intern (Summer 2025) - Built REST APIs using Spring Boot and PostgreSQL.', 'AWS Certified Cloud Practitioner; Oracle Certified Java SE Programmer', 'Winner of University Hackathon 2025 (1st of 60 teams); Dean Academic Excellence Award')
         """, (student_id,))
+    else:
+        cursor.execute("UPDATE resume_data SET full_name = 'Madhuri Pathav' WHERE employee_id = ?", (student_id,))
 
     # Seed demo resume analyses (ATS Score)
     cursor.execute("SELECT id FROM resume_analyses WHERE employee_id = ?", (student_id,))
@@ -1666,7 +1669,7 @@ def init_db():
     cursor.execute("SELECT id FROM resume_versions WHERE employee_id = ?", (student_id,))
     if not cursor.fetchone():
         resume_demo_data = {
-            "full_name": "Rahul Sharma",
+            "full_name": "Madhuri Pathav",
             "email": "student@prep.com",
             "phone": "+91 9876543210",
             "location": "Bengaluru, India",
@@ -1715,6 +1718,8 @@ def init_db():
             INSERT INTO resume_versions (employee_id, version_name, template_name, target_role, target_company, resume_data_json, score)
             VALUES (?, 'TCS - Java Developer v1', 'modern-single', 'Java Developer', 'Tata Consultancy Services (TCS)', ?, 88)
         """, (student_id, json.dumps(resume_demo_data)))
+    else:
+        cursor.execute("UPDATE resume_versions SET resume_data_json = REPLACE(resume_data_json, 'Rahul Sharma', 'Madhuri Pathav') WHERE employee_id = ?", (student_id,))
 
     # Seed demo student AI Fluency Attempt
     cursor.execute("SELECT id FROM ai_fluency_attempts WHERE employee_id = ?", (student_id,))

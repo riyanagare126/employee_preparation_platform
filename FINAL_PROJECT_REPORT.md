@@ -271,7 +271,7 @@ erDiagram
   * Role separation: Students are restricted to preparation tools, while Administrators have access to CMS controls (`/admin.html`).
 * **1-Click College Demo Buttons:**
   * Pre-configured accounts for instant viva evaluation:
-    * **Demo Student:** `student@prep.com` / `Student123!` (Seeds Rahul Sharma with full historical metrics, 77% readiness, 350 XP, and unlocked badges).
+    * **Demo Student:** `student@prep.com` / `Student123!` (Seeds Madhuri Pathav with full historical metrics, 77% readiness, 350 XP, and unlocked badges).
     * **Platform Admin:** `admin@prep.com` / `AdminPassword123!` (Full CMS control access).
 
 ---
