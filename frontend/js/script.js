@@ -271,9 +271,25 @@ async function setupGlobalNavbar() {
       adminLi.innerHTML = `<a href="admin.html" class="nav-link" style="color: #f43f5e; font-weight: 700;"><i class="fa-solid fa-shield-halved"></i> Admin</a>`;
       navMenu.appendChild(adminLi);
     }
+    if (!document.getElementById("nav-live-db-link")) {
+      const dbLi = document.createElement("li");
+      dbLi.id = "nav-live-db-link";
+      dbLi.innerHTML = `<a href="view_db.html" class="nav-link" target="_blank" style="color: #10b981; font-weight: 600;"><i class="fa-solid fa-database"></i> Live DB</a>`;
+      navMenu.appendChild(dbLi);
+    }
     const adminShortcut = document.getElementById("shortcut-admin-card");
     if (adminShortcut) {
       adminShortcut.style.display = "flex";
+    }
+  } else {
+    // Strictly ensure no admin or live database links exist for candidate/user
+    const adminLi = document.getElementById("nav-admin-link");
+    if (adminLi) adminLi.remove();
+    const dbLi = document.getElementById("nav-live-db-link");
+    if (dbLi) dbLi.remove();
+    const adminShortcut = document.getElementById("shortcut-admin-card");
+    if (adminShortcut) {
+      adminShortcut.style.display = "none";
     }
   }
 }
