@@ -25,8 +25,8 @@ function getLoggedInEmployee() {
     if (!raw) return null;
     const employee = JSON.parse(raw);
     if (employee && employee.id && employee.name) {
-      if (employee.email && employee.email.toLowerCase() === "student@prep.com" && employee.name !== "Madhuri Pathav") {
-        employee.name = "Madhuri Pathav";
+      if (employee.email && employee.email.toLowerCase() === "student@prep.com" && employee.name !== "Madhuri Pathak") {
+        employee.name = "Madhuri Pathak";
         localStorage.setItem("loggedInEmployee", JSON.stringify(employee));
       }
       return employee;

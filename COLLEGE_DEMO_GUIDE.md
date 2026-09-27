@@ -39,7 +39,7 @@ On the **Login Page** (`login.html`), you don't even need to type! There are **1
 
 | Account Type | Email | Password | What it Shows |
 | :--- | :--- | :--- | :--- |
-| **Demo Student** *(1-Click Button)* | `student@prep.com` | `Student123!` | **Madhuri Pathav** — Pre-loaded with 77% Readiness, 350 XP, 5-Day Streak, Solved Coding Challenges, Aptitude Report, and Unlocked Badges! |
+| **Demo Student** *(1-Click Button)* | `student@prep.com` | `Student123!` | **Madhuri Pathak** — Pre-loaded with 77% Readiness, 350 XP, 5-Day Streak, Solved Coding Challenges, Aptitude Report, and Unlocked Badges! |
 | **Platform Admin** *(1-Click Button)* | `admin@prep.com` | `AdminPassword123!` | System Administrator portal with platform analytics and user logs. |
 | **Fresh Registration** | Any email | Any password | Evaluators can also register a brand new account live! |
 
@@ -52,7 +52,7 @@ On the **Login Page** (`login.html`), you don't even need to type! There are **1
 * **Highlight:** Clean responsive design, modern UI, and direct access to all preparation modules.
 
 ### Step 2: 1-Click Demo Login (`login.html`)
-* Click **"⚡ Demo Student Login (Madhuri Pathav)"**.
+* Click **"⚡ Demo Student Login (Madhuri Pathak)"**.
 * **Explain:** "We have built secure SHA-256 session token authentication with role-based access control (Student vs Admin)."
 
 ### Step 3: Interactive Employee Dashboard (`dashboard.html`)

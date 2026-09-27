@@ -23,11 +23,11 @@ else:
     print(f"Admin user password updated successfully to AdminPassword123! ({cur.rowcount} row updated)")
 
 # Also ensure demo student is set
-cur.execute("UPDATE employees SET password = ?, name = 'Madhuri Pathav' WHERE LOWER(email) = 'student@prep.com'", (student_hash,))
+cur.execute("UPDATE employees SET password = ?, name = 'Madhuri Pathak' WHERE LOWER(email) = 'student@prep.com'", (student_hash,))
 if cur.rowcount == 0:
     cur.execute("""
         INSERT INTO employees (name, email, password, qualification, skills, experience, job_role, target_company, target_role, is_admin)
-        VALUES ('Madhuri Pathav', 'student@prep.com', ?, 'B.Tech Computer Science', 'Java, Spring Boot, SQL, Python, React, DSA', 'Fresher', 'Software Engineer', 'Tata Consultancy Services (TCS)', 'Java Developer', 0)
+        VALUES ('Madhuri Pathak', 'student@prep.com', ?, 'B.Tech Computer Science', 'Java, Spring Boot, SQL, Python, React, DSA', 'Fresher', 'Software Engineer', 'Tata Consultancy Services (TCS)', 'Java Developer', 0)
     """, (student_hash,))
     print("Student user created!")
 else:
